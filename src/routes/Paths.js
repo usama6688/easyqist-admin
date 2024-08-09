@@ -1,0 +1,36 @@
+const prefix = "/admin";
+
+const PATHS = {
+    signin: prefix + '/signin',
+    signup: prefix + '/signup',
+    dashboard: prefix + '/dashboard',
+    addProduct: prefix + '/addProduct',
+    viewProduct: prefix + '/viewProduct',
+    editProduct: prefix + '/editProduct',
+    products: prefix + '/products',
+    users: prefix + '/users',
+    admins: prefix + '/admins',
+    addAdmin: prefix + '/addAdmin',
+    editAdmin: prefix + '/editAdmin',
+    viewUserData: prefix + '/viewUserData',
+    orderRequests: prefix + '/orderRequests',
+    viewOrderRequest: prefix + '/viewOrderRequest',
+    viewOrderPayment: prefix + '/viewOrderPayment',
+    categories: prefix + '/categories',
+    addCategory: prefix + '/addCategory',
+    editCategory: prefix + '/editCategory',
+    brands: prefix + '/brands',
+    addBrands: prefix + '/addBrands',
+    editBrand: prefix + '/editBrand',
+    banners: prefix + '/banners',
+    addBanner: prefix + '/addBanner',
+    editBanner: prefix + '/editBanner',
+    employees: prefix + '/employees',
+    addEmployee: prefix + '/addEmployee',
+    editEmployee: prefix + '/editEmployee',
+    customers: prefix + '/customers',
+    addCustomers: prefix + '/addCustomers',
+    editCustomers: prefix + '/editCustomers',
+}
+
+export default PATHS;

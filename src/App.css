@@ -1,0 +1,23 @@
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.cursor {
+    cursor: pointer;
+}
+
+.multiSelect button {
+    width: 100%;
+}
+
+.sidebarNav .nav-item .nav-link.active {
+    background-color: #35363B;
+    color: white;
+    border-radius: .5rem;
+}

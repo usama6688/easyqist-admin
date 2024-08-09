@@ -1,0 +1,44 @@
+.ImageViewerDiv img {
+    border-radius: 2rem;
+    object-fit: contain;
+    width: 100%;
+    /* height: 35rem; */
+}
+
+.removeImageIcon {
+    position: absolute;
+    top: -3px;
+    left: -7px;
+    background-color: var(--blueThemeColor);
+    color: white;
+    height: 1.5rem;
+    width: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.hiddenInputFile {
+    position: absolute;
+    left: 0;
+    width: 10rem;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.ImageViewerWrapper {
+    width: 30rem;
+}
+
+.ImgWidth {
+    width: 12rem !important;
+}
+
+@media (min-width : 767px) {
+    .ImageViewerWrapper {
+        width: 35rem;
+    }
+}
