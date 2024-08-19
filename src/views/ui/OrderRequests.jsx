@@ -35,7 +35,7 @@ const OrderRequests = () => {
         const data = {
             order_id: item?.id,
             order_status: itemId,
-        }
+        };
 
         changeOrderStatus({ data: data })
             .unwrap()
@@ -107,11 +107,12 @@ const OrderRequests = () => {
                             <option value="">Select status</option>
                             <option value="1">Pending</option>
                             <option value="2">Accepted</option>
-                            <option value="3">Documentation</option>
-                            <option value="4">Out for delivery</option>
+                            {/* <option value="3">Documentation</option>
+                            <option value="4">Out for delivery</option> */}
                             <option value="5">Delivered</option>
                             <option value="6">Completed</option>
                             <option value="-1">Rejected</option>
+                            <option value="o">Canceled</option>
                         </select>
                     </div>
                 </div>
@@ -125,9 +126,9 @@ const OrderRequests = () => {
                             <th>Order Date</th>
                             <th>Product Name</th>
                             <th>Status</th>
-                            {auth?.userDetail?.type == 3 ? null :
+                            {auth?.userDetail?.type == 1 ?
                                 <th>Actions</th>
-                            }
+                                : null}
                         </tr>
                     </thead>
                     <tbody>
@@ -153,7 +154,7 @@ const OrderRequests = () => {
                                     <td onClick={() => { navigator(PATHS.viewOrderRequest, { state: { data: data } }); window.location.reload(); }}>
                                         <h6 className="mb-0">{data?.order_status == 1 ? "Pending" : data?.order_status == 2 ? "Accepted" : data?.order_status == 3 ? "Documentation" : data?.order_status == 4 ? "Out for delivery" : data?.order_status == 5 ? "Delivered" : data?.order_status == 5 ? "Rejected" : ""}</h6>
                                     </td>
-                                    {auth?.userDetail?.type == 3 ? null :
+                                    {auth?.userDetail?.type == 1 ?
                                         <td>
                                             <div className='d-flex align-items-center gap-3'>
                                                 <div class="dropdown">
@@ -167,12 +168,12 @@ const OrderRequests = () => {
                                                         <li>
                                                             <a class="dropdown-item" onClick={() => handleItemClick(2, data)}>Accepted</a>
                                                         </li>
-                                                        <li>
+                                                        {/* <li>
                                                             <a class="dropdown-item" onClick={() => handleItemClick(3, data)}>Documentation</a>
                                                         </li>
                                                         <li>
                                                             <a class="dropdown-item" onClick={() => handleItemClick(4, data)}>Out for delivery</a>
-                                                        </li>
+                                                        </li> */}
                                                         <li>
                                                             <a class="dropdown-item" onClick={() => handleItemClick(5, data)}>Delivered</a>
                                                         </li>
@@ -205,7 +206,7 @@ const OrderRequests = () => {
                                             </> */}
                                             </div>
                                         </td>
-                                    }
+                                        : null}
                                 </tr>
                             )
                         }) : <>{viewOrderRequestLoading ? <td colSpan={7}>

@@ -56,7 +56,9 @@ const Products = () => {
             });
     };
 
-    const filteredDataInput = getProducts?.data?.filter(item => {
+    const filteredNullData = getProducts?.data?.filter(data => data !== null);
+
+    const filteredDataInput = filteredNullData?.filter(item => {
         return (
             item.name.toLowerCase().includes(searchQuery.toLowerCase())
         );
@@ -75,7 +77,7 @@ const Products = () => {
     }, []);
 
     useEffect(() => {
-        if(!selectedCategory){
+        if (!selectedCategory) {
             setSelectedBrand("");
         }
     }, [selectedCategory]);
