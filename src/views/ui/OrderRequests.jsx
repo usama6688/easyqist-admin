@@ -112,7 +112,7 @@ const OrderRequests = () => {
                             <option value="5">Delivered</option>
                             <option value="6">Completed</option>
                             <option value="-1">Rejected</option>
-                            <option value="o">Canceled</option>
+                            <option value="-2">Canceled</option>
                         </select>
                     </div>
                 </div>
