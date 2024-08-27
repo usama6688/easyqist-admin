@@ -119,17 +119,20 @@ const ViewOrderRequests = () => {
                             <li>
                                 <a class="dropdown-item" onClick={() => handleItemClick(2, reqData)}>Accepted</a>
                             </li>
-                            <li>
+                            {/* <li>
                                 <a class="dropdown-item" onClick={() => handleItemClick(3, reqData)}>Documentation</a>
                             </li>
                             <li>
                                 <a class="dropdown-item" onClick={() => handleItemClick(4, reqData)}>Out for delivery</a>
-                            </li>
+                            </li> */}
                             <li>
                                 <a class="dropdown-item" onClick={() => handleItemClick(5, reqData)}>Delivered</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" onClick={() => handleItemClick(6, reqData)}>Rejected</a>
+                                <a class="dropdown-item" onClick={() => handleItemClick(6, reqData)}>Completed</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" onClick={() => handleItemClick(-1, reqData)}>Rejected</a>
                             </li>
                         </ul>
                     </div>
