@@ -16,6 +16,7 @@ const AddAdmin = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [role, setRole] = useState("");
     const navigate = useNavigate();
 
     const [addAdmin] = useAddAdminMutation();
@@ -27,7 +28,7 @@ const AddAdmin = () => {
         formData.append('name', name);
         formData.append('email', email);
         formData.append('password', password);
-        formData.append('type', 2);
+        formData.append('type', role);
         formData.append('is_admin', 1);
 
         addAdmin({ data: formData })
@@ -44,6 +45,10 @@ const AddAdmin = () => {
                 console.log("error", error);
                 toast.error(error.message);
             });
+    };
+
+    const selectRoleHandler = (value) => {
+        setRole(value);
     };
 
     return (
@@ -80,6 +85,15 @@ const AddAdmin = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
+                </FormGroup>
+
+                <FormGroup>
+                    <Label for="exampleEmail">Role</Label>
+                    <select class="form-select" aria-label="Default select example" onChange={(e) => selectRoleHandler(e.target.value)}>
+                        <option value="">Select Role</option>
+                        <option value="1">Admin</option>
+                        <option value="3">Social Media Manager</option>
+                    </select>
                 </FormGroup>
 
                 <Button onClick={onAddAdmin} className="mt-2">Submit</Button>

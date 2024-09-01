@@ -194,16 +194,6 @@ const OrderRequests = () => {
                                                     :
                                                     null
                                                 }
-
-                                                {/* <>
-                                                {auth?.userDetail?.type == 2 && data?.order_status != 4 && data?.order_status != 5 && data?.order_status != 6 ?
-                                                    <img
-                                                        src={delIcon}
-                                                        alt=""
-                                                        onClick={() => deleteModalHandler(data)}
-                                                    />
-                                                    : null}
-                                            </> */}
                                             </div>
                                         </td>
                                         : null}

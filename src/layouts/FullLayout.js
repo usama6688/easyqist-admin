@@ -19,7 +19,7 @@ const FullLayout = () => {
           <Sidebar />
         </aside>
 
-        <div className="contentArea">
+        <div className="contentArea overflow-auto">
           <Header />
           <Container className="p-4 wrapper" fluid>
             <Outlet />
