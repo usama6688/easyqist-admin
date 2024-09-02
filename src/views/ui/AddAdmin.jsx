@@ -92,6 +92,7 @@ const AddAdmin = () => {
                     <select class="form-select" aria-label="Default select example" onChange={(e) => selectRoleHandler(e.target.value)}>
                         <option value="">Select Role</option>
                         <option value="1">Admin</option>
+                        <option value="2">Manager</option>
                         <option value="3">Social Media Manager</option>
                     </select>
                 </FormGroup>
