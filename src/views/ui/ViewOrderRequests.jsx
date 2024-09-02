@@ -7,6 +7,7 @@ import Select from "react-select";
 import PATHS from '../../routes/Paths';
 import { useChangeOrderStatusMutation, useEmploymentAssignMutation, useGetEmployeesQuery, useViewOrderDetailQuery } from '../../services/Api';
 import AssignEmployeeModal from '../../components/AssignEmployeeModal';
+import { useSelector } from 'react-redux';
 
 const ViewOrderRequests = () => {
 
@@ -15,6 +16,7 @@ const ViewOrderRequests = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const reqDataId = location?.state?.data;
+    const auth = useSelector((data) => data?.auth);
 
     const [employmentAssign, { isLoading }] = useEmploymentAssignMutation();
     const [changeOrderStatus] = useChangeOrderStatusMutation();
@@ -95,48 +97,52 @@ const ViewOrderRequests = () => {
         <div>
             <Row>
 
-                <Col lg="4"></Col>
-                <Col lg="4">
-                    <FormGroup>
-                        <Select
-                            options={modifiedBrands}
-                            placeholder="Assign to Employee"
-                            value={selectedOptions}
-                            onChange={handleSelect}
-                            isSearchable={true}
-                        />
-                    </FormGroup>
-                </Col>
-                <Col lg="4" className='mb-4'>
-                    <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-togglex w-100" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                            Change Status
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li>
-                                <a class="dropdown-item" onClick={() => handleItemClick(1, reqData)}>Pending</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" onClick={() => handleItemClick(2, reqData)}>Accepted</a>
-                            </li>
-                            {/* <li>
+                {auth?.userDetail?.type == 3 ? null :
+                    <>
+                        <Col lg="4"></Col>
+                        <Col lg="4">
+                            <FormGroup>
+                                <Select
+                                    options={modifiedBrands}
+                                    placeholder="Assign to Employee"
+                                    value={selectedOptions}
+                                    onChange={handleSelect}
+                                    isSearchable={true}
+                                />
+                            </FormGroup>
+                        </Col>
+                        <Col lg="4" className='mb-4'>
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-togglex w-100" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Change Status
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                    <li>
+                                        <a class="dropdown-item" onClick={() => handleItemClick(1, reqData)}>Pending</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" onClick={() => handleItemClick(2, reqData)}>Accepted</a>
+                                    </li>
+                                    {/* <li>
                                 <a class="dropdown-item" onClick={() => handleItemClick(3, reqData)}>Documentation</a>
                             </li>
                             <li>
                                 <a class="dropdown-item" onClick={() => handleItemClick(4, reqData)}>Out for delivery</a>
                             </li> */}
-                            <li>
-                                <a class="dropdown-item" onClick={() => handleItemClick(5, reqData)}>Delivered</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" onClick={() => handleItemClick(6, reqData)}>Completed</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" onClick={() => handleItemClick(-1, reqData)}>Rejected</a>
-                            </li>
-                        </ul>
-                    </div>
-                </Col>
+                                    <li>
+                                        <a class="dropdown-item" onClick={() => handleItemClick(5, reqData)}>Delivered</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" onClick={() => handleItemClick(6, reqData)}>Completed</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" onClick={() => handleItemClick(-1, reqData)}>Rejected</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </Col>
+                    </>
+                }
 
                 <Col lg="4">
                     <FormGroup>
@@ -215,10 +221,10 @@ const ViewOrderRequests = () => {
                                     <h6 class="card-title">Advance: {data?.order_product_advance_amount}</h6>
                                     <h6 class="card-title">Plan: {data?.orderinstallment?.amount * data?.qty} x {data?.orderinstallment?.duration} months</h6>
 
-                                    {reqData?.order_status !== 5 &&
+                                    {reqData?.order_status != 5 && auth?.userDetail?.type != 3 ?
                                         <a class="btn btn-primary" onClick={() => { navigate(PATHS.viewOrderPayment, { state: { data: data } }); window.location.reload(); }}
                                         >View Order Payment</a>
-                                    }
+                                        : null}
                                 </div>
                             </div>
                         </Col>
