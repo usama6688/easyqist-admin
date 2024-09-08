@@ -3,7 +3,7 @@ export const BASE_URL_IMAGES = process.env.REACT_APP_BASE_URL_IMAGES;
 
 export const API_END_POINTS = {
   /////////////////////////////<===MUTATIONS===>//////////////////////////////
-  loginUser: BASE_URL + "admin/login",
+  loginUser: BASE_URL + "admin/signIn",
   deleteCategory: BASE_URL + "category/delete_category",
   addCategory: BASE_URL + "category/add",
   editCategory: BASE_URL + "category/edit",
@@ -60,4 +60,6 @@ export const API_END_POINTS = {
   getCustomers: BASE_URL + "customer/list",
   getAdmins: BASE_URL + "admin/listing",
   chartData: BASE_URL + "Order/graph",
+  requestedProducts: BASE_URL + "request_products",
+  requestedProductDetail: BASE_URL + "request_products/details",
 };

@@ -41,6 +41,10 @@ const navigation = [
     title: "Customers",
     href: PATHS.customers,
   },
+  {
+    title: "Requested Products",
+    href: PATHS.requestedProducts,
+  },
 ];
 
 const Sidebar = () => {

@@ -496,6 +496,27 @@ export const api = SplitApiSettings.injectEndpoints({
       },
     }),
 
+    requestedProducts: builder.query({
+      query: () => {
+        return {
+          url: API_END_POINTS.requestedProducts,
+          method: "GET",
+        };
+      },
+    }),
+
+    requestedProductDetail: builder.query({
+      query: ({ params }) => {
+        console.log("params", params);
+
+        return {
+          url: API_END_POINTS.requestedProductDetail,
+          method: "GET",
+          params,
+        };
+      },
+    }),
+
   }),
 
   overrideExisting: true,
@@ -560,4 +581,6 @@ export const {
   useGetCustomersQuery,
   useGetAdminsQuery,
   useChartDataQuery,
+  useRequestedProductsQuery,
+  useRequestedProductDetailQuery,
 } = api;
