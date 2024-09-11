@@ -35,7 +35,7 @@ const ViewRequestedProduct = () => {
             }
 
             <FormGroup>
-                <Label for="exampleEmail">Deccription</Label>
+                <Label for="exampleEmail">Description</Label>
                 <Input
                     placeholder="Name"
                     type="text"
