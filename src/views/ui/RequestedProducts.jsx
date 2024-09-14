@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Input, Row, Table } from 'reactstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDeleteCategoryMutation, useDeleteEmployeeMutation, useGetEmployeesQuery, useGetProductCatQuery, useRequestedProductsQuery } from '../../services/Api';
+import { useDeleteCategoryMutation, useDeleteEmployeeMutation, useDeleteRequestedProductMutation, useGetEmployeesQuery, useGetProductCatQuery, useRequestedProductsQuery } from '../../services/Api';
 import DeleteModal from '../../components/DeleteModal';
 import PATHS from '../../routes/Paths';
 
@@ -16,10 +16,10 @@ const RequestedProducts = () => {
         refetch: requestedProductsRefetch,
     } = useRequestedProductsQuery();
 
-    const [deleteEmployee, { isLoading }] = useDeleteEmployeeMutation();
+    const [deleteRequestedProduct, { isLoading }] = useDeleteRequestedProductMutation();
 
-    const onDeletecategory = (id) => {
-        deleteEmployee({ data: id })
+    const onDeleteProduct = (id) => {
+        deleteRequestedProduct({ data: id })
             .unwrap()
             .then((payload) => {
                 if (payload.status) {
@@ -122,10 +122,10 @@ const RequestedProducts = () => {
             {deleteItemModal &&
                 <DeleteModal
                     handleCloseDeletModal={DeleteModalHandler}
-                    action={onDeletecategory}
+                    action={onDeleteProduct}
                     id={itemId}
                     loading={isLoading}
-                    confirmationMessage="Are you sure you want to delete the employee?"
+                    confirmationMessage="Are you sure you want to delete the product?"
                 />
             }
 

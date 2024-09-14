@@ -29,7 +29,9 @@ const ViewRequestedProduct = () => {
             {detail?.image_name ?
                 <FormGroup>
                     <Label for="exampleEmail">Product Image</Label>
-                    <img src={BASE_URL_IMAGES + detail?.image_name} alt="" />
+                    <div>
+                        <img src={detail?.image_name} alt="" className='w-50 rounded' style={{ height: "10rem" }} />
+                    </div>
                 </FormGroup>
                 : null
             }
@@ -45,21 +47,21 @@ const ViewRequestedProduct = () => {
             </FormGroup>
 
             <FormGroup>
-                <Label for="exampleEmail">Address</Label>
-                <Input
-                    placeholder="Name"
-                    type="text"
-                    value={detail?.address}
-                    readOnly
-                />
-            </FormGroup>
-
-            <FormGroup>
                 <Label for="exampleEmail">Customer Name</Label>
                 <Input
                     placeholder="Name"
                     type="text"
                     value={detail?.user?.name}
+                    readOnly
+                />
+            </FormGroup>
+
+            <FormGroup>
+                <Label for="exampleEmail">Customer CNIC</Label>
+                <Input
+                    placeholder="Name"
+                    type="text"
+                    value={detail?.user?.cnic_number}
                     readOnly
                 />
             </FormGroup>
@@ -80,6 +82,16 @@ const ViewRequestedProduct = () => {
                     placeholder="Name"
                     type="text"
                     value={detail?.user?.phone_no}
+                    readOnly
+                />
+            </FormGroup>
+
+            <FormGroup>
+                <Label for="exampleEmail">Address</Label>
+                <Input
+                    placeholder="Name"
+                    type="text"
+                    value={detail?.address}
                     readOnly
                 />
             </FormGroup>

@@ -339,6 +339,15 @@ export const api = SplitApiSettings.injectEndpoints({
       },
     }),
 
+    deleteRequestedProduct: builder.mutation({
+      query: ({ data }) => {
+        return {
+          url: `${API_END_POINTS.deleteRequestedProduct}?id=${data}`,
+          method: "DELETE",
+        }
+      },
+    }),
+
     /////////////////////////////<===QUERIES===>////////////////////////////////
 
     getBrands: builder.query({
@@ -356,7 +365,6 @@ export const api = SplitApiSettings.injectEndpoints({
         return {
           url: API_END_POINTS.getProductCat,
           method: "GET",
-
         };
       },
     }),
@@ -507,8 +515,6 @@ export const api = SplitApiSettings.injectEndpoints({
 
     requestedProductDetail: builder.query({
       query: ({ params }) => {
-        console.log("params", params);
-
         return {
           url: API_END_POINTS.requestedProductDetail,
           method: "GET",
@@ -564,6 +570,7 @@ export const {
   useEditAdminMutation,
   useDeleteAdminMutation,
   useDeleteOrderMutation,
+  useDeleteRequestedProductMutation,
   /////////////////////////////<===QUERIES===>////////////////////////////////
   useGetBrandsQuery,
   useGetProductCatQuery,
