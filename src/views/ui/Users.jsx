@@ -97,6 +97,7 @@ const Users = () => {
                             <th>Phone</th>
                             <th>Email</th>
                             <th>Address</th>
+                            <th>CNIC</th>
                             {auth?.userDetail?.type == 3 ? null :
                                 <th>Actions</th>
                             }
@@ -110,6 +111,7 @@ const Users = () => {
                                     <td>{data?.phone_no}</td>
                                     <td>{data?.email}</td>
                                     <td>{data?.address}</td>
+                                    <td>{data?.cnic_number}</td>
                                     {auth?.userDetail?.type == 3 ? null :
                                         <td>
                                             <div className='d-flex' style={{ alignItems: "center" }} >

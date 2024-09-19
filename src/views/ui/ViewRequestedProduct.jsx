@@ -30,7 +30,7 @@ const ViewRequestedProduct = () => {
                 <FormGroup>
                     <Label for="exampleEmail">Product Image</Label>
                     <div>
-                        <img src={detail?.image_name} alt="" className='w-50 rounded' style={{ height: "10rem" }} />
+                        <img src={detail?.image_name} alt="" className='w-50 rounded' style={{ height: "10rem", objectFit: "contain" }} />
                     </div>
                 </FormGroup>
                 : null
