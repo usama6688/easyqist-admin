@@ -6,11 +6,16 @@ import { useNavigate } from 'react-router-dom';
 import PATHS from '../../routes/Paths';
 import DeleteModal from '../../components/DeleteModal';
 import { useSelector } from 'react-redux';
+import moment from 'moment/moment';
+import { DateRangePicker } from "react-dates";
 
 const Users = () => {
 
     const navigate = useNavigate();
     const [itemId, setItemId] = useState("");
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+    const [focusedInput, setFocusedInput] = useState(null);
     const [deleteItemModal, setDeleteItemModal] = useState(false);
     const auth = useSelector((data) => data?.auth);
 
@@ -77,19 +82,51 @@ const Users = () => {
                 document.getElementsByClassName("mainDiv")[i].style.display = "none";
             }
         }
-    }
+    };
+
+    const handleDatesChange = ({ startDate, endDate }) => {
+        setStartDate(startDate);
+        setEndDate(endDate);
+    };
+
+    const falseFunc = () => false;
+
+    const filterDataByDate = (data, startDate, endDate) => {
+        if (!startDate || !endDate) return data;
+        return data?.filter(item => {
+            const createdAt = moment(item?.created_at);
+            return createdAt.isSameOrAfter(startDate) && createdAt.isSameOrBefore(endDate);
+        });
+    };
+
+    const filteredUserData = filterDataByDate(getUser?.data || [], startDate, endDate);
 
     return (
         <Row>
             <Col lg="12">
-                <div>
+                <div className=''>
                     <Input
                         id='localSearchInput'
                         placeholder="Search user"
                         type="search"
                         onChange={(e) => localSearchTableFunction(e.target.value)}
                     />
+
+                    <div className=" mt-4">
+                        <span>Select Date Range: </span>
+                        <DateRangePicker
+                            isOutsideRange={falseFunc}
+                            startDate={startDate}
+                            startDateId="datepicker-start-date"
+                            endDate={endDate}
+                            endDateId="datepicker-end-date"
+                            onDatesChange={handleDatesChange}
+                            focusedInput={focusedInput}
+                            onFocusChange={focusedInput => setFocusedInput(focusedInput)}
+                        />
+                    </div>
                 </div>
+
                 <Table className="no-wrap mt-3 align-middle" responsive borderless>
                     <thead>
                         <tr>
@@ -98,13 +135,14 @@ const Users = () => {
                             <th>Email</th>
                             <th>Address</th>
                             <th>CNIC</th>
+                            <th>Created At</th>
                             {auth?.userDetail?.type == 3 ? null :
                                 <th>Actions</th>
                             }
                         </tr>
                     </thead>
                     <tbody>
-                        {getUser?.data?.map((data) => {
+                        {filteredUserData?.map((data) => {
                             return (
                                 <tr className="border-top mainDiv">
                                     <td>{data?.name}</td>
@@ -112,6 +150,7 @@ const Users = () => {
                                     <td>{data?.email}</td>
                                     <td>{data?.address}</td>
                                     <td>{data?.cnic_number}</td>
+                                    <td>{moment(data?.created_at).format("DD-MM-YYYY")}</td>
                                     {auth?.userDetail?.type == 3 ? null :
                                         <td>
                                             <div className='d-flex' style={{ alignItems: "center" }} >

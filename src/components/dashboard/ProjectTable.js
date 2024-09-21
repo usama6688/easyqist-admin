@@ -115,6 +115,8 @@ const ProjectTables = () => {
                 <th>Phone</th>
                 <th>Email</th>
                 <th>Address</th>
+                <th>CNIC</th>
+                <th>Created At</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -126,6 +128,8 @@ const ProjectTables = () => {
                     <td>{data?.phone_no}</td>
                     <td>{data?.email}</td>
                     <td>{data?.address}</td>
+                    <td>{data?.cnic_number}</td>
+                    <td>{moment(data?.created_at).format("DD-MM-YYYY")}</td>
                     <td>
                       <div className='d-flex' style={{ alignItems: "center" }} >
                         <Button
