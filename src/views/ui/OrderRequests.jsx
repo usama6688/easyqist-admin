@@ -125,6 +125,7 @@ const OrderRequests = () => {
                             <th>Price</th>
                             <th>Order Date</th>
                             <th>Product Name</th>
+                            <th>CNIC</th>
                             <th>Status</th>
                             {auth?.userDetail?.type == 1 ?
                                 <th>Actions</th>
@@ -150,6 +151,9 @@ const OrderRequests = () => {
                                     </td>
                                     <td onClick={() => { navigator(PATHS.viewOrderRequest, { state: { data: data } }); window.location.reload(); }}>
                                         <h6 className="mb-0">{data?.order_products?.[0]?.product?.name}</h6>
+                                    </td>
+                                    <td onClick={() => { navigator(PATHS.viewOrderRequest, { state: { data: data } }); window.location.reload(); }}>
+                                        <h6 className="mb-0">{data?.cnic_number}</h6>
                                     </td>
                                     <td onClick={() => { navigator(PATHS.viewOrderRequest, { state: { data: data } }); window.location.reload(); }}>
                                         <h6 className="mb-0">{data?.order_status == 1 ? "Pending" : data?.order_status == 2 ? "Accepted" : data?.order_status == 3 ? "Documentation" : data?.order_status == 4 ? "Out for delivery" : data?.order_status == 5 ? "Delivered" : data?.order_status == 5 ? "Rejected" : ""}</h6>

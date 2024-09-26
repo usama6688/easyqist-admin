@@ -174,6 +174,13 @@ const ViewOrderRequests = () => {
 
                 <Col lg="4">
                     <FormGroup>
+                        <Label for="exampleEmail">CNIC</Label>
+                        <Input name="name" placeholder="Type.." type="text" value={reqData?.cnic_number} readOnly />
+                    </FormGroup>
+                </Col>
+
+                <Col lg="4">
+                    <FormGroup>
                         <Label for="exampleEmail">Referee Code</Label>
                         <Input name="name" placeholder="Type.." type="text" value={reqData?.refercode} readOnly />
                     </FormGroup>
