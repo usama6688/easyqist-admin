@@ -348,6 +348,16 @@ export const api = SplitApiSettings.injectEndpoints({
       },
     }),
 
+    changeProductStatus: builder.mutation({
+      query: ({ data }) => {
+        return {
+          url: API_END_POINTS.changeProductStatus,
+          method: "POST",
+          body: data,
+        }
+      },
+    }),
+
     /////////////////////////////<===QUERIES===>////////////////////////////////
 
     getBrands: builder.query({
@@ -571,6 +581,7 @@ export const {
   useDeleteAdminMutation,
   useDeleteOrderMutation,
   useDeleteRequestedProductMutation,
+  useChangeProductStatusMutation,
   /////////////////////////////<===QUERIES===>////////////////////////////////
   useGetBrandsQuery,
   useGetProductCatQuery,

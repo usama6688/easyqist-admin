@@ -1,27 +1,55 @@
 import React, { useEffect, useState } from "react";
 import { Form, FormGroup, Label, Input } from "reactstrap";
-import { useViewProductDetailQuery } from "../../services/Api";
+import { useChangeProductStatusMutation, useViewProductDetailQuery } from "../../services/Api";
 import ImageViewer from "../../components/ImageViewer";
 import { useLocation } from "react-router-dom";
+import PATHS from "../../routes/Paths";
 
 const ViewProduct = () => {
 
+  const [status, setStatus] = useState('');
   const location = useLocation();
+
+  const [changeProductStatus] = useChangeProductStatusMutation();
 
   const {
     data: viewProductDetail,
-    isLoading: viewProductDetailLoading,
     refetch: viewProductDetailRefetch,
   } = useViewProductDetailQuery({ params: { product_id: location?.state?.id } });
+
+  const onChangeStatus = (value) => {
+
+    const data = {
+      status: value,
+      product_id: viewProductDetail?.data?.id,
+    };
+
+    changeProductStatus({ data: data })
+      .unwrap()
+      .then((payload) => {
+        if (payload.status) {
+          navigator(PATHS.products);
+          window.location.reload();
+        }
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  };
 
   useEffect(() => {
     viewProductDetailRefetch();
   }, []);
 
-  console.log("viewProductDetail", viewProductDetail);
-
   return (
     <div>
+
+      <select className="form-select w-50 mb-5" onChange={(e) => onChangeStatus(e.target.value)}>
+        <option value="">Change Status</option>
+        <option value="1">Active</option>
+        <option value="0">Not Active</option>
+      </select>
+
       <Form>
         <FormGroup>
           <Label for="exampleEmail">Product Name</Label>

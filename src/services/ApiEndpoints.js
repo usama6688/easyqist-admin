@@ -43,6 +43,7 @@ export const API_END_POINTS = {
   deleteUser: BASE_URL + "delete_user",
   deleteOrder: BASE_URL + "order/delete_order",
   deleteRequestedProduct: BASE_URL + "request_products/delete",
+  changeProductStatus: BASE_URL + "admin/update_status",
   /////////////////////////////<===QUERIES===>////////////////////////////////
   getBrands: BASE_URL + "get-brand",
   getProductCat: BASE_URL + "get-category",
