@@ -48,7 +48,7 @@ export const API_END_POINTS = {
   getBrands: BASE_URL + "get-brand",
   getProductCat: BASE_URL + "get-category",
   getUser: BASE_URL + "get-all-user",
-  getProducts: BASE_URL + "getallproduct2",
+  getProducts: BASE_URL + "admin/getallproduct",
   RejectedOrApproved: BASE_URL + "get-category",
   viewOrderRequest: BASE_URL + "view_order_listing",
   getAllProducts: BASE_URL + "getallproductcategory2",
