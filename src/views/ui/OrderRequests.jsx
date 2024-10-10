@@ -85,6 +85,13 @@ const OrderRequests = () => {
         }
     }
 
+    const sortedData = [...(viewOrderRequest?.data || [])].sort((a, b) => {
+        const dateA = new Date(a.order_date);
+        const dateB = new Date(b.order_date);
+
+        return dateB - dateA;
+    });
+
     useEffect(() => {
         viewOrderRequestRefetch();
     }, [status]);
@@ -133,7 +140,7 @@ const OrderRequests = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {viewOrderRequest?.data?.length ? viewOrderRequest?.data?.map((data) => {
+                        {sortedData?.length ? sortedData?.map((data) => {
                             return (
                                 <tr className="border-top mainDiv" style={{ cursor: "pointer" }}
                                 >
@@ -153,7 +160,7 @@ const OrderRequests = () => {
                                         <h6 className="mb-0">{data?.order_products?.[0]?.product?.name}</h6>
                                     </td>
                                     <td onClick={() => { navigator(PATHS.viewOrderRequest, { state: { data: data } }); window.location.reload(); }}>
-                                        <h6 className="mb-0">{data?.cnic_number}</h6>
+                                        <h6 className="mb-0">{data?.users?.cnic_number}</h6>
                                     </td>
                                     <td onClick={() => { navigator(PATHS.viewOrderRequest, { state: { data: data } }); window.location.reload(); }}>
                                         <h6 className="mb-0">{data?.order_status == 1 ? "Pending" : data?.order_status == 2 ? "Accepted" : data?.order_status == 3 ? "Documentation" : data?.order_status == 4 ? "Out for delivery" : data?.order_status == 5 ? "Delivered" : data?.order_status == 5 ? "Rejected" : ""}</h6>
@@ -203,9 +210,9 @@ const OrderRequests = () => {
                                         : null}
                                 </tr>
                             )
-                        }) : <>{viewOrderRequestLoading ? <td colSpan={7}>
+                        }) : <>{viewOrderRequestLoading ? <td colSpan={8}>
                             <h6 className='text-center'>Loading...</h6>
-                        </td> : <td colSpan={7}><h6 className='text-center'>No Record Found</h6></td>}</>
+                        </td> : <td colSpan={8}><h6 className='text-center'>No Record Found</h6></td>}</>
                         }
                     </tbody>
                 </Table>
