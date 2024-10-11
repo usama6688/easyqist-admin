@@ -39,7 +39,7 @@ const Starter = () => {
             icon="bi bi-coin"
           />
         </Col>
-        <Col sm="6" lg="3">
+        {/* <Col sm="6" lg="3">
           <TopCards
             bg="bg-light-warning text-warning"
             title="New Project"
@@ -54,6 +54,46 @@ const Starter = () => {
             title="Sales"
             subtitle="Completed Orders"
             earning={viewDashboardCounts?.data?.completed}
+            icon="bi bi-bag"
+          />
+        </Col> */}
+
+        <Col sm="6" lg="3">
+          <TopCards
+            bg="bg-light-info text-into"
+            title="Sales"
+            subtitle="Todays Accepted"
+            earning={viewDashboardCounts?.data?.todayAccepted}
+            icon="bi bi-bag"
+          />
+        </Col>
+
+        <Col sm="6" lg="3">
+          <TopCards
+            bg="bg-light-info text-into"
+            title="Sales"
+            subtitle="Total Accepted"
+            earning={viewDashboardCounts?.data?.totalAccepted}
+            icon="bi bi-bag"
+          />
+        </Col>
+
+        <Col sm="6" lg="3">
+          <TopCards
+            bg="bg-light-info text-into"
+            title="Sales"
+            subtitle="Today Delivered"
+            earning={viewDashboardCounts?.data?.todayDelivered}
+            icon="bi bi-bag"
+          />
+        </Col>
+
+        <Col sm="6" lg="3">
+          <TopCards
+            bg="bg-light-info text-into"
+            title="Sales"
+            subtitle="Total Delivered"
+            earning={viewDashboardCounts?.data?.totalDelivered}
             icon="bi bi-bag"
           />
         </Col>
