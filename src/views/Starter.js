@@ -23,20 +23,20 @@ const Starter = () => {
       <Row>
         <Col sm="6" lg="3">
           <TopCards
-            bg="bg-light-success text-success"
+            bg="bg-light-info text-into"
             title="Profit"
             subtitle="Today's Orders"
             earning={viewDashboardCounts?.data?.today}
-            icon="bi bi-wallet"
+            icon="bi bi-bag"
           />
         </Col>
         <Col sm="6" lg="3">
           <TopCards
-            bg="bg-light-danger text-danger"
+            bg="bg-light-info text-into"
             title="Refunds"
             subtitle="Pending Orders"
             earning={viewDashboardCounts?.data?.pending}
-            icon="bi bi-coin"
+            icon="bi bi-bag"
           />
         </Col>
         {/* <Col sm="6" lg="3">
@@ -57,7 +57,6 @@ const Starter = () => {
             icon="bi bi-bag"
           />
         </Col> */}
-
         <Col sm="6" lg="3">
           <TopCards
             bg="bg-light-info text-into"
@@ -95,6 +94,26 @@ const Starter = () => {
             subtitle="Total Delivered"
             earning={viewDashboardCounts?.data?.totalDelivered}
             icon="bi bi-bag"
+          />
+        </Col>
+
+        <Col sm="6" lg="3">
+          <TopCards
+            bg="bg-light-info text-into"
+            title="Sales"
+            subtitle="Today Users"
+            earning={viewDashboardCounts?.data?.todayUsers}
+            icon="bi bi-people"
+          />
+        </Col>
+
+        <Col sm="6" lg="3">
+          <TopCards
+            bg="bg-light-info text-into"
+            title="Sales"
+            subtitle="Total Users"
+            earning={viewDashboardCounts?.data?.totalUsers}
+            icon="bi bi-people"
           />
         </Col>
       </Row>
