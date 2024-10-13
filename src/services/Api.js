@@ -358,6 +358,16 @@ export const api = SplitApiSettings.injectEndpoints({
       },
     }),
 
+    newUser: builder.mutation({
+      query: ({ data }) => {
+        return {
+          url: API_END_POINTS.newUser,
+          method: "POST",
+          body: data,
+        }
+      },
+    }),
+
     /////////////////////////////<===QUERIES===>////////////////////////////////
 
     getBrands: builder.query({
@@ -582,6 +592,7 @@ export const {
   useDeleteOrderMutation,
   useDeleteRequestedProductMutation,
   useChangeProductStatusMutation,
+  useNewUserMutation,
   /////////////////////////////<===QUERIES===>////////////////////////////////
   useGetBrandsQuery,
   useGetProductCatQuery,

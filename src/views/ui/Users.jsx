@@ -49,20 +49,6 @@ const Users = () => {
 
     const [isRejectedOrApproved] = useIsRejectedOrApprovedMutation();
 
-    const onIsRejectedOrApproved = (id) => {
-
-        isRejectedOrApproved({ data: id })
-            .unwrap()
-            .then((payload) => {
-                console.log("Payload-->", payload);
-                if (payload.status) {
-                }
-            })
-            .catch((error) => {
-                console.log("error", error);
-            });
-    };
-
     const localSearchTableFunction = (value) => {
         const input = document.getElementById("localSearchInput");
         const filter = input.value.toUpperCase();
@@ -112,18 +98,24 @@ const Users = () => {
                         onChange={(e) => localSearchTableFunction(e.target.value)}
                     />
 
-                    <div className=" mt-4">
-                        <span>Select Date Range: </span>
-                        <DateRangePicker
-                            isOutsideRange={falseFunc}
-                            startDate={startDate}
-                            startDateId="datepicker-start-date"
-                            endDate={endDate}
-                            endDateId="datepicker-end-date"
-                            onDatesChange={handleDatesChange}
-                            focusedInput={focusedInput}
-                            onFocusChange={focusedInput => setFocusedInput(focusedInput)}
-                        />
+                    <div className="mt-4 d-flex justify-content-between">
+                        <div>
+                            <span>Select Date Range: </span>
+                            <DateRangePicker
+                                isOutsideRange={falseFunc}
+                                startDate={startDate}
+                                startDateId="datepicker-start-date"
+                                endDate={endDate}
+                                endDateId="datepicker-end-date"
+                                onDatesChange={handleDatesChange}
+                                focusedInput={focusedInput}
+                                onFocusChange={focusedInput => setFocusedInput(focusedInput)}
+                            />
+                        </div>
+
+                        <a href={PATHS.addUser}>
+                            <Button>Add User</Button>
+                        </a>
                     </div>
                 </div>
 

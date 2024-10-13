@@ -9,6 +9,7 @@ const PATHS = {
     editProduct: prefix + '/editProduct',
     products: prefix + '/products',
     users: prefix + '/users',
+    addUser: prefix + '/addUser',
     admins: prefix + '/admins',
     addAdmin: prefix + '/addAdmin',
     editAdmin: prefix + '/editAdmin',

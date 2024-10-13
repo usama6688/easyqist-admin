@@ -21,6 +21,7 @@ const ViewProduct = Loadable(lazy(() => import("../views/ui/ViewProduct.jsx")));
 const EditProduct = Loadable(lazy(() => import("../views/ui/EditProduct.jsx")));
 const Products = Loadable(lazy(() => import("../views/ui/Products.jsx")));
 const Users = Loadable(lazy(() => import("../views/ui/Users.jsx")));
+const AddUser = Loadable(lazy(() => import("../views/ui/AddUser.jsx")));
 const Admins = Loadable(lazy(() => import("../views/ui/Admins.jsx")));
 const AddAdmin = Loadable(lazy(() => import("../views/ui/AddAdmin.jsx")));
 const EditAdmin = Loadable(lazy(() => import("../views/ui/EditAdmin.jsx")));
@@ -63,6 +64,7 @@ export default function Router() {
             { path: PATHS.editProduct, element: <EditProduct /> },
             { path: PATHS.products, element: <Products /> },
             { path: PATHS.users, element: <Users /> },
+            { path: PATHS.addUser, element: <AddUser /> },
             { path: PATHS.admins, element: <Admins /> },
             { path: PATHS.addAdmin, element: <AddAdmin /> },
             { path: PATHS.editAdmin, element: <EditAdmin /> },
