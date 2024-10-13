@@ -368,6 +368,22 @@ export const api = SplitApiSettings.injectEndpoints({
       },
     }),
 
+    addToCart: builder.mutation({
+      query: ({ data }) => ({
+        url: API_END_POINTS.addToCart,
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    proceed: builder.mutation({
+      query: ({ data }) => ({
+        url: API_END_POINTS.proceed,
+        method: "POST",
+        body: data,
+      }),
+    }),
+
     /////////////////////////////<===QUERIES===>////////////////////////////////
 
     getBrands: builder.query({
@@ -543,6 +559,26 @@ export const api = SplitApiSettings.injectEndpoints({
       },
     }),
 
+    getProductDetails: builder.query({
+      query: ({ params }) => {
+        return {
+          url: API_END_POINTS.getProductDetails,
+          method: "GET",
+          params,
+        };
+      },
+    }),
+
+    viewCartOrders: builder.query({
+      query: ({ params }) => {
+        return {
+          url: API_END_POINTS.viewCartOrders,
+          method: "GET",
+          params,
+        };
+      },
+    }),
+
   }),
 
   overrideExisting: true,
@@ -593,6 +629,8 @@ export const {
   useDeleteRequestedProductMutation,
   useChangeProductStatusMutation,
   useNewUserMutation,
+  useAddToCartMutation,
+  useProceedMutation,
   /////////////////////////////<===QUERIES===>////////////////////////////////
   useGetBrandsQuery,
   useGetProductCatQuery,
@@ -612,4 +650,6 @@ export const {
   useChartDataQuery,
   useRequestedProductsQuery,
   useRequestedProductDetailQuery,
+  useGetProductDetailsQuery,
+  useViewCartOrdersQuery,
 } = api;

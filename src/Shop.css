@@ -1,0 +1,230 @@
+:root {
+    --appThemeColor: #2ECC40;
+}
+
+.productDesc li {
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.hideRadioBtn {
+    display: none;
+}
+
+.customRadio {
+    height: 4rem;
+    width: max-content;
+    padding: .5rem;
+    border: 1px solid silver;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 400;
+    font-size: 1rem;
+    color: #A3A3A3;
+    cursor: pointer;
+}
+
+.hideRadioBtn:checked+.customRadio {
+    background-color: white;
+    border-color: var(--appThemeColor);
+    color: var(--appThemeColor);
+}
+
+.planDiv {
+    height: 8rem;
+    box-shadow: 0 0 0.4rem 0.2rem #c0c0c052;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem;
+    position: relative;
+}
+
+.planName {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #5B5B5B;
+}
+
+.priceText {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #5B5B5B;
+}
+
+.months {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #9F9F9F;
+}
+
+.advanceTxt {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--appThemeColor);
+}
+
+.radioContainer input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.checkmark {
+    position: absolute;
+    top: 3rem;
+    right: 2.3rem;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+    border-radius: 50%;
+}
+
+.radioContainer:hover input~.checkmark {
+    background-color: #ccc;
+}
+
+.radioContainer input:checked~.checkmark {
+    background-color: white;
+    border: 2px solid var(--appThemeColor);
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.radioContainer input:checked~.checkmark:after {
+    display: block;
+}
+
+.radioContainer .checkmark:after {
+    top: 2px;
+    left: 2px;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    background: var(--appThemeColor);
+}
+
+.productSlides {
+    height: 10rem;
+    border: 1px solid #c0c0c030;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.productSlideMain {
+    height: 40rem;
+    background-color: #F1F1F1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.productSlideMain img {
+    height: 35rem !important;
+}
+
+.selectedImg {
+    border: 2px solid var(--appThemeColor);
+}
+
+.filterDiv {
+    background-color: #F0F0F0;
+    border-radius: 1rem;
+}
+
+.filterLabels {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #5B5B5B;
+}
+
+.filterprice {
+    height: 4.5rem;
+    width: 100%;
+    border: 1px solid silver;
+    padding: 1rem;
+    font-size: 1.5rem;
+}
+
+.fromToLabel {
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: silver;
+}
+
+.accordion-button::after {
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='%23333' xmlns='http://www.w3.org/2000/svg'%3e%3cpath fill-rule='evenodd' d='M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z' clip-rule='evenodd'/%3e%3c/svg%3e");
+    transform: scale(.7) !important;
+}
+
+.accordion-button:not(.collapsed)::after {
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='%23333' xmlns='http://www.w3.org/2000/svg'%3e%3cpath fill-rule='evenodd' d='M0 8a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H1a1 1 0 0 1-1-1z' clip-rule='evenodd'/%3e%3c/svg%3e");
+}
+
+.accordion-header button {
+    font-size: 1.4rem;
+    font-weight: 500;
+}
+
+.checkboxContainer {
+    display: block;
+    position: relative;
+    padding-left: 28px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 1.6rem;
+    font-weight: 400;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.checkboxContainer input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkbox {
+    position: absolute;
+    top: 3px;
+    left: 0;
+    height: 2rem;
+    width: 2rem;
+    background-color: silver;
+    border-radius: 50%;
+}
+
+.checkboxContainer input:checked~.checkbox {
+    background-color: var(--appThemeColor);
+}
+
+.checkbox:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.checkboxContainer input:checked~.checkbox:after {
+    display: block;
+}
+
+.checkboxContainer .checkbox:after {
+    left: 5px;
+    top: 4px;
+    width: 11.5px;
+    height: 12px;
+    border: solid white;
+    border-radius: 50%;
+    background: white;
+}

@@ -45,6 +45,8 @@ export const API_END_POINTS = {
   deleteRequestedProduct: BASE_URL + "request_products/delete",
   changeProductStatus: BASE_URL + "admin/update_status",
   newUser: BASE_URL + "admin/register_user",
+  addToCart: BASE_URL + "add_to_cart",
+  proceed: BASE_URL + "proceed",
   /////////////////////////////<===QUERIES===>////////////////////////////////
   getBrands: BASE_URL + "get-brand",
   getProductCat: BASE_URL + "get-category",
@@ -65,4 +67,6 @@ export const API_END_POINTS = {
   chartData: BASE_URL + "Order/graph",
   requestedProducts: BASE_URL + "request_products",
   requestedProductDetail: BASE_URL + "request_products/details",
+  getProductDetails: BASE_URL + "getProductDetail2",
+  viewCartOrders: BASE_URL + "view_order_card",
 };

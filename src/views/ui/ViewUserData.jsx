@@ -1,13 +1,14 @@
-import React from 'react';
-import { Col, Row, Table, Button, Input } from 'reactstrap';
-import user1 from "../../assets/images/users/user1.jpg";
+import React, { useEffect, useState } from 'react';
+import { Col, Row, Table, Button } from 'reactstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useViewOrderHistoryQuery } from '../../services/Api';
+import { useGetAllProductsQuery, useViewOrderHistoryQuery } from '../../services/Api';
 import moment from 'moment';
 import PATHS from '../../routes/Paths';
+import Select from "react-select";
 
 const ViewUserData = () => {
 
+    const [selectedOptions, setSelectedOptions] = useState();
     const navigate = useNavigate();
     const location = useLocation();
     const userData = location?.state?.data;
@@ -17,11 +18,41 @@ const ViewUserData = () => {
         refetch: viewOrderHistoryRefetch,
     } = useViewOrderHistoryQuery({ params: { user_id: userData } });
 
-    console.log("viewOrderHistory", viewOrderHistory);
+    const {
+        data: getAllProducts,
+        refetch: getAllProductsRefetch,
+    } = useGetAllProductsQuery({ params: { start: 0, limit: 100000 } });
+
+    const modifiedProducts = getAllProducts?.data.map(product => ({
+        label: product?.name,
+        value: product?.id
+    }));
+
+    const handleSelect = (data) => {
+        setSelectedOptions(data);
+        navigate(PATHS.productDetail, { state: { id: data?.value, userId: userData } });
+        window.location.reload();
+    };
+
+    useEffect(() => {
+        viewOrderHistoryRefetch();
+        getAllProductsRefetch();
+    }, []);
 
     return (
         <Row>
-            <Col lg="12">
+
+            <Col lg="6">
+                <Select
+                    options={modifiedProducts}
+                    placeholder="Select product"
+                    value={selectedOptions}
+                    onChange={handleSelect}
+                    isSearchable={true}
+                />
+            </Col>
+
+            <Col lg="12 mt-3">
                 <Table className="no-wrap mt-3 align-middle" responsive borderless>
                     <thead>
                         <tr>
@@ -51,7 +82,7 @@ const ViewUserData = () => {
                         }) : <td colSpan={4} className='text-center'>No Record Found</td>}
                     </tbody>
                 </Table >
-            </Col >
+            </Col>
 
         </Row >
     )

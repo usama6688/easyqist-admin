@@ -46,6 +46,7 @@ const AddCustomers = Loadable(lazy(() => import("../views/ui/AddCustomer.jsx")))
 const EditCustomers = Loadable(lazy(() => import("../views/ui/EditCustomer.jsx")));
 const RequestedProducts = Loadable(lazy(() => import("../views/ui/RequestedProducts.jsx")));
 const ViewRequestedProduct = Loadable(lazy(() => import("../views/ui/ViewRequestedProduct.jsx")));
+const ProductDetail = Loadable(lazy(() => import("../views/ui/ProductDetail.jsx")));
 
 export default function Router() {
   const auth = useSelector((data) => data?.auth);
@@ -89,6 +90,7 @@ export default function Router() {
             { path: PATHS.editCustomers, element: <EditCustomers /> },
             { path: PATHS.requestedProducts, element: <RequestedProducts /> },
             { path: PATHS.viewRequestedProduct, element: <ViewRequestedProduct /> },
+            { path: PATHS.productDetail, element: <ProductDetail /> },
           ],
         },
       ]
