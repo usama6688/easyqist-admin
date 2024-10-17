@@ -5,12 +5,14 @@ import { useNavigate } from "react-router-dom";
 import PATHS from "../../routes/Paths";
 import { DateRangePicker } from "react-dates";
 import moment from "moment/moment";
+import { useSelector } from "react-redux";
 
 const ProjectTables = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [focusedInput, setFocusedInput] = useState(null);
   const navigator = useNavigate();
+  const auth = useSelector((data) => data?.auth);
 
   const {
     data: viewOrderRequest,
@@ -64,7 +66,12 @@ const ProjectTables = () => {
             <tbody>
               {filteredOrderRequestData.length ? filteredOrderRequestData.map((data) => {
                 return (
-                  <tr className="border-top" style={{ cursor: "pointer" }} onClick={() => { navigator(PATHS.viewOrderRequest, { state: { data: data } }); window.location.reload(); }}
+                  <tr className="border-top" style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      if (auth?.userDetail?.type != 3) {
+                        navigator(PATHS.viewOrderRequest, { state: { data: data } }); window.location.reload();
+                      }
+                    }}
                   >
                     <td>
                       <h6 className="mb-0 text-capitalize">{data?.users?.name}</h6>

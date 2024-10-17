@@ -58,7 +58,7 @@ const Sidebar = () => {
   const auth = useSelector((data) => data?.auth);
 
   const filteredNavigation = auth?.userDetail?.type == 3
-    ? navigation.filter(navi => navi?.title == "Users" || navi?.title == "Order Requests" || navi?.title == "Dashboard")
+    ? navigation.filter(navi => navi?.title == "Dashboard")
     : navigation;
 
   return (

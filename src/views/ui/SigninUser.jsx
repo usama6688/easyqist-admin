@@ -34,11 +34,12 @@ const SigninUser = () => {
                     };
 
                     dispatch(loggedIn(response));
-                    if (payload?.user?.type == 3) {
-                        navigate(PATHS.users);
-                    } else {
-                        navigate(PATHS.dashboard);
-                    }
+                    navigate(PATHS.dashboard);
+                    // if (payload?.user?.type == 3) {
+                    //     navigate(PATHS.dashboard);
+                    // } else {
+                    //     navigate(PATHS.dashboard);
+                    // }
                     toast.success(payload?.message);
                     // window.location.reload();
                 } else {

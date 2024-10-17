@@ -35,7 +35,7 @@ const Header = () => {
   const logoutFunction = () => {
     dispatch(userLogout(null));
     navigate(PATHS.signin);
-    window.location.reload();
+    // window.location.reload();
   }
 
   return (
