@@ -15,7 +15,6 @@ const Categories = () => {
 
     const {
         data: getProductCat,
-        isLoading: getProductCatLoading,
         refetch: getProductCatRefetch,
     } = useGetProductCatQuery();
 
@@ -47,24 +46,26 @@ const Categories = () => {
     return (
         <Row>
             <Col lg="12">
-                <div className='text-end'>
-                    <a href={PATHS.addCategory}>
-                        <Button>Add Category</Button>
-                    </a>
-                </div>
+                {auth?.userDetail?.type == 3 ? null :
+                    <div className='text-end'>
+                        <a href={PATHS.addCategory}>
+                            <Button>Add Category</Button>
+                        </a>
+                    </div>
+                }
 
-                {getProductCat?.data?.map((item, index) => {
-                    return (
-                        <Table key={index} className="no-wrap mt-3 align-middle" responsive borderless>
-                            <thead>
-                                <tr>
-                                    <th>Thumbnail</th>
-                                    <th>Name</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr className="border-top">
+                <Table className="no-wrap mt-3 align-middle" responsive borderless>
+                    <thead>
+                        <tr>
+                            <th>Thumbnail</th>
+                            <th>Name</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {getProductCat?.data?.map((item, index) => {
+                            return (
+                                <tr className="border-top" key={index}>
                                     <td>
                                         <div className="d-flex align-items-center p-2">
                                             <img
@@ -80,22 +81,24 @@ const Categories = () => {
                                         <h6 className="mb-0">{item.name}</h6>
                                     </td>
                                     <td>
-                                        <div className='text-end'>
-                                            <Button style={{ marginRight: 5 }} onClick={() => { navigate(PATHS.editCategory, { state: { data: item } }); window.location.reload(); }}>Edit</Button>
-                                            {auth?.userDetail?.type == 1 ?
-                                                <Button onClick={
-                                                    () => {
-                                                        DeleteModalHandler(item)
-                                                    }
-                                                }>Delete</Button>
-                                                : null}
-                                        </div>
+                                        {auth?.userDetail?.type == 3 ? null :
+                                            <div className='text-end'>
+                                                <Button style={{ marginRight: 5 }} onClick={() => { navigate(PATHS.editCategory, { state: { data: item } }); window.location.reload(); }}>Edit</Button>
+                                                {auth?.userDetail?.type == 1 ?
+                                                    <Button onClick={
+                                                        () => {
+                                                            DeleteModalHandler(item)
+                                                        }
+                                                    }>Delete</Button>
+                                                    : null}
+                                            </div>
+                                        }
                                     </td>
                                 </tr>
-                            </tbody>
-                        </Table>
-                    )
-                })}
+                            )
+                        })}
+                    </tbody>
+                </Table>
             </Col>
 
             {deleteItemModal &&

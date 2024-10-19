@@ -90,7 +90,7 @@ const Users = () => {
     return (
         <Row>
             <Col lg="12">
-                <div className=''>
+                <div>
                     <Input
                         id='localSearchInput'
                         placeholder="Search user"
@@ -113,9 +113,11 @@ const Users = () => {
                             />
                         </div>
 
-                        <a href={PATHS.addUser}>
-                            <Button>Add User</Button>
-                        </a>
+                        {auth?.userDetail?.type == 3 ? null :
+                            <a href={PATHS.addUser}>
+                                <Button>Add User</Button>
+                            </a>
+                        }
                     </div>
                 </div>
 

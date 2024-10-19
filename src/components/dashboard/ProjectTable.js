@@ -124,7 +124,9 @@ const ProjectTables = () => {
                 <th>Address</th>
                 <th>CNIC</th>
                 <th>Created At</th>
-                <th>Actions</th>
+                {auth?.userDetail?.type == 3 ? null :
+                  <th>Actions</th>
+                }
               </tr>
             </thead>
             <tbody>
@@ -137,14 +139,16 @@ const ProjectTables = () => {
                     <td>{data?.address}</td>
                     <td>{data?.cnic_number}</td>
                     <td>{moment(data?.created_at).format("DD-MM-YYYY")}</td>
-                    <td>
-                      <div className='d-flex' style={{ alignItems: "center" }} >
-                        <Button
-                          style={{ marginLeft: 10 }}
-                          onClick={() => { navigator(PATHS.viewUserData, { state: { data: data?.id } }); window.location.reload(); }}
-                        >View</Button>
-                      </div>
-                    </td>
+                    {auth?.userDetail?.type == 3 ? null :
+                      <td>
+                        <div className='d-flex' style={{ alignItems: "center" }} >
+                          <Button
+                            style={{ marginLeft: 10 }}
+                            onClick={() => { navigator(PATHS.viewUserData, { state: { data: data?.id } }); window.location.reload(); }}
+                          >View</Button>
+                        </div>
+                      </td>
+                    }
                   </tr>
                 )
               })}

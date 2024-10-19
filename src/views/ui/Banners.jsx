@@ -6,12 +6,14 @@ import { Button } from 'reactstrap';
 import { useDeleteBannerMutation, useGetBannersQuery } from '../../services/Api';
 import DeleteModal from '../../components/DeleteModal';
 import PATHS from '../../routes/Paths';
+import { useSelector } from 'react-redux';
 
 const Banners = () => {
 
     const [deleteItemModal, setDeleteItemModal] = useState(false);
     const [itemId, setItemId] = useState("");
     const navigator = useNavigate();
+    const auth = useSelector((data) => data?.auth);
 
     const [deleteBanner, { isSuccess }] = useDeleteBannerMutation();
 
@@ -51,22 +53,26 @@ const Banners = () => {
     return (
         <div className='row'>
 
-            <div className="col-12 mb-4">
-                <div className='text-end'>
-                    <a href={PATHS.addBanner}>
-                        <Button>Add Banner</Button>
-                    </a>
+            {auth?.userDetail?.type == 3 ? null :
+                <div className="col-12 mb-4">
+                    <div className='text-end'>
+                        <a href={PATHS.addBanner}>
+                            <Button>Add Banner</Button>
+                        </a>
+                    </div>
                 </div>
-            </div>
+            }
 
             {getBanners?.data?.map((data) => {
                 return (
                     <div className="col-6 mb-4">
-                        <div className="d-flex justify-content-end gap-3">
-                            <span className="cursor" style={{ fontSize: "25px" }} onClick={() => { navigator(PATHS.editBanner, { state: { data: data } }); window.location.reload(); }}>✎</span>
+                        {auth?.userDetail?.type == 3 ? null :
+                            <div className="d-flex justify-content-end gap-3">
+                                <span className="cursor" style={{ fontSize: "25px" }} onClick={() => { navigator(PATHS.editBanner, { state: { data: data } }); window.location.reload(); }}>✎</span>
 
-                            <span className="cursor" style={{ fontSize: "25px" }} onClick={() => DeleteModalHandler(data?.id)}>X</span>
-                        </div>
+                                <span className="cursor" style={{ fontSize: "25px" }} onClick={() => DeleteModalHandler(data?.id)}>X</span>
+                            </div>
+                        }
                         <img src={data?.banner_image} height={300} style={{ width: "100%" }} />
                     </div>
                 )

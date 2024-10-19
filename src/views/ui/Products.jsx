@@ -112,27 +112,31 @@ const Products = () => {
                             </Input>
                         </FormGroup>
                     </Col>
-                    <Col lg="3">
-                        <div className='text-end'>
-                            <a href={PATHS.addProduct}>
-                                <Button>Add Product</Button>
-                            </a>
-                        </div>
-                    </Col>
+                    {auth?.userDetail?.type == 3 ? null :
+                        <Col lg="3">
+                            <div className='text-end'>
+                                <a href={PATHS.addProduct}>
+                                    <Button>Add Product</Button>
+                                </a>
+                            </div>
+                        </Col>
+                    }
                 </Row>
 
-                {filteredData?.length ? filteredData?.map((item) => {
-                    return (
-                        <Table className="no-wrap mt-3 align-middle" responsive borderless>
-                            <thead>
-                                <tr>
-                                    <th>Thumbnail</th>
-                                    <th>Name</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr className="border-top mainDiv">
+                <Table className="no-wrap mt-3 align-middle" responsive borderless>
+                    <thead>
+                        <tr>
+                            <th>Thumbnail</th>
+                            <th>Name</th>
+                            {auth?.userDetail?.type == 3 ? null :
+                                <th>Actions</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filteredData?.length ? filteredData?.map((item, index) => {
+                            return (
+                                <tr className="border-top mainDiv" key={index}>
                                     <td>
                                         <div className="d-flex align-items-center p-2">
                                             <img
@@ -147,45 +151,47 @@ const Products = () => {
                                     <td>
                                         <h6 className="mb-0">{item.name}</h6>
                                     </td>
-                                    <td>
-                                        <Button
-                                            onClick={() => { navigator(PATHS.viewProduct, { state: { id: item?.id } }); window.location.reload(); }}
-                                        >View</Button>
-                                        <Button
-                                            style={{ backgroundColor: "orange", marginLeft: 10 }}
-                                            onClick={() => { navigator(PATHS.editProduct, { state: { id: item?.id } }); window.location.reload(); }}
-                                        >Edit</Button>
-                                        {auth?.userDetail?.type == 1 ?
+                                    {auth?.userDetail?.type == 3 ? null :
+                                        <td>
                                             <Button
-                                                style={{ backgroundColor: "red", marginLeft: 10 }}
-                                                onClick={() => {
-                                                    DeleteModalHandler(item?.id)
-                                                }}
-                                            >Delete</Button>
-                                            : null}
-                                        {item?.status == 0 ?
+                                                onClick={() => { navigator(PATHS.viewProduct, { state: { id: item?.id } }); window.location.reload(); }}
+                                            >View</Button>
                                             <Button
-                                                style={{ backgroundColor: "green", marginLeft: 10 }}
-                                                onClick={() => {
-                                                    // onDeleteBrand(item?.id)
-                                                }}
-                                            >Deactivate</Button>
-                                            :
-                                            <Button
-                                                style={{ backgroundColor: "green", marginLeft: 10 }}
-                                                onClick={() => {
-                                                    // onDeleteBrand(item?.id)
-                                                }}
-                                            >Activate</Button>}
-                                    </td>
+                                                style={{ backgroundColor: "orange", marginLeft: 10 }}
+                                                onClick={() => { navigator(PATHS.editProduct, { state: { id: item?.id } }); window.location.reload(); }}
+                                            >Edit</Button>
+                                            {auth?.userDetail?.type == 1 ?
+                                                <Button
+                                                    style={{ backgroundColor: "red", marginLeft: 10 }}
+                                                    onClick={() => {
+                                                        DeleteModalHandler(item?.id)
+                                                    }}
+                                                >Delete</Button>
+                                                : null}
+                                            {item?.status == 0 ?
+                                                <Button
+                                                    style={{ backgroundColor: "green", marginLeft: 10 }}
+                                                    onClick={() => {
+                                                        // onDeleteBrand(item?.id)
+                                                    }}
+                                                >Deactivate</Button>
+                                                :
+                                                <Button
+                                                    style={{ backgroundColor: "green", marginLeft: 10 }}
+                                                    onClick={() => {
+                                                        // onDeleteBrand(item?.id)
+                                                    }}
+                                                >Activate</Button>}
+                                        </td>
+                                    }
                                 </tr>
-                            </tbody>
-                        </Table>
-                    )
-                }).reverse() : <> {getProductsLoading ? <td colSpan={5}>
-                    <h6 className='text-center'>Loading...</h6>
-                </td> : <td colSpan={5}><h6 className='text-center'>No Record Found</h6></td>
-                }</>}
+                            )
+                        }).reverse() : <> {getProductsLoading ? <td colSpan={5}>
+                            <h6 className='text-center'>Loading...</h6>
+                        </td> : <td colSpan={5}><h6 className='text-center'>No Record Found</h6></td>
+                        }</>}
+                    </tbody>
+                </Table>
             </Col >
 
 

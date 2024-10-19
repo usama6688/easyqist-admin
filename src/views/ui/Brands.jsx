@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Row, Table } from 'reactstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDeleteBrandMutation, useGetBrandsQuery } from '../../services/Api';
 import DeleteModal from '../../components/DeleteModal';
 import PATHS from '../../routes/Paths';
@@ -18,8 +18,7 @@ const Brands = () => {
         refetch: getBrandtCatRefetch,
     } = useGetBrandsQuery({ params: { category_id: "" } });
 
-    //DeletBrand
-    const [deleteBrand, { isLoading }] = useDeleteBrandMutation();
+    const [deleteBrand] = useDeleteBrandMutation();
 
     const onDeleteBrand = (id) => {
         deleteBrand({ data: id })
@@ -47,25 +46,26 @@ const Brands = () => {
     return (
         <Row>
             <Col lg="12">
-                <div className='text-end'>
-                    <a href={PATHS.addBrands}>
-                        <Button>Add Brand</Button>
-                    </a>
-                </div>
+                {auth?.userDetail?.type == 3 ? null :
+                    <div className='text-end'>
+                        <a href={PATHS.addBrands}>
+                            <Button>Add Brand</Button>
+                        </a>
+                    </div>
+                }
 
-                {getBrands?.data?.map((item, index) => {
-                    return (
-                        <Table key={index} className="no-wrap mt-3 align-middle" responsive borderless>
-                            <thead>
-                                <tr>
-                                    <th>Thumbnail</th>
-                                    <th>Name</th>
-                                    <th></th>
-                                    {/* <th>Status</th> */}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr className="border-top">
+                <Table className="no-wrap mt-3 align-middle" responsive borderless>
+                    <thead>
+                        <tr>
+                            <th>Thumbnail</th>
+                            <th>Name</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {getBrands?.data?.map((item, index) => {
+                            return (
+                                <tr className="border-top" key={index}>
                                     <td>
                                         <div className="d-flex align-items-center p-2">
                                             <img
@@ -81,22 +81,24 @@ const Brands = () => {
                                         <h6 className="mb-0">{item?.brand_name}</h6>
                                     </td>
                                     <td>
-                                        <div className='text-end'>
-                                            <Button style={{ marginRight: 5 }} onClick={() => { navigate(PATHS.editBrand, { state: { data: item } }); window.location.reload(); }}>Edit</Button>
-                                            {auth?.userDetail?.type == 1 ?
-                                                <Button onClick={
-                                                    () => {
-                                                        DeleteModalHandler(item)
-                                                    }
-                                                }>Delete</Button>
-                                                : null}
-                                        </div>
+                                        {auth?.userDetail?.type == 3 ? null :
+                                            <div className='text-end'>
+                                                <Button style={{ marginRight: 5 }} onClick={() => { navigate(PATHS.editBrand, { state: { data: item } }); window.location.reload(); }}>Edit</Button>
+                                                {auth?.userDetail?.type == 1 ?
+                                                    <Button onClick={
+                                                        () => {
+                                                            DeleteModalHandler(item)
+                                                        }
+                                                    }>Delete</Button>
+                                                    : null}
+                                            </div>
+                                        }
                                     </td>
                                 </tr>
-                            </tbody>
-                        </Table>
-                    )
-                })}
+                            )
+                        })}
+                    </tbody>
+                </Table>
 
                 {deleteItemModal &&
                     <DeleteModal

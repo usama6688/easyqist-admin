@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Row, Table } from 'reactstrap';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDeleteCategoryMutation, useDeleteEmployeeMutation, useGetEmployeesQuery, useGetProductCatQuery } from '../../services/Api';
+import { useNavigate } from 'react-router-dom';
+import { useDeleteEmployeeMutation, useGetEmployeesQuery } from '../../services/Api';
 import DeleteModal from '../../components/DeleteModal';
 import PATHS from '../../routes/Paths';
+import { useSelector } from 'react-redux';
 
 const Employees = () => {
 
     const [deleteItemModal, setDeleteItemModal] = useState(false);
     const [itemId, setItemId] = useState("");
     const navigate = useNavigate();
+    const auth = useSelector((data) => data?.auth);
 
     const {
         data: getEmployees,
-        isLoading: getEmployeesLoading,
         refetch: getEmployeesRefetch,
     } = useGetEmployeesQuery();
 
@@ -45,11 +46,13 @@ const Employees = () => {
     return (
         <Row>
             <Col lg="12">
-                <div className='text-end'>
-                    <a href={PATHS.addEmployee}>
-                        <Button>Add Employee</Button>
-                    </a>
-                </div>
+                {auth?.userDetail?.type == 3 ? null :
+                    <div className='text-end'>
+                        <a href={PATHS.addEmployee}>
+                            <Button>Add Employee</Button>
+                        </a>
+                    </div>
+                }
 
                 <Table className="no-wrap mt-3 align-middle" responsive borderless>
                     <thead>
@@ -59,7 +62,9 @@ const Employees = () => {
                             <th>Email</th>
                             <th>Phone</th>
                             <th>Reference Number</th>
-                            <th>Actions</th>
+                            {auth?.userDetail?.type == 3 ? null :
+                                <th>Actions</th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
@@ -81,20 +86,22 @@ const Employees = () => {
                                     <td>
                                         <h6 className="mb-0">{data?.refno}</h6>
                                     </td>
-                                    <td>
-                                        <div>
-                                            <Button style={{ marginRight: 5 }}
-                                                onClick={() => { navigate(PATHS.editEmployee, { state: { data: data } }); window.location.reload(); }}
-                                            >Edit</Button>
+                                    {auth?.userDetail?.type == 3 ? null :
+                                        <td>
+                                            <div>
+                                                <Button style={{ marginRight: 5 }}
+                                                    onClick={() => { navigate(PATHS.editEmployee, { state: { data: data } }); window.location.reload(); }}
+                                                >Edit</Button>
 
-                                            <Button
-                                                onClick={
-                                                    () => {
-                                                        DeleteModalHandler(data)
-                                                    }}
-                                            >Delete</Button>
-                                        </div>
-                                    </td>
+                                                <Button
+                                                    onClick={
+                                                        () => {
+                                                            DeleteModalHandler(data)
+                                                        }}
+                                                >Delete</Button>
+                                            </div>
+                                        </td>
+                                    }
                                 </tr>
                             )
                         })}

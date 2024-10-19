@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Input, Row, Table } from 'reactstrap';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDeleteCategoryMutation, useDeleteEmployeeMutation, useDeleteRequestedProductMutation, useGetEmployeesQuery, useGetProductCatQuery, useRequestedProductsQuery } from '../../services/Api';
+import { useNavigate } from 'react-router-dom';
+import { useDeleteRequestedProductMutation, useRequestedProductsQuery } from '../../services/Api';
 import DeleteModal from '../../components/DeleteModal';
 import PATHS from '../../routes/Paths';
+import { useSelector } from 'react-redux';
 
 const RequestedProducts = () => {
 
     const [deleteItemModal, setDeleteItemModal] = useState(false);
     const [itemId, setItemId] = useState("");
     const navigate = useNavigate();
+    const auth = useSelector((data) => data?.auth);
 
     const {
         data: requestedProducts,
@@ -79,7 +81,9 @@ const RequestedProducts = () => {
                             <th>ID</th>
                             <th>Description</th>
                             <th>Address</th>
-                            <th>Actions</th>
+                            {auth?.userDetail?.type == 3 ? null :
+                                <th>Actions</th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
@@ -95,21 +99,23 @@ const RequestedProducts = () => {
                                     <td>
                                         <h6 className="mb-0">{data?.address}</h6>
                                     </td>
-                                    <td>
-                                        <div>
-                                            <Button
-                                                className='me-3'
-                                                onClick={() => { navigate(PATHS.viewRequestedProduct, { state: { data: data } }); window.location.reload(); }}
-                                            >View</Button>
+                                    {auth?.userDetail?.type == 3 ? null :
+                                        <td>
+                                            <div className='d-flex align-items-center'>
+                                                <Button
+                                                    className='me-3'
+                                                    onClick={() => { navigate(PATHS.viewRequestedProduct, { state: { data: data } }); window.location.reload(); }}
+                                                >View</Button>
 
-                                            <Button
-                                                onClick={
-                                                    () => {
-                                                        DeleteModalHandler(data)
-                                                    }}
-                                            >Delete</Button>
-                                        </div>
-                                    </td>
+                                                <Button
+                                                    onClick={
+                                                        () => {
+                                                            DeleteModalHandler(data)
+                                                        }}
+                                                >Delete</Button>
+                                            </div>
+                                        </td>
+                                    }
                                 </tr>
                             )
                         })}

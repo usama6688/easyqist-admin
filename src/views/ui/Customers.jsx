@@ -7,6 +7,7 @@ import PATHS from '../../routes/Paths';
 import SendMessageModal from '../../components/SendMessageModal';
 import { DateRangePicker } from "react-dates";
 import moment from "moment/moment";
+import { useSelector } from 'react-redux';
 
 const Customers = () => {
 
@@ -17,6 +18,7 @@ const Customers = () => {
     const [focusedInput, setFocusedInput] = useState(null);
     const [itemId, setItemId] = useState("");
     const navigate = useNavigate();
+    const auth = useSelector((data) => data?.auth);
 
     const SendMessageModalHandler = () => {
         setSendMessageModal((prev) => !prev);
@@ -132,13 +134,15 @@ const Customers = () => {
                     </div>
                 </div>
 
-                <div className='mt-3 text-end'>
-                    <a href={PATHS.addCustomers}>
-                        <Button>Add Customer</Button>
-                    </a>
+                {auth?.userDetail?.type == 3 ? null :
+                    <div className='mt-3 text-end'>
+                        <a href={PATHS.addCustomers}>
+                            <Button>Add Customer</Button>
+                        </a>
 
-                    <Button className='ms-3' onClick={SendMessageModalHandler}>Send Message</Button>
-                </div>
+                        <Button className='ms-3' onClick={SendMessageModalHandler}>Send Message</Button>
+                    </div>
+                }
 
 
                 <Table className="no-wrap mt-3 align-middle" responsive borderless>
@@ -148,7 +152,9 @@ const Customers = () => {
                             <th>Name</th>
                             <th>Phone</th>
                             <th>Address</th>
-                            <th>Actions</th>
+                            {auth?.userDetail?.type == 3 ? null :
+                                <th>Actions</th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
@@ -167,19 +173,21 @@ const Customers = () => {
                                     <td>
                                         <h6 className="mb-0">{data?.address}</h6>
                                     </td>
-                                    <td>
-                                        <div className='d-flex align-items-center gap-2'>
-                                            <Button style={{ marginRight: 5 }}
-                                                onClick={() => { navigate(PATHS.editCustomers, { state: { data: data } }); window.location.reload(); }}
-                                            >Edit</Button>
-                                            <Button
-                                                onClick={
-                                                    () => {
-                                                        DeleteModalHandler(data)
-                                                    }}
-                                            >Delete</Button>
-                                        </div>
-                                    </td>
+                                    {auth?.userDetail?.type == 3 ? null :
+                                        <td>
+                                            <div className='d-flex align-items-center gap-2'>
+                                                <Button style={{ marginRight: 5 }}
+                                                    onClick={() => { navigate(PATHS.editCustomers, { state: { data: data } }); window.location.reload(); }}
+                                                >Edit</Button>
+                                                <Button
+                                                    onClick={
+                                                        () => {
+                                                            DeleteModalHandler(data)
+                                                        }}
+                                                >Delete</Button>
+                                            </div>
+                                        </td>
+                                    }
                                 </tr>
                             )
                         }) : <tr><td colSpan={5}><p className='text-center'>No record found</p></td></tr>}
