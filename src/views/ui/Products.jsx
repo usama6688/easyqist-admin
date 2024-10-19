@@ -153,35 +153,37 @@ const Products = () => {
                                     </td>
                                     {auth?.userDetail?.type == 3 ? null :
                                         <td>
-                                            <Button
-                                                onClick={() => { navigator(PATHS.viewProduct, { state: { id: item?.id } }); window.location.reload(); }}
-                                            >View</Button>
-                                            <Button
-                                                style={{ backgroundColor: "orange", marginLeft: 10 }}
-                                                onClick={() => { navigator(PATHS.editProduct, { state: { id: item?.id } }); window.location.reload(); }}
-                                            >Edit</Button>
-                                            {auth?.userDetail?.type == 1 ?
+                                            <div className='d-flex align-items-center'>
                                                 <Button
-                                                    style={{ backgroundColor: "red", marginLeft: 10 }}
-                                                    onClick={() => {
-                                                        DeleteModalHandler(item?.id)
-                                                    }}
-                                                >Delete</Button>
-                                                : null}
-                                            {item?.status == 0 ?
+                                                    onClick={() => { navigator(PATHS.viewProduct, { state: { id: item?.id } }); window.location.reload(); }}
+                                                >View</Button>
                                                 <Button
-                                                    style={{ backgroundColor: "green", marginLeft: 10 }}
-                                                    onClick={() => {
-                                                        // onDeleteBrand(item?.id)
-                                                    }}
-                                                >Deactivate</Button>
-                                                :
-                                                <Button
-                                                    style={{ backgroundColor: "green", marginLeft: 10 }}
-                                                    onClick={() => {
-                                                        // onDeleteBrand(item?.id)
-                                                    }}
-                                                >Activate</Button>}
+                                                    style={{ backgroundColor: "orange", marginLeft: 10 }}
+                                                    onClick={() => { navigator(PATHS.editProduct, { state: { id: item?.id } }); window.location.reload(); }}
+                                                >Edit</Button>
+                                                {auth?.userDetail?.type == 1 ?
+                                                    <Button
+                                                        style={{ backgroundColor: "red", marginLeft: 10 }}
+                                                        onClick={() => {
+                                                            DeleteModalHandler(item?.id)
+                                                        }}
+                                                    >Delete</Button>
+                                                    : null}
+                                                {item?.status == 0 ?
+                                                    <Button
+                                                        style={{ backgroundColor: "green", marginLeft: 10 }}
+                                                        onClick={() => {
+                                                            // onDeleteBrand(item?.id)
+                                                        }}
+                                                    >Deactivate</Button>
+                                                    :
+                                                    <Button
+                                                        style={{ backgroundColor: "green", marginLeft: 10 }}
+                                                        onClick={() => {
+                                                            // onDeleteBrand(item?.id)
+                                                        }}
+                                                    >Activate</Button>}
+                                            </div>
                                         </td>
                                     }
                                 </tr>
