@@ -47,6 +47,7 @@ export const API_END_POINTS = {
   newUser: BASE_URL + "admin/register_user",
   addToCart: BASE_URL + "add_to_cart",
   proceed: BASE_URL + "proceed",
+  changeUserStatus: BASE_URL + "admin/change_user_status",
   /////////////////////////////<===QUERIES===>////////////////////////////////
   getBrands: BASE_URL + "get-brand",
   getProductCat: BASE_URL + "get-category",

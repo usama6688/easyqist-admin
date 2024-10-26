@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Col, Row, Table, Button, Input } from 'reactstrap';
-import user1 from "../../assets/images/users/user1.jpg";
-import { useDeleteUserMutation, useGetUserQuery, useIsRejectedOrApprovedMutation } from '../../services/Api';
+import { useChangeUserStatusMutation, useDeleteUserMutation, useGetUserQuery } from '../../services/Api';
 import { useNavigate } from 'react-router-dom';
 import PATHS from '../../routes/Paths';
 import DeleteModal from '../../components/DeleteModal';
@@ -30,6 +29,7 @@ const Users = () => {
     };
 
     const [deleteUser] = useDeleteUserMutation();
+    const [changeUserStatus] = useChangeUserStatusMutation();
 
     const onDeleteUser = (id) => {
 
@@ -47,7 +47,25 @@ const Users = () => {
             });
     };
 
-    const [isRejectedOrApproved] = useIsRejectedOrApprovedMutation();
+    const onChangeUserStatus = (user, status) => {
+
+        const data = {
+            user_id: user?.id,
+            status: status,
+        };
+
+        changeUserStatus({ data: status })
+            .unwrap()
+            .then((payload) => {
+                if (payload.status) {
+                    window.location.reload();
+                    getUserRefetch();
+                }
+            })
+            .catch((error) => {
+                console.log("error", error);
+            });
+    };
 
     const localSearchTableFunction = (value) => {
         const input = document.getElementById("localSearchInput");
@@ -156,6 +174,36 @@ const Users = () => {
                                                                 DeleteModalHandler(data)
                                                             }}
                                                     >Delete</Button>
+                                                    : null}
+
+                                                {auth?.userDetail?.type == 1 ?
+                                                    <>
+                                                        {data?.status == 1 ?
+                                                            <Button
+                                                                style={{ backgroundColor: "red", marginLeft: 10 }}
+                                                                onClick={
+                                                                    () => {
+                                                                        onChangeUserStatus(data, 3)
+                                                                    }}
+                                                            >Ban User</Button>
+                                                            : data?.status == 2 ?
+                                                                <Button
+                                                                    style={{ backgroundColor: "red", marginLeft: 10 }}
+                                                                    onClick={
+                                                                        () => {
+                                                                            onChangeUserStatus(data, 3)
+                                                                        }}
+                                                                >Approved</Button>
+                                                                : data?.status == 3 ?
+                                                                    <Button
+                                                                        style={{ backgroundColor: "red", marginLeft: 10 }}
+                                                                        onClick={
+                                                                            () => {
+                                                                                onChangeUserStatus(data, 2)
+                                                                            }}
+                                                                    >Banned</Button>
+                                                                    : null}
+                                                    </>
                                                     : null}
 
                                                 <Button
