@@ -147,70 +147,77 @@ const ViewOrderRequests = () => {
                 <Col lg="4">
                     <FormGroup>
                         <Label for="exampleEmail">Advance Amount</Label>
-                        <Input name="name" placeholder="Type.." type="text" value={reqData?.order_advance_amount} readOnly />
+                        <Input type="text" value={reqData?.order_advance_amount} readOnly />
                     </FormGroup>
                 </Col>
 
                 <Col lg="4">
                     <FormGroup>
                         <Label for="exampleEmail">Order Price</Label>
-                        <Input name="name" placeholder="Type.." type="text" value={reqData?.order_price} readOnly />
+                        <Input type="text" value={reqData?.order_price} readOnly />
                     </FormGroup>
                 </Col>
 
                 <Col lg="4">
                     <FormGroup>
                         <Label for="exampleEmail">Order Date</Label>
-                        <Input name="name" placeholder="Type.." type="text" value={moment(reqData?.order_date).format('MMMM Do YYYY, h:mm:ss a')} readOnly />
+                        <Input type="text" value={moment(reqData?.order_date).format('MMMM Do YYYY, h:mm:ss a')} readOnly />
                     </FormGroup>
                 </Col>
 
                 <Col lg="4">
                     <FormGroup>
                         <Label for="exampleEmail">Address</Label>
-                        <Input name="name" placeholder="Type.." type="text" value={reqData?.address?.address || reqData?.user?.address} readOnly />
+                        <Input type="text" value={reqData?.address?.address || reqData?.user?.address} readOnly />
                     </FormGroup>
                 </Col>
 
                 <Col lg="4">
                     <FormGroup>
                         <Label for="exampleEmail">CNIC</Label>
-                        <Input name="name" placeholder="Type.." type="text" value={reqData?.user?.cnic_number} readOnly />
+                        <Input type="text" value={reqData?.user?.cnic_number} readOnly />
+                    </FormGroup>
+                </Col>
+
+                <Col lg="4">
+                    <FormGroup>
+                        <Label for="exampleEmail">Session ID</Label>
+                        <Input type="text" value={reqData?.order_session_id} readOnly />
                     </FormGroup>
                 </Col>
 
                 <Col lg="4">
                     <FormGroup>
                         <Label for="exampleEmail">Referee Code</Label>
-                        <Input name="name" placeholder="Type.." type="text" value={reqData?.refercode} readOnly />
+                        <Input type="text" value={reqData?.refercode} readOnly />
                     </FormGroup>
                 </Col>
 
                 <Col lg="4">
                     <FormGroup>
                         <Label for="exampleEmail">Referee Name</Label>
-                        <Input name="name" placeholder="Type.." type="text" value={reqData?.refername} readOnly />
+                        <Input type="text" value={reqData?.refername} readOnly />
                     </FormGroup>
                 </Col>
 
                 <Col lg="4">
                     <FormGroup>
                         <Label for="exampleEmail">Assigned Employee</Label>
-                        <Input name="name" placeholder="Type.." type="text" value={reqData?.empname} readOnly />
+                        <Input type="text" value={reqData?.empname} readOnly />
                     </FormGroup>
                 </Col>
 
                 <Col lg="4">
                     <FormGroup>
                         <Label for="exampleEmail">Phone</Label>
-                        <Input name="name" placeholder="Type.." type="text" value={reqData?.user?.phone_no} readOnly />
+                        <Input type="text" value={reqData?.user?.phone_no} readOnly />
                     </FormGroup>
                 </Col>
 
                 <Col lg="4">
                     <FormGroup>
                         <Label for="exampleEmail">Name</Label>
-                        <Input name="name" placeholder="Type.." type="text" value={reqData?.user?.name} readOnly />
+                        <Input type="text" value={reqData?.user?.name} readOnly />
                     </FormGroup>
                 </Col>
             </Row>

@@ -12,10 +12,12 @@ const Users = () => {
 
     const navigate = useNavigate();
     const [itemId, setItemId] = useState("");
+    const [status, setStatus] = useState("");
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [focusedInput, setFocusedInput] = useState(null);
     const [deleteItemModal, setDeleteItemModal] = useState(false);
+    const [banUserModal, setBanUserModal] = useState(false);
     const auth = useSelector((data) => data?.auth);
 
     const {
@@ -26,6 +28,12 @@ const Users = () => {
     const DeleteModalHandler = (data) => {
         setItemId(data?.id);
         setDeleteItemModal((prev) => !prev);
+    };
+
+    const banUserHandler = (data,status) => {
+        setItemId(data?.id);
+        setStatus(status);
+        setBanUserModal((prev) => !prev);
     };
 
     const [deleteUser] = useDeleteUserMutation();
@@ -47,14 +55,17 @@ const Users = () => {
             });
     };
 
-    const onChangeUserStatus = (user, status) => {
+    const onChangeUserStatus = (id) => {
 
         const data = {
-            user_id: user?.id,
+            user_id: id,
             status: status,
         };
 
-        changeUserStatus({ data: status })
+        // console.log("data", data);
+        // return;
+
+        changeUserStatus({ data: data })
             .unwrap()
             .then((payload) => {
                 if (payload.status) {
@@ -147,6 +158,7 @@ const Users = () => {
                             <th>Email</th>
                             <th>Address</th>
                             <th>CNIC</th>
+                            <th>Status</th>
                             <th>Created At</th>
                             {auth?.userDetail?.type == 3 ? null :
                                 <th>Actions</th>
@@ -162,6 +174,12 @@ const Users = () => {
                                     <td>{data?.email}</td>
                                     <td>{data?.address}</td>
                                     <td>{data?.cnic_number}</td>
+                                    <td>
+                                        {(data?.status == 0 || data?.status == 1 || data?.status == 2) ? <p className="text-success mb-0" style={{ width: "max-content" }}>Not Banned</p> : data?.status == 3 ? <p className="text-danger mb-0" style={{ width: "max-content" }}>Banned</p> : ""}
+                                    </td>
+                                    {/* <td>
+                                        {(data?.status == 0 || data?.status == 1 || data?.status == 2) ? <p className="text-white bg-success p-2 rounded mb-0" style={{ width: "max-content" }}>Not Banned</p> : data?.status == 3 ? <p className="text-white bg-danger p-2 rounded mb-0" style={{ width: "max-content" }}>Banned</p> : ""}
+                                    </td> */}
                                     <td>{moment(data?.created_at).format("DD-MM-YYYY")}</td>
                                     {auth?.userDetail?.type == 3 ? null :
                                         <td>
@@ -178,31 +196,23 @@ const Users = () => {
 
                                                 {auth?.userDetail?.type == 1 ?
                                                     <>
-                                                        {data?.status == 1 ?
+                                                        {(data?.status == 0 || data?.status == 1 || data?.status == 2) ?
                                                             <Button
-                                                                style={{ backgroundColor: "red", marginLeft: 10 }}
+                                                                style={{ marginLeft: 10, width: "max-content" }}
+                                                                className='bg-danger'
                                                                 onClick={
                                                                     () => {
-                                                                        onChangeUserStatus(data, 3)
+                                                                        banUserHandler(data, 3)
                                                                     }}
                                                             >Ban User</Button>
-                                                            : data?.status == 2 ?
-                                                                <Button
-                                                                    style={{ backgroundColor: "red", marginLeft: 10 }}
-                                                                    onClick={
-                                                                        () => {
-                                                                            onChangeUserStatus(data, 3)
-                                                                        }}
-                                                                >Approved</Button>
-                                                                : data?.status == 3 ?
-                                                                    <Button
-                                                                        style={{ backgroundColor: "red", marginLeft: 10 }}
-                                                                        onClick={
-                                                                            () => {
-                                                                                onChangeUserStatus(data, 2)
-                                                                            }}
-                                                                    >Banned</Button>
-                                                                    : null}
+                                                            :
+                                                            <Button
+                                                                style={{ backgroundColor: "green", marginLeft: 10, width: "max-content" }}
+                                                                onClick={
+                                                                    () => {
+                                                                        banUserHandler(data, 2)
+                                                                    }}
+                                                            >UnBan User</Button>}
                                                     </>
                                                     : null}
 
@@ -229,7 +239,16 @@ const Users = () => {
                 />
             }
 
-        </Row >
+            {banUserModal &&
+                <DeleteModal
+                    handleCloseDeletModal={banUserHandler}
+                    action={onChangeUserStatus}
+                    id={itemId}
+                    confirmationMessage="Are you sure you want to change status of this user?"
+                />
+            }
+
+        </Row>
     )
 }
 
