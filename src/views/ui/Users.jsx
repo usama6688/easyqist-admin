@@ -30,7 +30,7 @@ const Users = () => {
         setDeleteItemModal((prev) => !prev);
     };
 
-    const banUserHandler = (data,status) => {
+    const banUserHandler = (data, status) => {
         setItemId(data?.id);
         setStatus(status);
         setBanUserModal((prev) => !prev);
@@ -61,9 +61,6 @@ const Users = () => {
             user_id: id,
             status: status,
         };
-
-        // console.log("data", data);
-        // return;
 
         changeUserStatus({ data: data })
             .unwrap()
@@ -194,7 +191,7 @@ const Users = () => {
                                                     >Delete</Button>
                                                     : null}
 
-                                                {auth?.userDetail?.type == 1 ?
+                                                {(auth?.userDetail?.type == 1 || auth?.userDetail?.type == 2) ?
                                                     <>
                                                         {(data?.status == 0 || data?.status == 1 || data?.status == 2) ?
                                                             <Button
