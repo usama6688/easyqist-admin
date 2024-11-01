@@ -1,4 +1,3 @@
-// import React from 'react';
 import React, { useEffect, useState } from "react";
 import {
     Button,
@@ -20,7 +19,7 @@ const EditCategories = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
-    const [editCategory, { isLoading }] = useEditCategoryMutation();
+    const [editCategory] = useEditCategoryMutation();
 
     const catData = location?.state?.data;
 
@@ -37,7 +36,11 @@ const EditCategories = () => {
 
     const selectedBrands = modifiedBrands?.filter(brand => brandIdsArray?.includes(brand?.value));
 
-    const [selectedOptions, setSelectedOptions] = useState(selectedBrands);
+    const [selectedOptions, setSelectedOptions] = useState([]);
+
+    useEffect(() => {
+        setSelectedOptions(selectedBrands);
+    }, [getBrands?.data]);
 
     const handleSelect = (data) => {
         setSelectedOptions(data);
