@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Col, FormGroup, Input, Label, Row } from 'reactstrap';
 import moment from 'moment';
-import user1 from "../../assets/images/users/user1.jpg";
 import Select from "react-select";
 import PATHS from '../../routes/Paths';
-import { useChangeOrderStatusMutation, useEmploymentAssignMutation, useGetEmployeesQuery, useViewOrderDetailQuery } from '../../services/Api';
+import { useAddCommentMutation, useChangeOrderStatusMutation, useEmploymentAssignMutation, useGetCommentsQuery, useGetEmployeesQuery, useViewOrderDetailQuery } from '../../services/Api';
 import AssignEmployeeModal from '../../components/AssignEmployeeModal';
 import { useSelector } from 'react-redux';
 
@@ -13,6 +12,7 @@ const ViewOrderRequests = () => {
 
     const [assignEmployeeModal, setAssignEmployeeModal] = useState(false);
     const [selectedOptions, setSelectedOptions] = useState();
+    const [comment, setComment] = useState('');
     const location = useLocation();
     const navigate = useNavigate();
     const reqDataId = location?.state?.data;
@@ -20,6 +20,7 @@ const ViewOrderRequests = () => {
 
     const [employmentAssign, { isLoading }] = useEmploymentAssignMutation();
     const [changeOrderStatus] = useChangeOrderStatusMutation();
+    const [addComment] = useAddCommentMutation();
 
     const AssignEmployeeModalHandler = () => {
         setAssignEmployeeModal((prev) => !prev);
@@ -29,6 +30,13 @@ const ViewOrderRequests = () => {
         data: getEmployees,
         refetch: getEmployeesRefetch,
     } = useGetEmployeesQuery();
+
+    const {
+        data: getComments,
+        refetch: getCommentsRefetch,
+    } = useGetCommentsQuery();
+
+    console.log("getComments", getComments);
 
     const {
         data: viewOrderDetail,
@@ -45,6 +53,28 @@ const ViewOrderRequests = () => {
     const handleSelect = (data) => {
         setSelectedOptions(data);
         AssignEmployeeModalHandler();
+    };
+
+    const handleAddComment = () => {
+
+        const data = {
+            comment: comment,
+            user_id: reqDataId?.users?.id,
+            order_id: reqDataId?.id,
+        }
+
+        addComment({ data: data })
+            .unwrap()
+            .then((payload) => {
+                if (payload.status) {
+                    getCommentsRefetch();
+                    // navigate(PATHS.orderRequests);
+                    // window.location.reload();
+                }
+            })
+            .catch((error) => {
+                console.log("error", error);
+            });
     };
 
     const handleItemClick = (itemId, item) => {
@@ -91,6 +121,7 @@ const ViewOrderRequests = () => {
     useEffect(() => {
         getEmployeesRefetch();
         viewOrderDetailRefetch();
+        getCommentsRefetch();
     }, []);
 
     return (
@@ -245,6 +276,24 @@ const ViewOrderRequests = () => {
                     )
                 })}
             </Row>
+
+            <FormGroup>
+                <Label for="exampleEmail">Add Comment</Label>
+                <textarea value={comment} className='form-control' rows={6} onChange={(e) => setComment(e.target.value)} placeholder='Add Comment...' />
+
+                <div className='text-end mt-3'>
+                    <button class="btn btn-success" onClick={handleAddComment} disabled={!comment}>
+                        Add Comment
+                    </button>
+                </div>
+            </FormGroup>
+
+            <Label for="exampleEmail">Comments</Label>
+            {getComments?.data?.map((data) => {
+                return (
+                    <Input type="text" className='mb-3' value={data?.comment} readOnly />
+                )
+            })}
 
             {assignEmployeeModal &&
                 <AssignEmployeeModal

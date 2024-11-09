@@ -48,6 +48,7 @@ export const API_END_POINTS = {
   addToCart: BASE_URL + "add_to_cart",
   proceed: BASE_URL + "proceed",
   changeUserStatus: BASE_URL + "admin/change_user_status",
+  addComment: BASE_URL + "addComment",
   /////////////////////////////<===QUERIES===>////////////////////////////////
   getBrands: BASE_URL + "get-brand",
   getProductCat: BASE_URL + "get-category",
@@ -70,4 +71,5 @@ export const API_END_POINTS = {
   requestedProductDetail: BASE_URL + "request_products/details",
   getProductDetails: BASE_URL + "getProductDetail2",
   viewCartOrders: BASE_URL + "view_order_card",
+  getComments: BASE_URL + "getComment",
 };

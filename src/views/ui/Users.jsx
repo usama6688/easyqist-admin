@@ -152,7 +152,7 @@ const Users = () => {
                         <tr>
                             <th>Name</th>
                             <th>Phone</th>
-                            <th>Email</th>
+                            {/* <th>Email</th> */}
                             <th>Address</th>
                             <th>CNIC</th>
                             <th>Status</th>
@@ -168,7 +168,7 @@ const Users = () => {
                                 <tr className="border-top mainDiv">
                                     <td>{data?.name}</td>
                                     <td>{data?.phone_no}</td>
-                                    <td>{data?.email}</td>
+                                    {/* <td>{data?.email}</td> */}
                                     <td>{data?.address}</td>
                                     <td>{data?.cnic_number}</td>
                                     <td>

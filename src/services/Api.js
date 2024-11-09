@@ -392,6 +392,14 @@ export const api = SplitApiSettings.injectEndpoints({
       }),
     }),
 
+    addComment: builder.mutation({
+      query: ({ data }) => ({
+        url: API_END_POINTS.addComment,
+        method: "POST",
+        body: data,
+      }),
+    }),
+
     /////////////////////////////<===QUERIES===>////////////////////////////////
 
     getBrands: builder.query({
@@ -587,6 +595,15 @@ export const api = SplitApiSettings.injectEndpoints({
       },
     }),
 
+    getComments: builder.query({
+      query: () => {
+        return {
+          url: API_END_POINTS.getComments,
+          method: "GET",
+        };
+      },
+    }),
+
   }),
 
   overrideExisting: true,
@@ -640,6 +657,7 @@ export const {
   useAddToCartMutation,
   useProceedMutation,
   useChangeUserStatusMutation,
+  useAddCommentMutation,
   /////////////////////////////<===QUERIES===>////////////////////////////////
   useGetBrandsQuery,
   useGetProductCatQuery,
@@ -661,4 +679,5 @@ export const {
   useRequestedProductDetailQuery,
   useGetProductDetailsQuery,
   useViewCartOrdersQuery,
+  useGetCommentsQuery,
 } = api;
