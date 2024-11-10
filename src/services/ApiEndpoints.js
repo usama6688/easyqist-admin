@@ -71,5 +71,5 @@ export const API_END_POINTS = {
   requestedProductDetail: BASE_URL + "request_products/details",
   getProductDetails: BASE_URL + "getProductDetail2",
   viewCartOrders: BASE_URL + "view_order_card",
-  getComments: BASE_URL + "getComment",
+  getComments: BASE_URL + "getOrderComment",
 };

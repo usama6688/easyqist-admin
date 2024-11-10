@@ -34,7 +34,7 @@ const ViewOrderRequests = () => {
     const {
         data: getComments,
         refetch: getCommentsRefetch,
-    } = useGetCommentsQuery();
+    } = useGetCommentsQuery({ params: { orderId: reqDataId?.id } });
 
     console.log("getComments", getComments);
 
@@ -288,8 +288,10 @@ const ViewOrderRequests = () => {
                 </div>
             </FormGroup>
 
-            <Label for="exampleEmail">Comments</Label>
-            {getComments?.data?.map((data) => {
+            {getComments?.data?.orderComment?.length ?
+                <Label for="exampleEmail">Comments</Label>
+                : null}
+            {getComments?.data?.orderComment?.map((data) => {
                 return (
                     <Input type="text" className='mb-3' value={data?.comment} readOnly />
                 )

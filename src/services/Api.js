@@ -596,10 +596,11 @@ export const api = SplitApiSettings.injectEndpoints({
     }),
 
     getComments: builder.query({
-      query: () => {
+      query: ({ params }) => {
         return {
           url: API_END_POINTS.getComments,
           method: "GET",
+          params
         };
       },
     }),

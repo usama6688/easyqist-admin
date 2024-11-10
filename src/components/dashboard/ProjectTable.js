@@ -60,11 +60,12 @@ const ProjectTables = () => {
                 <th>Name</th>
                 <th>Phone</th>
                 <th>Price</th>
+                <th>Date</th>
                 <th>Status</th>
               </tr>
             </thead>
             <tbody>
-              {filteredOrderRequestData.length ? filteredOrderRequestData.map((data) => {
+              {filteredOrderRequestData?.length ? filteredOrderRequestData?.map((data) => {
                 return (
                   <tr className="border-top" style={{ cursor: "pointer" }}
                     onClick={() => {
@@ -83,11 +84,14 @@ const ProjectTables = () => {
                       <h6 className="mb-0">{data?.order_price}</h6>
                     </td>
                     <td>
+                      <h6 className="mb-0">{moment(data?.created_at).format("DD-MM-YYYY")}</h6>
+                    </td>
+                    <td>
                       <h6 className="mb-0">{data?.order_status == 1 ? "Pending" : data?.order_status == 2 ? "Accepted" : data?.order_status == 3 ? "Documentation" : data?.order_status == 4 ? "Out for delivery" : data?.order_status == 5 ? "Delivered" : data?.order_status == 6 ? "Rejected" : ""}</h6>
                     </td>
                   </tr>
                 )
-              }) :
+              }).reverse() :
                 <>{viewOrderRequestLoading ? <td colSpan={5}>
                   <h6 className='text-center'>Loading...</h6>
                 </td> : <td colSpan={5}><h6 className='text-center'>No Record Found</h6></td>}</>
