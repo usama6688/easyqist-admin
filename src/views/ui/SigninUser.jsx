@@ -29,7 +29,7 @@ const SigninUser = () => {
             .then((payload) => {
                 if (payload?.status) {
                     const response = {
-                        token: payload?.token,
+                        token: payload?.access_token,
                         userDetail: payload?.user,
                     };
 
