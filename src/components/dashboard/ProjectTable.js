@@ -20,14 +20,14 @@ const ProjectTables = () => {
     refetch: viewOrderRequestRefetch,
   } = useViewOrderRequestQuery({ params: { status: 1 } });
 
-  const {
-    data: getUser,
-    refetch: getUserRefetch,
-  } = useGetUserQuery({ params: { start: 0, limit: 100000 } });
+  // const {
+  //   data: getUser,
+  //   refetch: getUserRefetch,
+  // } = useGetUserQuery({ params: { start: 0, limit: 100000 } });
 
   useEffect(() => {
     viewOrderRequestRefetch();
-    getUserRefetch();
+    // getUserRefetch();
   }, []);
 
   const handleDatesChange = ({ startDate, endDate }) => {
@@ -46,7 +46,7 @@ const ProjectTables = () => {
   };
 
   const filteredOrderRequestData = filterDataByDate(viewOrderRequest?.data || [], startDate, endDate);
-  const filteredUserData = filterDataByDate(getUser?.data || [], startDate, endDate);
+  // const filteredUserData = filterDataByDate(getUser?.data || [], startDate, endDate);
 
   return (
     <div>
@@ -101,7 +101,7 @@ const ProjectTables = () => {
         </CardBody>
       </Card>
 
-      <div className="mb-4 text-end">
+      {/* <div className="mb-4 text-end">
         <span>Select Date Range: </span>
         <DateRangePicker
           isOutsideRange={falseFunc}
@@ -113,9 +113,9 @@ const ProjectTables = () => {
           focusedInput={focusedInput}
           onFocusChange={focusedInput => setFocusedInput(focusedInput)}
         />
-      </div>
+      </div> */}
 
-      <Card>
+      {/* <Card>
         <CardBody>
           <CardTitle tag="h5">Users</CardTitle>
 
@@ -159,7 +159,7 @@ const ProjectTables = () => {
             </tbody>
           </Table>
         </CardBody>
-      </Card>
+      </Card> */}
     </div>
   );
 };

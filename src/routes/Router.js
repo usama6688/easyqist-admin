@@ -15,7 +15,7 @@ const Loadable = (Component) => (props) => {
 // Lazy-loaded components
 const SigninUser = Loadable(lazy(() => import("../views/ui/SigninUser.jsx")));
 const Signup = Loadable(lazy(() => import("../views/ui/Signup.jsx")));
-const Dashboard = Loadable(lazy(() => import("../views/Starter.js")));
+const Dashboard = Loadable(lazy(() => import("../views/Dashboard.js")));
 const AddProduct = Loadable(lazy(() => import("../views/ui/AddProduct.jsx")));
 const ViewProduct = Loadable(lazy(() => import("../views/ui/ViewProduct.jsx")));
 const EditProduct = Loadable(lazy(() => import("../views/ui/EditProduct.jsx")));

@@ -58,8 +58,8 @@ const Sidebar = () => {
   const auth = useSelector((data) => data?.auth);
 
   const filteredNavigation = auth?.userDetail?.type == 3
-    ? navigation.filter(navi => navi?.title == "Dashboard")
-    : navigation;
+    ? navigation.filter(navi => navi?.title == "Dashboard") : (auth?.userDetail?.type == 4 || auth?.userDetail?.type == 5) ? navigation.filter(navi => navi?.title == "Dashboard" || navi?.title == "Order Requests")
+      : navigation;
 
   // const filteredNavigation = auth?.userDetail?.type == 3 ? navigation : navigation;
 

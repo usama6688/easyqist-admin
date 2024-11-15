@@ -128,20 +128,22 @@ const ViewOrderRequests = () => {
         <div>
             <Row>
 
-                {auth?.userDetail?.type == 3 ? null :
+                {(auth?.userDetail?.type == 3 || auth?.userDetail?.type == 5) ? null :
                     <>
                         <Col lg="4"></Col>
-                        <Col lg="4">
-                            <FormGroup>
-                                <Select
-                                    options={modifiedBrands}
-                                    placeholder="Assign to Employee"
-                                    value={selectedOptions}
-                                    onChange={handleSelect}
-                                    isSearchable={true}
-                                />
-                            </FormGroup>
-                        </Col>
+                        {auth?.userDetail?.type == 4 ? <Col lg="4"></Col> :
+                            <Col lg="4">
+                                <FormGroup>
+                                    <Select
+                                        options={modifiedBrands}
+                                        placeholder="Assign to Employee"
+                                        value={selectedOptions}
+                                        onChange={handleSelect}
+                                        isSearchable={true}
+                                    />
+                                </FormGroup>
+                            </Col>
+                        }
                         <Col lg="4" className='mb-4'>
                             <div class="dropdown">
                                 <button class="btn btn-secondary dropdown-togglex w-100" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -266,7 +268,7 @@ const ViewOrderRequests = () => {
                                     <h6 class="card-title">Advance: {data?.order_product_advance_amount}</h6>
                                     <h6 class="card-title">Plan: {data?.orderinstallment?.amount * data?.qty} x {data?.orderinstallment?.duration} months</h6>
 
-                                    {reqData?.order_status != 5 && auth?.userDetail?.type != 3 ?
+                                    {reqData?.order_status != 5 && (auth?.userDetail?.type != 3 && auth?.userDetail?.type != 4 && auth?.userDetail?.type != 5) ?
                                         <a class="btn btn-primary" onClick={() => { navigate(PATHS.viewOrderPayment, { state: { data: data } }); window.location.reload(); }}
                                         >View Order Payment</a>
                                         : null}
@@ -277,16 +279,18 @@ const ViewOrderRequests = () => {
                 })}
             </Row>
 
-            <FormGroup>
-                <Label for="exampleEmail">Add Comment</Label>
-                <textarea value={comment} className='form-control' rows={6} onChange={(e) => setComment(e.target.value)} placeholder='Add Comment...' />
+            {auth?.userDetail?.type == 5 ? null :
+                <FormGroup>
+                    <Label for="exampleEmail">Add Comment</Label>
+                    <textarea value={comment} className='form-control' rows={6} onChange={(e) => setComment(e.target.value)} placeholder='Add Comment...' />
 
-                <div className='text-end mt-3'>
-                    <button class="btn btn-success" onClick={handleAddComment} disabled={!comment}>
-                        Add Comment
-                    </button>
-                </div>
-            </FormGroup>
+                    <div className='text-end mt-3'>
+                        <button class="btn btn-success" onClick={handleAddComment} disabled={!comment}>
+                            Add Comment
+                        </button>
+                    </div>
+                </FormGroup>
+            }
 
             {getComments?.data?.orderComment?.length ?
                 <Label for="exampleEmail">Comments</Label>
