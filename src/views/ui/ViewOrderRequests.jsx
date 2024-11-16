@@ -279,18 +279,16 @@ const ViewOrderRequests = () => {
                 })}
             </Row>
 
-            {auth?.userDetail?.type == 5 ? null :
-                <FormGroup>
-                    <Label for="exampleEmail">Add Comment</Label>
-                    <textarea value={comment} className='form-control' rows={6} onChange={(e) => setComment(e.target.value)} placeholder='Add Comment...' />
+            <FormGroup>
+                <Label for="exampleEmail">Add Comment</Label>
+                <textarea value={comment} className='form-control' rows={6} onChange={(e) => setComment(e.target.value)} placeholder='Add Comment...' />
 
-                    <div className='text-end mt-3'>
-                        <button class="btn btn-success" onClick={handleAddComment} disabled={!comment}>
-                            Add Comment
-                        </button>
-                    </div>
-                </FormGroup>
-            }
+                <div className='text-end mt-3'>
+                    <button class="btn btn-success" onClick={handleAddComment} disabled={!comment}>
+                        Add Comment
+                    </button>
+                </div>
+            </FormGroup>
 
             {getComments?.data?.orderComment?.length ?
                 <Label for="exampleEmail">Comments</Label>

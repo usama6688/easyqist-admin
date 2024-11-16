@@ -11,6 +11,7 @@ import uploadIcon from "../../assets/images/uploadImg.svg";
 import { useNewUserMutation } from '../../services/Api';
 import PATHS from '../../routes/Paths';
 import PhoneInput from 'react-phone-input-2';
+import { toast } from 'react-toastify';
 
 const AddUser = () => {
 
@@ -35,7 +36,10 @@ const AddUser = () => {
             .then((payload) => {
                 if (payload.status) {
                     navigate(PATHS.users);
-                    window.location.reload();
+                    toast.success(payload?.message);
+                    // window.location.reload();
+                } else {
+                    toast.error(payload?.message);
                 }
             })
             .catch((error) => {
@@ -102,7 +106,6 @@ const AddUser = () => {
                         <Input
                             type="text"
                             placeholder="CNIC"
-                            className="inputField"
                             value={cnic}
                             onChange={handleChange}
                             maxLength={13}
