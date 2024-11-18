@@ -5,6 +5,7 @@ import { useDeleteRequestedProductMutation, useRequestedProductsQuery } from '..
 import DeleteModal from '../../components/DeleteModal';
 import PATHS from '../../routes/Paths';
 import { useSelector } from 'react-redux';
+import moment from 'moment/moment';
 
 const RequestedProducts = () => {
 
@@ -78,9 +79,9 @@ const RequestedProducts = () => {
                 <Table className="no-wrap mt-3 align-middle" responsive borderless>
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Description</th>
                             <th>Address</th>
+                            <th>Created At</th>
                             {auth?.userDetail?.type == 3 ? null :
                                 <th>Actions</th>
                             }
@@ -91,13 +92,13 @@ const RequestedProducts = () => {
                             return (
                                 <tr className="border-top mainDiv" key={index}>
                                     <td>
-                                        <h6 className="mb-0">{index + 1}</h6>
-                                    </td>
-                                    <td>
                                         <h6 className="mb-0">{data?.description}</h6>
                                     </td>
                                     <td>
                                         <h6 className="mb-0">{data?.address}</h6>
+                                    </td>
+                                    <td>
+                                        <h6 className="mb-0">{moment(data?.created_at).format("DD-MM-YYYY")}</h6>
                                     </td>
                                     {auth?.userDetail?.type == 3 ? null :
                                         <td>
@@ -118,7 +119,7 @@ const RequestedProducts = () => {
                                     }
                                 </tr>
                             )
-                        })}
+                        }).reverse()}
                     </tbody>
                 </Table>
                 {/* )
