@@ -36,8 +36,6 @@ const ViewOrderRequests = () => {
         refetch: getCommentsRefetch,
     } = useGetCommentsQuery({ params: { orderId: reqDataId?.id } });
 
-    console.log("getComments", getComments);
-
     const {
         data: viewOrderDetail,
         refetch: viewOrderDetailRefetch,
@@ -88,8 +86,9 @@ const ViewOrderRequests = () => {
             .unwrap()
             .then((payload) => {
                 if (payload.status) {
-                    navigate(PATHS.orderRequests);
-                    window.location.reload();
+                    viewOrderDetailRefetch();
+                    // navigate(PATHS.orderRequests);
+                    // window.location.reload();
                 }
             })
             .catch((error) => {
