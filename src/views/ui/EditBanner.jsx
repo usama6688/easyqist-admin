@@ -10,6 +10,7 @@ import PATHS from '../../routes/Paths';
 const EditBanner = () => {
 
     const [showThumbnail, setShowThumbnail] = useState([]);
+    const [showMobThumbnail, setShowMobThumbnail] = useState([]);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -30,8 +31,6 @@ const EditBanner = () => {
 
     const [selectedOptions, setSelectedOptions] = useState(selectedProducts);
 
-    // console.log("getAllProducts", getAllProducts);
-
     const handleThumbnail = (e) => {
         const maxImages = 1;
 
@@ -51,6 +50,25 @@ const EditBanner = () => {
         setShowThumbnail(combinedImages);
     };
 
+    const handleMobThumbnail = (e) => {
+        const maxImages = 1;
+
+        const imagesMap = Object.entries(e.target.files).map((images) => {
+            return (images[1])
+        });
+
+        const previousImages = [...showMobThumbnail];
+
+        const combinedImages = [...previousImages, ...imagesMap];
+
+        if (combinedImages.length > maxImages) {
+            alert("Please select up to 1 images only.");
+            return;
+        }
+
+        setShowMobThumbnail(combinedImages);
+    };
+
     const removeThumbnail = (image) => {
         let filteredData = [];
         if (image.id) {
@@ -61,6 +79,18 @@ const EditBanner = () => {
             filteredData = showThumbnail.filter((i) => i.name !== image.name);
         }
         setShowThumbnail([...filteredData]);
+    };
+
+    const removeMobThumbnail = (image) => {
+        let filteredData = [];
+        if (image.id) {
+            filteredData = showMobThumbnail.filter((i) =>
+                i.hasOwnProperty("id") ? i.id !== image.id : true
+            );
+        } else {
+            filteredData = showMobThumbnail.filter((i) => i.name !== image.name);
+        }
+        setShowMobThumbnail([...filteredData]);
     };
 
     const modifiedProducts = getAllProducts?.data.map(product => ({
@@ -80,6 +110,7 @@ const EditBanner = () => {
         let formData = new FormData();
 
         formData.append('banner_image', showThumbnail[0]);
+        formData.append('mobile_banner', showMobThumbnail[0]);
         formData.append('banner_link', "#");
         formData.append('productids', productIdsString);
         formData.append('id', location?.state?.data?.id);
@@ -135,6 +166,53 @@ const EditBanner = () => {
                             <div className="col-md-3 position-relative">
                                 <ImageViewer
                                     src={location?.state?.data?.banner_image}
+                                    onError={(e) => {
+                                        e.target.onerror = null;
+                                        e.target.src = '';
+                                    }}
+                                    width="100px"
+                                    height="100px"
+                                />
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <Label for="exampleFile">Mobile Thumbnail</Label>
+
+                <div className='position-relative ms-5 mb-4'>
+                    <div className="row">
+                        {showMobThumbnail?.length < 6 ?
+                            <div className="col-md-3">
+                                <img src={uploadIcon} alt="" height={100} width={100} />
+                                <input type="file" className='hiddenInputFile' name="image"
+                                    accept="image/png, image/jpg, image/jpeg" onChange={handleMobThumbnail} />
+                            </div>
+                            : ""}
+
+                        {showMobThumbnail?.length > 0 ?
+                            showMobThumbnail?.map((image) => (
+                                <div className="col-md-3 position-relative">
+                                    <ImageViewer
+                                        src={image}
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.target.src = '';
+                                        }}
+                                        width="100px"
+                                        height="100px"
+                                    />
+
+                                    <div
+                                        className='removeImageIcon text-dark'
+                                        onClick={() => removeMobThumbnail(image)}
+                                    >X</div>
+                                </div>
+                            ))
+                            :
+                            <div className="col-md-3 position-relative">
+                                <ImageViewer
+                                    src={location?.state?.data?.mobile_banner}
                                     onError={(e) => {
                                         e.target.onerror = null;
                                         e.target.src = '';
