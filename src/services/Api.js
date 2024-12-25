@@ -400,6 +400,14 @@ export const api = SplitApiSettings.injectEndpoints({
       }),
     }),
 
+    sendNotifications: builder.mutation({
+      query: ({ data }) => ({
+        url: API_END_POINTS.sendNotifications,
+        method: "POST",
+        body: data,
+      }),
+    }),
+
     /////////////////////////////<===QUERIES===>////////////////////////////////
 
     getBrands: builder.query({
@@ -659,6 +667,7 @@ export const {
   useProceedMutation,
   useChangeUserStatusMutation,
   useAddCommentMutation,
+  useSendNotificationsMutation,
   /////////////////////////////<===QUERIES===>////////////////////////////////
   useGetBrandsQuery,
   useGetProductCatQuery,
