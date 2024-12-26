@@ -27,7 +27,9 @@ const Notifications = () => {
             .unwrap()
             .then((payload) => {
                 if (payload.status) {
-                    window.location.reload();
+                    toast.success("Notification sent successfully");
+                    setTitle("");
+                    setBody("");
                 } else {
                     toast.error(payload.message);
                 }

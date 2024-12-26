@@ -49,7 +49,7 @@ export const API_END_POINTS = {
   proceed: BASE_URL + "proceed",
   changeUserStatus: BASE_URL + "admin/change_user_status",
   addComment: BASE_URL + "addComment",
-  sendNotifications: BASE_URL + "send-notificaton",
+  sendNotifications: BASE_URL + "send-notification",
   /////////////////////////////<===QUERIES===>////////////////////////////////
   getBrands: BASE_URL + "get-brand",
   getProductCat: BASE_URL + "get-category",
