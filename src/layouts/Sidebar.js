@@ -61,10 +61,9 @@ const Sidebar = () => {
 
   const auth = useSelector((data) => data?.auth);
 
-  const filteredNavigation = auth?.userDetail?.type == 2
-    ? navigation.filter(navi => navi?.title == "Notifications") : auth?.userDetail?.type == 3
-      ? navigation.filter(navi => navi?.title == "Dashboard" || navi?.title == "Notifications") : auth?.userDetail?.type == 4 ? navigation.filter(navi => navi?.title == "Dashboard" || navi?.title == "Order Requests" || navi?.title == "Products" || navi?.title == "Users") : auth?.userDetail?.type == 5 ? navigation.filter(navi => navi?.title == "Dashboard" || navi?.title == "Order Requests")
-        : navigation;
+  const filteredNavigation = auth?.userDetail?.type == 3
+    ? navigation.filter(navi => navi?.title == "Dashboard" || navi?.title == "Notifications") : auth?.userDetail?.type == 4 ? navigation.filter(navi => navi?.title == "Dashboard" || navi?.title == "Order Requests" || navi?.title == "Products" || navi?.title == "Users") : auth?.userDetail?.type == 5 ? navigation.filter(navi => navi?.title == "Dashboard" || navi?.title == "Order Requests")
+      : navigation;
 
   return (
     <div className="p-3">
