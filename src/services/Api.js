@@ -408,6 +408,33 @@ export const api = SplitApiSettings.injectEndpoints({
       }),
     }),
 
+    addBlog: builder.mutation({
+      query: ({ data }) => ({
+        url: API_END_POINTS.addBlog,
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    editBlog: builder.mutation({
+      query: ({ data }) => {
+        return {
+          url: `${API_END_POINTS.editBlog}/${data?.id}`,
+          method: "PUT",
+          data
+        }
+      },
+    }),
+
+    deleteBlog: builder.mutation({
+      query: (id) => {
+        return {
+          url: `${API_END_POINTS.editBlog}/${id}`,
+          method: "DELETE",
+        }
+      },
+    }),
+
     /////////////////////////////<===QUERIES===>////////////////////////////////
 
     getBrands: builder.query({
@@ -613,6 +640,24 @@ export const api = SplitApiSettings.injectEndpoints({
       },
     }),
 
+    getAllBlogs: builder.query({
+      query: () => {
+        return {
+          url: API_END_POINTS.getAllBlogs,
+          method: "GET",
+        };
+      },
+    }),
+
+    getBlogById: builder.query({
+      query: (id) => {
+        return {
+          url: `${API_END_POINTS.editBlog}/${id}`,
+          method: "GET",
+        };
+      },
+    }),
+
   }),
 
   overrideExisting: true,
@@ -668,6 +713,9 @@ export const {
   useChangeUserStatusMutation,
   useAddCommentMutation,
   useSendNotificationsMutation,
+  useAddBlogMutation,
+  useEditBlogMutation,
+  useDeleteBlogMutation,
   /////////////////////////////<===QUERIES===>////////////////////////////////
   useGetBrandsQuery,
   useGetProductCatQuery,
@@ -690,4 +738,6 @@ export const {
   useGetProductDetailsQuery,
   useViewCartOrdersQuery,
   useGetCommentsQuery,
+  useGetAllBlogsQuery,
+  useGetBlogByIdQuery,
 } = api;

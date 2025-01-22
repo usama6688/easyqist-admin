@@ -50,6 +50,8 @@ export const API_END_POINTS = {
   changeUserStatus: BASE_URL + "admin/change_user_status",
   addComment: BASE_URL + "addComment",
   sendNotifications: BASE_URL + "send-notification",
+  addBlog: BASE_URL + "create-blog",
+  editBlog: BASE_URL + "blogs",
   /////////////////////////////<===QUERIES===>////////////////////////////////
   getBrands: BASE_URL + "get-brand",
   getProductCat: BASE_URL + "get-category",
@@ -73,4 +75,5 @@ export const API_END_POINTS = {
   getProductDetails: BASE_URL + "getProductDetail2",
   viewCartOrders: BASE_URL + "view_order_card",
   getComments: BASE_URL + "getOrderComment",
+  getAllBlogs: BASE_URL + "get-blogs",
 };

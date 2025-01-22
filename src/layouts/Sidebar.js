@@ -49,6 +49,10 @@ const navigation = [
     title: "Notifications",
     href: PATHS.notifications,
   },
+  {
+    title: "Blogs",
+    href: PATHS.allBlogs,
+  },
 ];
 
 const Sidebar = () => {
