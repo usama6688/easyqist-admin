@@ -421,7 +421,7 @@ export const api = SplitApiSettings.injectEndpoints({
         return {
           url: `${API_END_POINTS.editBlog}/${data?.id}`,
           method: "PUT",
-          data
+          body: data
         }
       },
     }),
@@ -650,7 +650,7 @@ export const api = SplitApiSettings.injectEndpoints({
     }),
 
     getBlogById: builder.query({
-      query: (id) => {
+      query: ({ id }) => {
         return {
           url: `${API_END_POINTS.editBlog}/${id}`,
           method: "GET",

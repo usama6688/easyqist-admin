@@ -8,7 +8,7 @@ import {
 } from "reactstrap";
 import { toast } from "react-toastify";
 import { useEditBlogMutation, useGetBlogByIdQuery } from "../../services/Api";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import PATHS from "../../routes/Paths";
 
 const EditBlog = () => {
@@ -16,11 +16,12 @@ const EditBlog = () => {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const navigate = useNavigate();
+    const location = useLocation();
 
     const {
         data: getBlogById,
         refetch: getBlogByIdRefetch,
-    } = useGetBlogByIdQuery({ params: { start: 0, limit: 100000 } });
+    } = useGetBlogByIdQuery({ id: location?.state?.data?.id });
 
     const [editBlog] = useEditBlogMutation();
 
@@ -36,7 +37,7 @@ const EditBlog = () => {
             .unwrap()
             .then((payload) => {
                 if (payload.status) {
-                    toast.success("Blog added successfully");
+                    toast.success("Blog updated successfully");
                     navigate(PATHS.allBlogs);
                 } else {
                     toast.error(payload.message);
@@ -54,8 +55,8 @@ const EditBlog = () => {
 
     useEffect(() => {
         if (getBlogById) {
-            setTitle();
-            setContent();
+            setTitle(getBlogById?.data?.title);
+            setContent(getBlogById?.data?.content);
         }
     }, [getBlogById]);
 
