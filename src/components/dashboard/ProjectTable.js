@@ -6,6 +6,7 @@ import PATHS from "../../routes/Paths";
 import { DateRangePicker } from "react-dates";
 import moment from "moment/moment";
 import { useSelector } from "react-redux";
+import PaginationComponent from "../pagination/Pagination";
 
 const ProjectTables = () => {
   const [startDate, setStartDate] = useState(null);
@@ -14,11 +15,24 @@ const ProjectTables = () => {
   const navigator = useNavigate();
   const auth = useSelector((data) => data?.auth);
 
+  const [queryParams, setQueryParams] = useState({
+    start: 1,
+    limit: 10,
+    status: 1,
+  });
+
   const {
     data: viewOrderRequest,
     isLoading: viewOrderRequestLoading,
     refetch: viewOrderRequestRefetch,
-  } = useViewOrderRequestQuery({ params: { status: 1 } });
+  } = useViewOrderRequestQuery({ params: queryParams });
+
+  const totalRecords = viewOrderRequest?.pagination?.totalRecords || 0;
+  const totalPages = Math.ceil(totalRecords / queryParams?.limit);
+
+  const handlePageChange = (page) => {
+    setQueryParams((prev) => ({ ...prev, start: page }));
+  };
 
   // const {
   //   data: getUser,
@@ -98,6 +112,14 @@ const ProjectTables = () => {
               }
             </tbody>
           </Table>
+
+          <div style={{ marginTop: "2rem" }}>
+            <PaginationComponent
+              currentPage={queryParams?.start}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </div>
         </CardBody>
       </Card>
 

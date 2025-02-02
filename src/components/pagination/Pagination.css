@@ -1,0 +1,23 @@
+.pagination {
+    justify-content: end;
+}
+
+.pagination .page-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: "Inter";
+    color: black;
+    padding: 12px 15px;
+}
+
+.page-item.active .page-link {
+    background-color: #006400;
+    border: none;
+}
+
+.arrowBtns .page-link {
+    border: 1px solid #006400;
+}

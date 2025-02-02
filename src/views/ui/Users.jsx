@@ -7,6 +7,7 @@ import DeleteModal from '../../components/DeleteModal';
 import { useSelector } from 'react-redux';
 import moment from 'moment/moment';
 import { DateRangePicker } from "react-dates";
+import PaginationComponent from '../../components/pagination/Pagination';
 
 const Users = () => {
 
@@ -20,10 +21,22 @@ const Users = () => {
     const [banUserModal, setBanUserModal] = useState(false);
     const auth = useSelector((data) => data?.auth);
 
+    const [queryParams, setQueryParams] = useState({
+        start: 1,
+        limit: 10,
+    });
+
     const {
         data: getUser,
         refetch: getUserRefetch,
-    } = useGetUserQuery({ params: { start: 0, limit: 100000 } });
+    } = useGetUserQuery({ params: queryParams });
+
+    const totalRecords = getUser?.pagination?.totalRecords || 0;
+    const totalPages = Math.ceil(totalRecords / queryParams?.limit);
+
+    const handlePageChange = (page) => {
+        setQueryParams((prev) => ({ ...prev, start: page }));
+    };
 
     const DeleteModalHandler = (data) => {
         setItemId(data?.id);
@@ -225,6 +238,14 @@ const Users = () => {
                         })}
                     </tbody>
                 </Table>
+
+                <div style={{ marginTop: "6.4rem" }}>
+                    <PaginationComponent
+                        currentPage={queryParams?.start}
+                        totalPages={totalPages}
+                        onPageChange={handlePageChange}
+                    />
+                </div>
             </Col>
 
             {deleteItemModal &&

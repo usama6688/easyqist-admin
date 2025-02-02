@@ -7,6 +7,7 @@ import PATHS from '../../routes/Paths';
 import DeleteModal from "../../components/DeleteModal";
 import { useSelector } from 'react-redux';
 import moment from 'moment/moment';
+import PaginationComponent from '../../components/pagination/Pagination';
 
 const OrderRequests = () => {
 
@@ -16,11 +17,24 @@ const OrderRequests = () => {
     const navigator = useNavigate();
     const auth = useSelector((data) => data?.auth);
 
+    const [queryParams, setQueryParams] = useState({
+        start: 1,
+        limit: 10,
+        status: "",
+    });
+
     const {
         data: viewOrderRequest,
         isLoading: viewOrderRequestLoading,
         refetch: viewOrderRequestRefetch,
-    } = useViewOrderRequestQuery({ params: { status: status } });
+    } = useViewOrderRequestQuery({ params: queryParams });
+
+    const totalRecords = viewOrderRequest?.pagination?.totalRecords || 0;
+    const totalPages = Math.ceil(totalRecords / queryParams?.limit);
+
+    const handlePageChange = (page) => {
+        setQueryParams((prev) => ({ ...prev, start: page }));
+    };
 
     const deleteModalHandler = (data) => {
         setDeleteModal((prev) => !prev);
@@ -62,6 +76,10 @@ const OrderRequests = () => {
 
     const selectStatusHandler = (value) => {
         setStatus(value);
+        setQueryParams((prev) => ({
+            ...prev,
+            status: value,
+        }));
     };
 
     const localSearchTableFunction = () => {
@@ -220,6 +238,14 @@ const OrderRequests = () => {
                         }
                     </tbody>
                 </Table>
+
+                <div style={{ marginTop: "6.4rem" }}>
+                    <PaginationComponent
+                        currentPage={queryParams?.start}
+                        totalPages={totalPages}
+                        onPageChange={handlePageChange}
+                    />
+                </div>
             </Col>
 
             {deleteModal &&
