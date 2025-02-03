@@ -22,8 +22,10 @@ const Users = () => {
     const auth = useSelector((data) => data?.auth);
 
     const [queryParams, setQueryParams] = useState({
-        start: 1,
+        page: 1,
         limit: 10,
+        name: "",
+        phone: "",
     });
 
     const {
@@ -35,7 +37,7 @@ const Users = () => {
     const totalPages = Math.ceil(totalRecords / queryParams?.limit);
 
     const handlePageChange = (page) => {
-        setQueryParams((prev) => ({ ...prev, start: page }));
+        setQueryParams((prev) => ({ ...prev, page: page }));
     };
 
     const DeleteModalHandler = (data) => {
@@ -88,26 +90,26 @@ const Users = () => {
             });
     };
 
-    const localSearchTableFunction = (value) => {
-        const input = document.getElementById("localSearchInput");
-        const filter = input.value.toUpperCase();
-        var length = document.getElementsByClassName("mainDiv").length;
-        let recordsFound = false;
+    // const localSearchTableFunction = (value) => {
+    //     const input = document.getElementById("localSearchInput");
+    //     const filter = input.value.toUpperCase();
+    //     var length = document.getElementsByClassName("mainDiv").length;
+    //     let recordsFound = false;
 
-        for (var i = 0; i < length; i++) {
-            if (
-                document
-                    .getElementsByClassName("mainDiv")
-                [i].innerHTML.toUpperCase()
-                    .indexOf(filter) > -1
-            ) {
-                document.getElementsByClassName("mainDiv")[i].style.display = "table-row";
-                recordsFound = true;
-            } else {
-                document.getElementsByClassName("mainDiv")[i].style.display = "none";
-            }
-        }
-    };
+    //     for (var i = 0; i < length; i++) {
+    //         if (
+    //             document
+    //                 .getElementsByClassName("mainDiv")
+    //             [i].innerHTML.toUpperCase()
+    //                 .indexOf(filter) > -1
+    //         ) {
+    //             document.getElementsByClassName("mainDiv")[i].style.display = "table-row";
+    //             recordsFound = true;
+    //         } else {
+    //             document.getElementsByClassName("mainDiv")[i].style.display = "none";
+    //         }
+    //     }
+    // };
 
     const handleDatesChange = ({ startDate, endDate }) => {
         setStartDate(startDate);
@@ -124,18 +126,30 @@ const Users = () => {
         });
     };
 
-    const filteredUserData = filterDataByDate(getUser?.data || [], startDate, endDate);
+    // const filteredUserData = filterDataByDate(getUser?.data || [], startDate, endDate);
 
     return (
         <Row>
             <Col lg="12">
                 <div>
-                    <Input
-                        id='localSearchInput'
-                        placeholder="Search user"
-                        type="search"
-                        onChange={(e) => localSearchTableFunction(e.target.value)}
-                    />
+                    <div className="row">
+                        <div className="col-6">
+                            <Input
+                                placeholder="Search by Name"
+                                type="search"
+                                value={queryParams?.name}
+                                onChange={(e) => setQueryParams((prev) => ({ ...prev, name: e.target.value }))}
+                            />
+                        </div>
+                        <div className="col-6">
+                            <Input
+                                placeholder="Search by Phone"
+                                type="number"
+                                value={queryParams?.phone}
+                                onChange={(e) => setQueryParams((prev) => ({ ...prev, phone: e.target.value }))}
+                            />
+                        </div>
+                    </div>
 
                     <div className="mt-4 d-flex justify-content-between">
                         <div>
@@ -176,7 +190,7 @@ const Users = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredUserData?.map((data) => {
+                        {getUser?.data?.map((data) => {
                             return (
                                 <tr className="border-top mainDiv">
                                     <td>{data?.name}</td>
@@ -241,7 +255,7 @@ const Users = () => {
 
                 <div style={{ marginTop: "6.4rem" }}>
                     <PaginationComponent
-                        currentPage={queryParams?.start}
+                        currentPage={queryParams?.page}
                         totalPages={totalPages}
                         onPageChange={handlePageChange}
                     />

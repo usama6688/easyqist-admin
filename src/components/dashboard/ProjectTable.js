@@ -3,20 +3,20 @@ import { useGetUserQuery, useViewOrderRequestQuery } from "../../services/Api";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PATHS from "../../routes/Paths";
-import { DateRangePicker } from "react-dates";
+// import { DateRangePicker } from "react-dates";
 import moment from "moment/moment";
 import { useSelector } from "react-redux";
 import PaginationComponent from "../pagination/Pagination";
 
 const ProjectTables = () => {
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const [focusedInput, setFocusedInput] = useState(null);
+  // const [startDate, setStartDate] = useState(null);
+  // const [endDate, setEndDate] = useState(null);
+  // const [focusedInput, setFocusedInput] = useState(null);
   const navigator = useNavigate();
   const auth = useSelector((data) => data?.auth);
 
   const [queryParams, setQueryParams] = useState({
-    start: 1,
+    page: 1,
     limit: 10,
     status: 1,
   });
@@ -31,7 +31,7 @@ const ProjectTables = () => {
   const totalPages = Math.ceil(totalRecords / queryParams?.limit);
 
   const handlePageChange = (page) => {
-    setQueryParams((prev) => ({ ...prev, start: page }));
+    setQueryParams((prev) => ({ ...prev, page: page }));
   };
 
   // const {
@@ -44,22 +44,22 @@ const ProjectTables = () => {
     // getUserRefetch();
   }, []);
 
-  const handleDatesChange = ({ startDate, endDate }) => {
-    setStartDate(startDate);
-    setEndDate(endDate);
-  };
+  // const handleDatesChange = ({ startDate, endDate }) => {
+  //   setStartDate(startDate);
+  //   setEndDate(endDate);
+  // };
 
-  const falseFunc = () => false;
+  // const falseFunc = () => false;
 
-  const filterDataByDate = (data, startDate, endDate) => {
-    if (!startDate || !endDate) return data;
-    return data.filter(item => {
-      const createdAt = moment(item.created_at);
-      return createdAt.isSameOrAfter(startDate) && createdAt.isSameOrBefore(endDate);
-    });
-  };
+  // const filterDataByDate = (data, startDate, endDate) => {
+  //   if (!startDate || !endDate) return data;
+  //   return data.filter(item => {
+  //     const createdAt = moment(item.created_at);
+  //     return createdAt.isSameOrAfter(startDate) && createdAt.isSameOrBefore(endDate);
+  //   });
+  // };
 
-  const filteredOrderRequestData = filterDataByDate(viewOrderRequest?.data || [], startDate, endDate);
+  // const filteredOrderRequestData = filterDataByDate(viewOrderRequest?.data || [], startDate, endDate);
   // const filteredUserData = filterDataByDate(getUser?.data || [], startDate, endDate);
 
   return (
@@ -79,7 +79,7 @@ const ProjectTables = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredOrderRequestData?.length ? filteredOrderRequestData?.map((data) => {
+              {viewOrderRequest?.data?.length ? viewOrderRequest?.data?.map((data) => {
                 return (
                   <tr className="border-top" style={{ cursor: "pointer" }}
                     onClick={() => {
@@ -115,7 +115,7 @@ const ProjectTables = () => {
 
           <div style={{ marginTop: "2rem" }}>
             <PaginationComponent
-              currentPage={queryParams?.start}
+              currentPage={queryParams?.page}
               totalPages={totalPages}
               onPageChange={handlePageChange}
             />

@@ -18,9 +18,11 @@ const OrderRequests = () => {
     const auth = useSelector((data) => data?.auth);
 
     const [queryParams, setQueryParams] = useState({
-        start: 1,
+        page: 1,
         limit: 10,
         status: "",
+        name: "",
+        phone: "",
     });
 
     const {
@@ -33,7 +35,7 @@ const OrderRequests = () => {
     const totalPages = Math.ceil(totalRecords / queryParams?.limit);
 
     const handlePageChange = (page) => {
-        setQueryParams((prev) => ({ ...prev, start: page }));
+        setQueryParams((prev) => ({ ...prev, page: page }));
     };
 
     const deleteModalHandler = (data) => {
@@ -82,33 +84,33 @@ const OrderRequests = () => {
         }));
     };
 
-    const localSearchTableFunction = () => {
-        const input = document.getElementById("localSearchInput");
-        const filter = input.value.toUpperCase();
-        var length = document.getElementsByClassName("mainDiv").length;
-        let recordsFound = false;
+    // const localSearchTableFunction = () => {
+    //     const input = document.getElementById("localSearchInput");
+    //     const filter = input.value.toUpperCase();
+    //     var length = document.getElementsByClassName("mainDiv").length;
+    //     let recordsFound = false;
 
-        for (var i = 0; i < length; i++) {
-            if (
-                document
-                    .getElementsByClassName("mainDiv")
-                [i].innerHTML.toUpperCase()
-                    .indexOf(filter) > -1
-            ) {
-                document.getElementsByClassName("mainDiv")[i].style.display = "table-row";
-                recordsFound = true;
-            } else {
-                document.getElementsByClassName("mainDiv")[i].style.display = "none";
-            }
-        }
-    }
+    //     for (var i = 0; i < length; i++) {
+    //         if (
+    //             document
+    //                 .getElementsByClassName("mainDiv")
+    //             [i].innerHTML.toUpperCase()
+    //                 .indexOf(filter) > -1
+    //         ) {
+    //             document.getElementsByClassName("mainDiv")[i].style.display = "table-row";
+    //             recordsFound = true;
+    //         } else {
+    //             document.getElementsByClassName("mainDiv")[i].style.display = "none";
+    //         }
+    //     }
+    // }
 
-    const sortedData = [...(viewOrderRequest?.data || [])].sort((a, b) => {
-        const dateA = new Date(a.order_date);
-        const dateB = new Date(b.order_date);
+    // const sortedData = [...(viewOrderRequest?.data || [])].sort((a, b) => {
+    //     const dateA = new Date(a.order_date);
+    //     const dateB = new Date(b.order_date);
 
-        return dateB - dateA;
-    });
+    //     return dateB - dateA;
+    // });
 
     useEffect(() => {
         viewOrderRequestRefetch();
@@ -120,13 +122,20 @@ const OrderRequests = () => {
                 <div className="row">
                     <div className="col-4">
                         <Input
-                            id='localSearchInput'
-                            placeholder="Search order"
-                            type="search"
-                            onChange={(e) => localSearchTableFunction(e.target.value)}
+                            placeholder="Search by Name"
+                            type="text"
+                            value={queryParams?.name}
+                            onChange={(e) => setQueryParams((prev) => ({ ...prev, name: e.target.value }))}
                         />
                     </div>
-                    <div className="col-4"></div>
+                    <div className="col-4">
+                        <Input
+                            placeholder="Search by Phone"
+                            type="number"
+                            value={queryParams?.phone}
+                            onChange={(e) => setQueryParams((prev) => ({ ...prev, phone: e.target.value }))}
+                        />
+                    </div>
                     <div className="col-4">
                         <select class="form-select" aria-label="Default select example" onChange={(e) => selectStatusHandler(e.target.value)}>
                             <option value="">Select status</option>
@@ -159,7 +168,7 @@ const OrderRequests = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {sortedData?.length ? sortedData?.map((data) => {
+                        {viewOrderRequest?.data?.length ? viewOrderRequest?.data?.map((data) => {
                             return (
                                 <tr className="border-top mainDiv" style={{ cursor: "pointer" }}
                                 >
@@ -241,7 +250,7 @@ const OrderRequests = () => {
 
                 <div style={{ marginTop: "6.4rem" }}>
                     <PaginationComponent
-                        currentPage={queryParams?.start}
+                        currentPage={queryParams?.page}
                         totalPages={totalPages}
                         onPageChange={handlePageChange}
                     />
