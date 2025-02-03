@@ -26,6 +26,8 @@ const Users = () => {
         limit: 10,
         name: "",
         phone: "",
+        startDate: "",
+        endDate: "",
     });
 
     const {
@@ -90,6 +92,16 @@ const Users = () => {
             });
     };
 
+    const handleDatesChange = ({ startDate, endDate }) => {
+        setStartDate(startDate);
+        setEndDate(endDate);
+        setQueryParams((prev) => ({
+            ...prev,
+            startDate: startDate ? moment(startDate).format("DD-MM-YYYY") : "",
+            endDate: endDate ? moment(endDate).format("DD-MM-YYYY") : "",
+        }));
+    };
+
     // const localSearchTableFunction = (value) => {
     //     const input = document.getElementById("localSearchInput");
     //     const filter = input.value.toUpperCase();
@@ -111,20 +123,20 @@ const Users = () => {
     //     }
     // };
 
-    const handleDatesChange = ({ startDate, endDate }) => {
-        setStartDate(startDate);
-        setEndDate(endDate);
-    };
+    // const handleDatesChange = ({ startDate, endDate }) => {
+    //     setStartDate(startDate);
+    //     setEndDate(endDate);
+    // };
 
     const falseFunc = () => false;
 
-    const filterDataByDate = (data, startDate, endDate) => {
-        if (!startDate || !endDate) return data;
-        return data?.filter(item => {
-            const createdAt = moment(item?.created_at);
-            return createdAt.isSameOrAfter(startDate) && createdAt.isSameOrBefore(endDate);
-        });
-    };
+    // const filterDataByDate = (data, startDate, endDate) => {
+    //     if (!startDate || !endDate) return data;
+    //     return data?.filter(item => {
+    //         const createdAt = moment(item?.created_at);
+    //         return createdAt.isSameOrAfter(startDate) && createdAt.isSameOrBefore(endDate);
+    //     });
+    // };
 
     // const filteredUserData = filterDataByDate(getUser?.data || [], startDate, endDate);
 
