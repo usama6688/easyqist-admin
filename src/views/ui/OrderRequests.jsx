@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Row, Table } from 'reactstrap';
+import { Button, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Row, Table } from 'reactstrap';
 import delIcon from "../../assets/images/delIcon.svg";
 import { useChangeOrderStatusMutation, useDeleteOrderMutation, useViewOrderRequestQuery } from '../../services/Api';
 import { Link, useNavigate } from 'react-router-dom';
@@ -8,10 +8,16 @@ import DeleteModal from "../../components/DeleteModal";
 import { useSelector } from 'react-redux';
 import moment from 'moment/moment';
 import PaginationComponent from '../../components/pagination/Pagination';
+import { DateRangePicker } from "react-dates";
 
 const OrderRequests = () => {
 
     const [status, setStatus] = useState("");
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+    const [searchName, setSearchName] = useState("");
+    const [searchPhone, setSearchPhone] = useState("");
+    const [focusedInput, setFocusedInput] = useState(null);
     const [deleteModal, setDeleteModal] = useState(false);
     const [viewData, setViewData] = useState("");
     const navigator = useNavigate();
@@ -23,6 +29,8 @@ const OrderRequests = () => {
         status: "",
         name: "",
         phone: "",
+        startDate: "",
+        endDate: "",
     });
 
     const {
@@ -34,9 +42,43 @@ const OrderRequests = () => {
     const totalRecords = viewOrderRequest?.pagination?.totalRecords || 0;
     const totalPages = Math.ceil(totalRecords / queryParams?.limit);
 
+    const handleSearch = () => {
+        setQueryParams((prev) => ({
+            ...prev,
+            status: status,
+            name: searchName,
+            phone: searchPhone,
+            startDate: startDate ? moment(startDate).format("DD-MM-YYYY") : "",
+            endDate: endDate ? moment(endDate).format("DD-MM-YYYY") : "",
+        }));
+    };
+
+    const handleReset = () => {
+        setQueryParams((prev) => ({
+            ...prev,
+            name: "",
+            phone: "",
+            startDate: "",
+            endDate: "",
+            status: ""
+        }));
+        setSearchName("");
+        setSearchPhone("");
+        setStartDate(null);
+        setEndDate(null);
+        setStatus("");
+    };
+
     const handlePageChange = (page) => {
         setQueryParams((prev) => ({ ...prev, page: page }));
     };
+
+    const handleDatesChange = ({ startDate, endDate }) => {
+        setStartDate(startDate);
+        setEndDate(endDate);
+    };
+
+    const falseFunc = () => false;
 
     const deleteModalHandler = (data) => {
         setDeleteModal((prev) => !prev);
@@ -78,66 +120,44 @@ const OrderRequests = () => {
 
     const selectStatusHandler = (value) => {
         setStatus(value);
-        setQueryParams((prev) => ({
-            ...prev,
-            status: value,
-        }));
     };
-
-    // const localSearchTableFunction = () => {
-    //     const input = document.getElementById("localSearchInput");
-    //     const filter = input.value.toUpperCase();
-    //     var length = document.getElementsByClassName("mainDiv").length;
-    //     let recordsFound = false;
-
-    //     for (var i = 0; i < length; i++) {
-    //         if (
-    //             document
-    //                 .getElementsByClassName("mainDiv")
-    //             [i].innerHTML.toUpperCase()
-    //                 .indexOf(filter) > -1
-    //         ) {
-    //             document.getElementsByClassName("mainDiv")[i].style.display = "table-row";
-    //             recordsFound = true;
-    //         } else {
-    //             document.getElementsByClassName("mainDiv")[i].style.display = "none";
-    //         }
-    //     }
-    // }
-
-    // const sortedData = [...(viewOrderRequest?.data || [])].sort((a, b) => {
-    //     const dateA = new Date(a.order_date);
-    //     const dateB = new Date(b.order_date);
-
-    //     return dateB - dateA;
-    // });
-
-    useEffect(() => {
-        viewOrderRequestRefetch();
-    }, [status]);
 
     return (
         <Row>
             <Col lg="12">
                 <div className="row">
-                    <div className="col-4">
+                    <div className="col-4 pe-0">
                         <Input
                             placeholder="Search by Name"
-                            type="text"
-                            value={queryParams?.name}
-                            onChange={(e) => setQueryParams((prev) => ({ ...prev, name: e.target.value }))}
+                            className='h-100'
+                            type="search"
+                            value={searchName}
+                            onChange={(e) => setSearchName(e.target.value)}
                         />
                     </div>
-                    <div className="col-4">
+                    <div className="col-4 pe-0">
                         <Input
                             placeholder="Search by Phone"
+                            className='h-100'
                             type="number"
-                            value={queryParams?.phone}
-                            onChange={(e) => setQueryParams((prev) => ({ ...prev, phone: e.target.value }))}
+                            value={searchPhone}
+                            onChange={(e) => setSearchPhone(e.target.value)}
                         />
                     </div>
-                    <div className="col-4">
-                        <select class="form-select" aria-label="Default select example" onChange={(e) => selectStatusHandler(e.target.value)}>
+                    <div className="col-4 pe-0">
+                        <DateRangePicker
+                            isOutsideRange={falseFunc}
+                            startDate={startDate}
+                            startDateId="datepicker-start-date"
+                            endDate={endDate}
+                            endDateId="datepicker-end-date"
+                            onDatesChange={handleDatesChange}
+                            focusedInput={focusedInput}
+                            onFocusChange={focusedInput => setFocusedInput(focusedInput)}
+                        />
+                    </div>
+                    <div className="col-4 pe-0 mt-4">
+                        <select class="form-select" aria-label="Default select example" onChange={(e) => selectStatusHandler(e.target.value)} value={status} style={{ height: "47px" }}>
                             <option value="">Select status</option>
                             <option value="1">Pending</option>
                             <option value="2">Accepted</option>
@@ -149,9 +169,13 @@ const OrderRequests = () => {
                             <option value="-2">Canceled</option>
                         </select>
                     </div>
+                    <div className="col-4 pe-0 mt-4 d-flex gap-2">
+                        <Button className="w-100 h-100 bg-danger border-0" onClick={handleReset}>Reset</Button>
+                        <Button className="w-100 h-100 bg-success border-0" onClick={handleSearch}>Search</Button>
+                    </div>
                 </div>
 
-                <Table className="no-wrap mt-3 align-middle" borderless>
+                <Table className="no-wrap mt-3 align-middle" responsive borderless>
                     <thead>
                         <tr>
                             <th>Name</th>

@@ -16,6 +16,8 @@ const Users = () => {
     const [status, setStatus] = useState("");
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
+    const [searchName, setSearchName] = useState("");
+    const [searchPhone, setSearchPhone] = useState("");
     const [focusedInput, setFocusedInput] = useState(null);
     const [deleteItemModal, setDeleteItemModal] = useState(false);
     const [banUserModal, setBanUserModal] = useState(false);
@@ -37,6 +39,30 @@ const Users = () => {
 
     const totalRecords = getUser?.pagination?.totalRecords || 0;
     const totalPages = Math.ceil(totalRecords / queryParams?.limit);
+
+    const handleSearch = () => {
+        setQueryParams((prev) => ({
+            ...prev,
+            name: searchName,
+            phone: searchPhone,
+            startDate: startDate ? moment(startDate).format("DD-MM-YYYY") : "",
+            endDate: endDate ? moment(endDate).format("DD-MM-YYYY") : "",
+        }));
+    };
+
+    const handleReset = () => {
+        setQueryParams((prev) => ({
+            ...prev,
+            name: "",
+            phone: "",
+            startDate: "",
+            endDate: "",
+        }));
+        setSearchName("");
+        setSearchPhone("");
+        setStartDate(null);
+        setEndDate(null);
+    };
 
     const handlePageChange = (page) => {
         setQueryParams((prev) => ({ ...prev, page: page }));
@@ -95,77 +121,34 @@ const Users = () => {
     const handleDatesChange = ({ startDate, endDate }) => {
         setStartDate(startDate);
         setEndDate(endDate);
-        setQueryParams((prev) => ({
-            ...prev,
-            startDate: startDate ? moment(startDate).format("DD-MM-YYYY") : "",
-            endDate: endDate ? moment(endDate).format("DD-MM-YYYY") : "",
-        }));
     };
 
-    // const localSearchTableFunction = (value) => {
-    //     const input = document.getElementById("localSearchInput");
-    //     const filter = input.value.toUpperCase();
-    //     var length = document.getElementsByClassName("mainDiv").length;
-    //     let recordsFound = false;
-
-    //     for (var i = 0; i < length; i++) {
-    //         if (
-    //             document
-    //                 .getElementsByClassName("mainDiv")
-    //             [i].innerHTML.toUpperCase()
-    //                 .indexOf(filter) > -1
-    //         ) {
-    //             document.getElementsByClassName("mainDiv")[i].style.display = "table-row";
-    //             recordsFound = true;
-    //         } else {
-    //             document.getElementsByClassName("mainDiv")[i].style.display = "none";
-    //         }
-    //     }
-    // };
-
-    // const handleDatesChange = ({ startDate, endDate }) => {
-    //     setStartDate(startDate);
-    //     setEndDate(endDate);
-    // };
-
     const falseFunc = () => false;
-
-    // const filterDataByDate = (data, startDate, endDate) => {
-    //     if (!startDate || !endDate) return data;
-    //     return data?.filter(item => {
-    //         const createdAt = moment(item?.created_at);
-    //         return createdAt.isSameOrAfter(startDate) && createdAt.isSameOrBefore(endDate);
-    //     });
-    // };
-
-    // const filteredUserData = filterDataByDate(getUser?.data || [], startDate, endDate);
 
     return (
         <Row>
             <Col lg="12">
                 <div>
                     <div className="row">
-                        <div className="col-6">
+                        <div className="col-3 pe-0">
                             <Input
                                 placeholder="Search by Name"
+                                className='h-100'
                                 type="search"
-                                value={queryParams?.name}
-                                onChange={(e) => setQueryParams((prev) => ({ ...prev, name: e.target.value }))}
+                                value={searchName}
+                                onChange={(e) => setSearchName(e.target.value)}
                             />
                         </div>
-                        <div className="col-6">
+                        <div className="col-3 pe-0">
                             <Input
                                 placeholder="Search by Phone"
+                                className='h-100'
                                 type="number"
-                                value={queryParams?.phone}
-                                onChange={(e) => setQueryParams((prev) => ({ ...prev, phone: e.target.value }))}
+                                value={searchPhone}
+                                onChange={(e) => setSearchPhone(e.target.value)}
                             />
                         </div>
-                    </div>
-
-                    <div className="mt-4 d-flex justify-content-between">
-                        <div>
-                            <span>Select Date Range: </span>
+                        <div className="col-4">
                             <DateRangePicker
                                 isOutsideRange={falseFunc}
                                 startDate={startDate}
@@ -176,6 +159,15 @@ const Users = () => {
                                 focusedInput={focusedInput}
                                 onFocusChange={focusedInput => setFocusedInput(focusedInput)}
                             />
+                        </div>
+                        <div className="col-2 ps-0 d-flex gap-2">
+                            <Button className="w-100 h-100 bg-danger border-0" onClick={handleReset}>Reset</Button>
+                            <Button className="w-100 h-100 bg-success border-0" onClick={handleSearch}>Search</Button>
+                        </div>
+                    </div>
+
+                    <div className="mt-4 d-flex justify-content-between">
+                        <div>
                         </div>
 
                         {auth?.userDetail?.type == 3 ? null :
