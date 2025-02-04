@@ -45,11 +45,10 @@ const OrderRequests = () => {
     const handleSearch = () => {
         setQueryParams((prev) => ({
             ...prev,
+            page: 1,
             status: status,
             name: searchName,
             phone: searchPhone,
-            startDate: startDate ? moment(startDate).format("DD-MM-YYYY") : "",
-            endDate: endDate ? moment(endDate).format("DD-MM-YYYY") : "",
         }));
     };
 
@@ -58,24 +57,38 @@ const OrderRequests = () => {
             ...prev,
             name: "",
             phone: "",
-            startDate: "",
-            endDate: "",
             status: ""
         }));
         setSearchName("");
         setSearchPhone("");
-        setStartDate(null);
-        setEndDate(null);
         setStatus("");
     };
 
-    const handlePageChange = (page) => {
-        setQueryParams((prev) => ({ ...prev, page: page }));
+    const handleResetDate = () => {
+        setQueryParams((prev) => ({
+            ...prev,
+            limit: 10,
+            startDate: "",
+            endDate: "",
+        }));
+        setStartDate(null);
+        setEndDate(null);
     };
 
     const handleDatesChange = ({ startDate, endDate }) => {
         setStartDate(startDate);
         setEndDate(endDate);
+        setQueryParams((prev) => ({
+            ...prev,
+            page: 1,
+            limit: 100,
+            startDate: startDate ? moment(startDate).format("YYYY-MM-DD") : "",
+            endDate: endDate ? moment(endDate).format("YYYY-MM-DD") : "",
+        }));
+    };
+
+    const handlePageChange = (page) => {
+        setQueryParams((prev) => ({ ...prev, page: page }));
     };
 
     const falseFunc = () => false;
@@ -126,7 +139,7 @@ const OrderRequests = () => {
         <Row>
             <Col lg="12">
                 <div className="row">
-                    <div className="col-4 pe-0">
+                    <div className="col-3 pe-0">
                         <Input
                             placeholder="Search by Name"
                             className='h-100'
@@ -135,7 +148,7 @@ const OrderRequests = () => {
                             onChange={(e) => setSearchName(e.target.value)}
                         />
                     </div>
-                    <div className="col-4 pe-0">
+                    <div className="col-3 pe-0">
                         <Input
                             placeholder="Search by Phone"
                             className='h-100'
@@ -144,19 +157,7 @@ const OrderRequests = () => {
                             onChange={(e) => setSearchPhone(e.target.value)}
                         />
                     </div>
-                    <div className="col-4 pe-0">
-                        <DateRangePicker
-                            isOutsideRange={falseFunc}
-                            startDate={startDate}
-                            startDateId="datepicker-start-date"
-                            endDate={endDate}
-                            endDateId="datepicker-end-date"
-                            onDatesChange={handleDatesChange}
-                            focusedInput={focusedInput}
-                            onFocusChange={focusedInput => setFocusedInput(focusedInput)}
-                        />
-                    </div>
-                    <div className="col-4 pe-0 mt-4">
+                    <div className="col-3 pe-0">
                         <select class="form-select" aria-label="Default select example" onChange={(e) => selectStatusHandler(e.target.value)} value={status} style={{ height: "47px" }}>
                             <option value="">Select status</option>
                             <option value="1">Pending</option>
@@ -169,9 +170,25 @@ const OrderRequests = () => {
                             <option value="-2">Canceled</option>
                         </select>
                     </div>
-                    <div className="col-4 pe-0 mt-4 d-flex gap-2">
+                    <div className="col-3 pe-0 d-flex gap-2">
                         <Button className="w-100 h-100 bg-danger border-0" onClick={handleReset}>Reset</Button>
                         <Button className="w-100 h-100 bg-success border-0" onClick={handleSearch}>Search</Button>
+                    </div>
+
+                    <div className="col-4 mt-4 pe-0">
+                        <DateRangePicker
+                            isOutsideRange={falseFunc}
+                            startDate={startDate}
+                            startDateId="datepicker-start-date"
+                            endDate={endDate}
+                            endDateId="datepicker-end-date"
+                            onDatesChange={handleDatesChange}
+                            focusedInput={focusedInput}
+                            onFocusChange={focusedInput => setFocusedInput(focusedInput)}
+                        />
+                    </div>
+                    <div className="col-4 mt-4 ps-0">
+                        <Button className="w-50 h-100 bg-danger border-0" onClick={handleResetDate}>Reset Date</Button>
                     </div>
                 </div>
 

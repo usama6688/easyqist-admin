@@ -43,10 +43,9 @@ const Users = () => {
     const handleSearch = () => {
         setQueryParams((prev) => ({
             ...prev,
+            page: 1,
             name: searchName,
             phone: searchPhone,
-            startDate: startDate ? moment(startDate).format("DD-MM-YYYY") : "",
-            endDate: endDate ? moment(endDate).format("DD-MM-YYYY") : "",
         }));
     };
 
@@ -55,14 +54,35 @@ const Users = () => {
             ...prev,
             name: "",
             phone: "",
-            startDate: "",
-            endDate: "",
         }));
         setSearchName("");
         setSearchPhone("");
+    };
+
+    const handleResetDate = () => {
+        setQueryParams((prev) => ({
+            ...prev,
+            limit: 10,
+            startDate: "",
+            endDate: "",
+        }));
         setStartDate(null);
         setEndDate(null);
     };
+
+    const handleDatesChange = ({ startDate, endDate }) => {
+        setStartDate(startDate);
+        setEndDate(endDate);
+        setQueryParams((prev) => ({
+            ...prev,
+            page: 1,
+            limit: 100,
+            startDate: startDate ? moment(startDate).format("YYYY-MM-DD") : "",
+            endDate: endDate ? moment(endDate).format("YYYY-MM-DD") : "",
+        }));
+    };
+
+    const falseFunc = () => false;
 
     const handlePageChange = (page) => {
         setQueryParams((prev) => ({ ...prev, page: page }));
@@ -118,19 +138,12 @@ const Users = () => {
             });
     };
 
-    const handleDatesChange = ({ startDate, endDate }) => {
-        setStartDate(startDate);
-        setEndDate(endDate);
-    };
-
-    const falseFunc = () => false;
-
     return (
         <Row>
             <Col lg="12">
                 <div>
                     <div className="row">
-                        <div className="col-3 pe-0">
+                        <div className="col-4 pe-0">
                             <Input
                                 placeholder="Search by Name"
                                 className='h-100'
@@ -139,7 +152,7 @@ const Users = () => {
                                 onChange={(e) => setSearchName(e.target.value)}
                             />
                         </div>
-                        <div className="col-3 pe-0">
+                        <div className="col-4 pe-0">
                             <Input
                                 placeholder="Search by Phone"
                                 className='h-100'
@@ -148,7 +161,11 @@ const Users = () => {
                                 onChange={(e) => setSearchPhone(e.target.value)}
                             />
                         </div>
-                        <div className="col-4">
+                        <div className="col-4 d-flex gap-2">
+                            <Button className="w-100 h-100 bg-danger border-0" onClick={handleReset}>Reset</Button>
+                            <Button className="w-100 h-100 bg-success border-0" onClick={handleSearch}>Search</Button>
+                        </div>
+                        <div className="col-4 mt-4">
                             <DateRangePicker
                                 isOutsideRange={falseFunc}
                                 startDate={startDate}
@@ -160,9 +177,8 @@ const Users = () => {
                                 onFocusChange={focusedInput => setFocusedInput(focusedInput)}
                             />
                         </div>
-                        <div className="col-2 ps-0 d-flex gap-2">
-                            <Button className="w-100 h-100 bg-danger border-0" onClick={handleReset}>Reset</Button>
-                            <Button className="w-100 h-100 bg-success border-0" onClick={handleSearch}>Search</Button>
+                        <div className="col-4 mt-4 ps-0">
+                            <Button className="w-50 h-100 bg-danger border-0" onClick={handleResetDate}>Reset Date</Button>
                         </div>
                     </div>
 
