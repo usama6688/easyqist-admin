@@ -25,7 +25,7 @@ const Users = () => {
 
     const [queryParams, setQueryParams] = useState({
         page: 1,
-        limit: 10,
+        limit: 50,
         name: "",
         phone: "",
         startDate: "",

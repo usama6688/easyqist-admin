@@ -12,7 +12,8 @@ import { DateRangePicker } from "react-dates";
 
 const OrderRequests = () => {
 
-    const [status, setStatus] = useState("");
+    const prevStatus = localStorage.getItem("status");
+    const [status, setStatus] = useState(prevStatus || "");
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [searchName, setSearchName] = useState("");
@@ -25,8 +26,8 @@ const OrderRequests = () => {
 
     const [queryParams, setQueryParams] = useState({
         page: 1,
-        limit: 10,
-        status: "",
+        limit: 50,
+        status: prevStatus || "",
         name: "",
         phone: "",
         startDate: "",
@@ -46,7 +47,7 @@ const OrderRequests = () => {
         setQueryParams((prev) => ({
             ...prev,
             page: 1,
-            status: status,
+            // status: status,
             name: searchName,
             phone: searchPhone,
         }));
@@ -61,7 +62,7 @@ const OrderRequests = () => {
         }));
         setSearchName("");
         setSearchPhone("");
-        setStatus("");
+        // setStatus("");
     };
 
     const handleResetDate = () => {
@@ -133,13 +134,19 @@ const OrderRequests = () => {
 
     const selectStatusHandler = (value) => {
         setStatus(value);
+        localStorage.setItem("status", value);
+        setQueryParams((prev) => ({
+            ...prev,
+            page: 1,
+            status: value,
+        }));
     };
 
     return (
         <Row>
             <Col lg="12">
                 <div className="row">
-                    <div className="col-3 pe-0">
+                    <div className="col-4 pe-0">
                         <Input
                             placeholder="Search by Name"
                             className='h-100'
@@ -148,7 +155,7 @@ const OrderRequests = () => {
                             onChange={(e) => setSearchName(e.target.value)}
                         />
                     </div>
-                    <div className="col-3 pe-0">
+                    <div className="col-4 pe-0">
                         <Input
                             placeholder="Search by Phone"
                             className='h-100'
@@ -157,7 +164,12 @@ const OrderRequests = () => {
                             onChange={(e) => setSearchPhone(e.target.value)}
                         />
                     </div>
-                    <div className="col-3 pe-0">
+                    <div className="col-4 pe-0 d-flex gap-2">
+                        <Button className="w-100 h-100 bg-danger border-0" onClick={handleReset}>Reset</Button>
+                        <Button className="w-100 h-100 bg-success border-0" onClick={handleSearch}>Search</Button>
+                    </div>
+
+                    <div className="col-3 pe-0 mt-4">
                         <select class="form-select" aria-label="Default select example" onChange={(e) => selectStatusHandler(e.target.value)} value={status} style={{ height: "47px" }}>
                             <option value="">Select status</option>
                             <option value="1">Pending</option>
@@ -170,11 +182,6 @@ const OrderRequests = () => {
                             <option value="-2">Canceled</option>
                         </select>
                     </div>
-                    <div className="col-3 pe-0 d-flex gap-2">
-                        <Button className="w-100 h-100 bg-danger border-0" onClick={handleReset}>Reset</Button>
-                        <Button className="w-100 h-100 bg-success border-0" onClick={handleSearch}>Search</Button>
-                    </div>
-
                     <div className="col-4 mt-4 pe-0">
                         <DateRangePicker
                             isOutsideRange={falseFunc}
@@ -282,9 +289,9 @@ const OrderRequests = () => {
                                         : null}
                                 </tr>
                             )
-                        }) : <>{viewOrderRequestLoading ? <td colSpan={8}>
+                        }) : <>{viewOrderRequestLoading ? <td colSpan={9}>
                             <h6 className='text-center'>Loading...</h6>
-                        </td> : <td colSpan={8}><h6 className='text-center'>No Record Found</h6></td>}</>
+                        </td> : <td colSpan={9}><h6 className='text-center'>No Record Found</h6></td>}</>
                         }
                     </tbody>
                 </Table>
