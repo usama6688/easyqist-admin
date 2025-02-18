@@ -51,6 +51,7 @@ const Notifications = Loadable(lazy(() => import("../views/ui/Notifications.jsx"
 const Blogs = Loadable(lazy(() => import("../views/ui/Blogs.jsx")));
 const AddBlog = Loadable(lazy(() => import("../views/ui/AddBlog.jsx")));
 const EditBlog = Loadable(lazy(() => import("../views/ui/EditBlog.jsx")));
+const EditProductRequests = Loadable(lazy(() => import("../views/ui/EditProductRequests.jsx")));
 
 export default function Router() {
   const auth = useSelector((data) => data?.auth);
@@ -99,6 +100,7 @@ export default function Router() {
             { path: PATHS.allBlogs, element: <Blogs /> },
             { path: PATHS.addBlog, element: <AddBlog /> },
             { path: PATHS.editBlog, element: <EditBlog /> },
+            { path: PATHS.editProductRequests, element: <EditProductRequests /> },
           ],
         },
       ]

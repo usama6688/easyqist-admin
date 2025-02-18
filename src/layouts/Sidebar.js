@@ -46,6 +46,10 @@ const navigation = [
     href: PATHS.requestedProducts,
   },
   {
+    title: "Edit Product Requests",
+    href: PATHS.editProductRequests,
+  },
+  {
     title: "Notifications",
     href: PATHS.notifications,
   },

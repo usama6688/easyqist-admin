@@ -658,6 +658,15 @@ export const api = SplitApiSettings.injectEndpoints({
       },
     }),
 
+    getEditProductRequests: builder.query({
+      query: () => {
+        return {
+          url: API_END_POINTS.getEditProductRequests,
+          method: "GET",
+        };
+      },
+    }),
+
   }),
 
   overrideExisting: true,
@@ -740,4 +749,5 @@ export const {
   useGetCommentsQuery,
   useGetAllBlogsQuery,
   useGetBlogByIdQuery,
+  useGetEditProductRequestsQuery,
 } = api;
