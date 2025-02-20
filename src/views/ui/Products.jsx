@@ -112,7 +112,7 @@ const Products = () => {
                             </Input>
                         </FormGroup>
                     </Col>
-                    {auth?.userDetail?.type == 3 ? null :
+                    {(auth?.userDetail?.type == 3 || auth?.userDetail?.type == 6) ? null :
                         <Col lg="3">
                             <div className='text-end'>
                                 <a href={PATHS.addProduct}>
@@ -169,20 +169,20 @@ const Products = () => {
                                                         }}
                                                     >Delete</Button>
                                                     : null}
-                                                {item?.status == 0 ?
+                                                {/* {item?.status == 0 ?
                                                     <Button
                                                         style={{ backgroundColor: "green", marginLeft: 10 }}
                                                         onClick={() => {
-                                                            // onDeleteBrand(item?.id)
+                                                            onDeleteBrand(item?.id)
                                                         }}
                                                     >Deactivate</Button>
                                                     :
                                                     <Button
                                                         style={{ backgroundColor: "green", marginLeft: 10 }}
                                                         onClick={() => {
-                                                            // onDeleteBrand(item?.id)
+                                                            onDeleteBrand(item?.id)
                                                         }}
-                                                    >Activate</Button>}
+                                                    >Activate</Button>} */}
                                             </div>
                                         </td>
                                     }

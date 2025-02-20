@@ -435,6 +435,27 @@ export const api = SplitApiSettings.injectEndpoints({
       },
     }),
 
+    editProductRequest: builder.mutation({
+      query: ({ data }) => ({
+        url: API_END_POINTS.editProductRequest,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    approveProductRequest: builder.mutation({
+      query: ({ data }) => {
+        return {
+          url: `${API_END_POINTS.approveProductRequest}/${data?.id}`,
+          method: "POST",
+          body: data,
+        }
+      },
+    }),
+
     /////////////////////////////<===QUERIES===>////////////////////////////////
 
     getBrands: builder.query({
@@ -725,6 +746,8 @@ export const {
   useAddBlogMutation,
   useEditBlogMutation,
   useDeleteBlogMutation,
+  useEditProductRequestMutation,
+  useApproveProductRequestMutation,
   /////////////////////////////<===QUERIES===>////////////////////////////////
   useGetBrandsQuery,
   useGetProductCatQuery,

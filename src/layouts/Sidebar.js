@@ -71,7 +71,7 @@ const Sidebar = () => {
 
   const filteredNavigation = auth?.userDetail?.type == 3
     ? navigation.filter(navi => navi?.title == "Dashboard" || navi?.title == "Notifications" || navi?.title == "Users") : auth?.userDetail?.type == 4 ? navigation.filter(navi => navi?.title == "Dashboard" || navi?.title == "Order Requests" || navi?.title == "Products" || navi?.title == "Users") : auth?.userDetail?.type == 5 ? navigation.filter(navi => navi?.title == "Dashboard" || navi?.title == "Order Requests")
-      : navigation;
+      : auth?.userDetail?.type == 6 ? navigation.filter(navi => navi?.title == "Dashboard" || navi?.title == "Products") : navigation;
 
   return (
     <div className="p-3">

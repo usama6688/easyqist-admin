@@ -5,6 +5,7 @@ import { Button, FormGroup, Input, Label } from "reactstrap";
 import ImageViewer from "./ImageViewer";
 import uploadIcon from "../assets/images/uploadImg.svg";
 import { useAddThumbnailMutation, useGetBrandsQuery, useGetProductCatQuery } from "../services/Api";
+import { useSelector } from "react-redux";
 
 const EditProductModal = (props) => {
 
@@ -20,6 +21,7 @@ const EditProductModal = (props) => {
     const [selectedBrandId, setSelectedBrandId] = useState(null);
     const [showThumbnail, setShowThumbnail] = useState([]);
     const [addThumbnailApi, setAddThumbnailApi] = useState("");
+    const auth = useSelector((data) => data?.auth);
 
     const {
         data: getProductCat,
@@ -132,10 +134,14 @@ const EditProductModal = (props) => {
         formData.append('discount_type', '%');
         formData.append('status', 1);
         formData.append('installment', 1);
-        formData.append('thumbnailimage', addThumbnailApi);
+        formData.append('thumbnailimage', addThumbnailApi || props?.data?.thumbnail);
         formData.append('id', props?.data?.id);
 
-        props?.action(formData);
+        if (auth?.userDetail?.type == 6) {
+            props?.newAction(formData);
+        } else {
+            props?.action(formData);
+        }
     };
 
     useEffect(() => {

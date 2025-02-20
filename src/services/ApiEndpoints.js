@@ -52,6 +52,8 @@ export const API_END_POINTS = {
   sendNotifications: BASE_URL + "send-notification",
   addBlog: BASE_URL + "create-blog",
   editBlog: BASE_URL + "blogs",
+  editProductRequest: BASE_URL + "product/edit_request",
+  approveProductRequest: BASE_URL + "product/edit_request/approve",
   /////////////////////////////<===QUERIES===>////////////////////////////////
   getBrands: BASE_URL + "get-brand",
   getProductCat: BASE_URL + "get-category",

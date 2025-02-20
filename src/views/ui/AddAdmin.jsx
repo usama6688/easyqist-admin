@@ -96,6 +96,7 @@ const AddAdmin = () => {
                         <option value="3">Social Media Manager</option>
                         <option value="4">Customer Service User</option>
                         <option value="5">Operation User</option>
+                        <option value="6">Marketing User</option>
                     </select>
                 </FormGroup>
 

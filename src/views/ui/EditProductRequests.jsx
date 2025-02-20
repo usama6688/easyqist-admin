@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Row, Table, FormGroup, Input } from 'reactstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDeleteProductMutation, useGetBrandsQuery, useGetProductCatQuery, useGetEditProductRequestsQuery } from '../../services/Api';
+import { useDeleteProductMutation, useGetBrandsQuery, useGetProductCatQuery, useGetEditProductRequestsQuery, useApproveProductRequestMutation } from '../../services/Api';
 import PATHS from '../../routes/Paths';
 import DeleteModal from '../../components/DeleteModal';
 import { useSelector } from 'react-redux';
 
 const EditProductRequests = () => {
 
-    const [deleteItemModal, setDeleteItemModal] = useState(false);
+    // const [deleteItemModal, setDeleteItemModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedBrand, setSelectedBrand] = useState('');
-    const [itemId, setItemId] = useState("");
-    const navigator = useNavigate();
+    // const [itemId, setItemId] = useState("");
+    // const navigator = useNavigate();
     const auth = useSelector((data) => data?.auth);
 
     const {
@@ -35,19 +35,39 @@ const EditProductRequests = () => {
     const { data: categories } = getProductCat || {};
     const { data: brands } = getBrands || {};
 
-    const [deleteProduct] = useDeleteProductMutation();
+    // const [deleteProduct] = useDeleteProductMutation();
+    const [approveProductRequest] = useApproveProductRequestMutation();
 
-    const DeleteModalHandler = (data) => {
-        setItemId(data);
-        setDeleteItemModal((prev) => !prev);
-    };
+    // const DeleteModalHandler = (data) => {
+    //     setItemId(data);
+    //     setDeleteItemModal((prev) => !prev);
+    // };
 
-    const ondeleteProduct = (id) => {
-        deleteProduct({ data: id })
+    // const ondeleteProduct = (id) => {
+    //     deleteProduct({ data: id })
+    //         .unwrap()
+    //         .then((payload) => {
+    //             if (payload.status) {
+    //                 DeleteModalHandler();
+    //                 getEditProductRequestsRefetch();
+    //             }
+    //         })
+    //         .catch((error) => {
+    //             console.log("error", error);
+    //         });
+    // };
+
+    const onApproveProduct = (id) => {
+
+        const data = {
+            status: "approved",
+            id: id,
+        };
+
+        approveProductRequest({ data: data })
             .unwrap()
             .then((payload) => {
                 if (payload.status) {
-                    DeleteModalHandler();
                     getEditProductRequestsRefetch();
                 }
             })
@@ -85,7 +105,6 @@ const EditProductRequests = () => {
     return (
         <Row>
             <Col lg="12">
-
                 <Row>
                     <Col lg="3">
                         <FormGroup>
@@ -112,15 +131,6 @@ const EditProductRequests = () => {
                             </Input>
                         </FormGroup>
                     </Col>
-                    {auth?.userDetail?.type == 3 ? null :
-                        <Col lg="3">
-                            <div className='text-end'>
-                                <a href={PATHS.addProduct}>
-                                    <Button>Add Product</Button>
-                                </a>
-                            </div>
-                        </Col>
-                    }
                 </Row>
 
                 <Table className="no-wrap mt-3 align-middle" responsive borderless>
@@ -154,35 +164,25 @@ const EditProductRequests = () => {
                                     {auth?.userDetail?.type == 3 ? null :
                                         <td>
                                             <div className='d-flex align-items-center'>
-                                                <Button
-                                                    onClick={() => { navigator(PATHS.viewProduct, { state: { id: item?.id } }); window.location.reload(); }}
-                                                >View</Button>
-                                                <Button
+                                                {/* <Button
+                                                    onClick={() => { navigator(PATHS.viewProductRequest, { state: { id: item?.edit_id } }); window.location.reload(); }}
+                                                >View</Button> */}
+                                                {/* <Button
                                                     style={{ backgroundColor: "orange", marginLeft: 10 }}
                                                     onClick={() => { navigator(PATHS.editProduct, { state: { id: item?.id } }); window.location.reload(); }}
-                                                >Edit</Button>
-                                                {auth?.userDetail?.type == 1 ?
+                                                >Edit</Button> */}
+                                                {item?.edit_status == "approved" ?
                                                     <Button
-                                                        style={{ backgroundColor: "red", marginLeft: 10 }}
-                                                        onClick={() => {
-                                                            DeleteModalHandler(item?.id)
-                                                        }}
-                                                    >Delete</Button>
-                                                    : null}
-                                                {item?.status == 0 ?
-                                                    <Button
-                                                        style={{ backgroundColor: "green", marginLeft: 10 }}
-                                                        onClick={() => {
-                                                            // onDeleteBrand(item?.id)
-                                                        }}
-                                                    >Deactivate</Button>
+                                                        style={{ backgroundColor: "green", marginLeft: 10, cursor: "unset" }}
+                                                    >Approved</Button>
                                                     :
                                                     <Button
-                                                        style={{ backgroundColor: "green", marginLeft: 10 }}
+                                                        style={{ backgroundColor: "orange", marginLeft: 10 }}
                                                         onClick={() => {
-                                                            // onDeleteBrand(item?.id)
+                                                            onApproveProduct(item?.edit_id)
                                                         }}
-                                                    >Activate</Button>}
+                                                    >Approve</Button>
+                                                }
                                             </div>
                                         </td>
                                     }
@@ -197,14 +197,14 @@ const EditProductRequests = () => {
             </Col >
 
 
-            {deleteItemModal &&
+            {/* {deleteItemModal &&
                 <DeleteModal
                     handleCloseDeletModal={DeleteModalHandler}
                     action={ondeleteProduct}
                     id={itemId}
                     confirmationMessage="Are you sure you want to delete the item?"
                 />
-            }
+            } */}
 
         </Row >
     )

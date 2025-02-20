@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 import PATHS from "../../routes/Paths";
 import { useSelector } from "react-redux";
 
-const ViewProduct = () => {
+const ViewProductRequest = () => {
 
   const location = useLocation();
   const auth = useSelector((data) => data?.auth);
@@ -203,4 +203,4 @@ const ViewProduct = () => {
   );
 };
 
-export default ViewProduct;
+export default ViewProductRequest;

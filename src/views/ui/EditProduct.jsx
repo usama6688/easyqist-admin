@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Form, FormGroup, Label, Input, Button } from "reactstrap";
-import { useAddProductImageMutation, useAddProductImagesMutation, useAddProductInstallmentMutation, useAddProductTypeMutation, useDeletePlanMutation, useDeleteProductImageMutation, useDeleteTypeMutation, useEditProductImagesMutation, useEditProductInstallmentMutation, useEditProductMutation, useEditProductTypeMutation, useViewProductDetailQuery } from "../../services/Api";
+import { useAddProductImageMutation, useAddProductImagesMutation, useAddProductInstallmentMutation, useAddProductTypeMutation, useDeletePlanMutation, useDeleteProductImageMutation, useDeleteTypeMutation, useEditProductImagesMutation, useEditProductInstallmentMutation, useEditProductMutation, useEditProductRequestMutation, useEditProductTypeMutation, useViewProductDetailQuery } from "../../services/Api";
 import ImageViewer from "../../components/ImageViewer";
 import { useLocation, useNavigate } from "react-router-dom";
 import EditProductModal from "../../components/EditProductModal";
@@ -12,6 +12,7 @@ import EditProductTypeModal from "../../components/EditProductTypeModal";
 import EditProductInstalmentModal from "../../components/EditProductInstalmentModal";
 import AddProductInstalmentModal from "../../components/AddProductInstalmentModal";
 import DeleteModal from "../../components/DeleteModal";
+import { useSelector } from "react-redux";
 
 const EditProduct = () => {
 
@@ -31,6 +32,7 @@ const EditProduct = () => {
   const [itemId, setItemId] = useState("");
   const location = useLocation();
   const navigator = useNavigate();
+  const auth = useSelector((data) => data?.auth);
 
   const [deleteProductImage] = useDeleteProductImageMutation();
 
@@ -78,6 +80,7 @@ const EditProduct = () => {
   };
 
   const [editProduct, { isLoading }] = useEditProductMutation();
+  const [editProductRequest] = useEditProductRequestMutation();
   const [addProductImage, { isLoading: addProductImageLoading }] = useAddProductImageMutation();
   const [editProductImages, { isLoading: editProductImagesLoading }] = useEditProductImagesMutation();
   const [addProductImages, { isLoading: addProductImagesLoading }] = useAddProductImagesMutation();
@@ -89,7 +92,6 @@ const EditProduct = () => {
   const [editProductInstallment, { isLoading: editProductInstallmentLoading }] = useEditProductInstallmentMutation();
   const [deleteType, { isLoading: deleteTypeLoading }] = useDeleteTypeMutation();
   const [deletePlan, { isLoading: deletePlanLoading }] = useDeletePlanMutation();
-
 
   const {
     data: viewProductDetail,
@@ -150,6 +152,21 @@ const EditProduct = () => {
           viewProductDetailRefetch();
           // navigator(PATHS.editProduct);
           // window.location.reload();
+        }
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  };
+
+  const editProductRequestApiHandler = (data) => {
+    editProductRequest({ data: data })
+      .unwrap()
+      .then((payload) => {
+        if (payload.status) {
+          console.log("success");
+          editProductModalHandler();
+          viewProductDetailRefetch();
         }
       })
       .catch((error) => {
@@ -404,136 +421,138 @@ const EditProduct = () => {
           >Edit Product</Button>
         </div>
 
-        <FormGroup>
-          <Label for="exampleFile">Image(s)</Label>
+        {auth?.userDetail?.type == 6 ? null :
+          <>
+            <FormGroup>
+              <Label for="exampleFile">Image(s)</Label>
 
-          <div className='position-relative ms-5 mb-4'>
-            <div className="row">
+              <div className='position-relative ms-5 mb-4'>
+                <div className="row">
 
-              {showShopImages?.length < 6 ?
-                <div className="col-md-3">
-                  <img src={uploadIcon} alt="" height={100} width={100} />
-                  <input type="file" className='hiddenInputFile' name="image"
-                    accept="image/png, image/jpg, image/jpeg" onChange={handleFileChange} />
+                  {showShopImages?.length < 6 ?
+                    <div className="col-md-3">
+                      <img src={uploadIcon} alt="" height={100} width={100} />
+                      <input type="file" className='hiddenInputFile' name="image"
+                        accept="image/png, image/jpg, image/jpeg" onChange={handleFileChange} />
+                    </div>
+                    : ""}
+
+                  {showShopImages?.length > 0 &&
+                    showShopImages?.map((image) => (
+                      <div className="col-md-3 position-relative">
+                        <ImageViewer
+                          src={image}
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = '';
+                          }}
+                          width="100px"
+                          height="100px"
+                        />
+
+                        <div
+                          className='removeImageIcon text-dark'
+                          onClick={() => removeShopImages(image)}
+                        >X</div>
+                      </div>
+                    ))}
                 </div>
-                : ""}
+              </div>
+            </FormGroup>
 
-              {showShopImages?.length > 0 &&
-                showShopImages?.map((image) => (
-                  <div className="col-md-3 position-relative">
-                    <ImageViewer
-                      src={image}
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = '';
-                      }}
-                      width="100px"
-                      height="100px"
-                    />
+            {viewProductDetail?.data?.product_image?.length ?
+              <FormGroup>
+                <div className='position-relative ms-5 mb-4'>
+                  <div className="row">
+                    {viewProductDetail?.data?.product_image?.map((image) => (
+                      <div className="col-md-3 mt-3 position-relative">
+                        <div className="d-flex justify-content-end gap-3">
+                          <span className="cursor" style={{ fontSize: "25px" }} onClick={() => editProductImageModalHandler(image)}>✎</span>
 
-                    <div
-                      className='removeImageIcon text-dark'
-                      onClick={() => removeShopImages(image)}
-                    >X</div>
+                          <span className="cursor" style={{ fontSize: "25px" }} onClick={() => DeleteModalHandler(image?.id)}>X</span>
+                        </div>
+
+                        <ImageViewer
+                          src={image?.image_name}
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = '';
+                          }}
+                          width="100px"
+                          height="100px"
+                        />
+                      </div>
+                    ))}
                   </div>
-                ))}
-            </div>
-          </div>
-        </FormGroup>
+                </div>
+              </FormGroup>
+              : null}
 
-        {viewProductDetail?.data?.product_image?.length ?
-          <FormGroup>
-            {/* <Label for="exampleFile">Image(s)</Label> */}
+            <FormGroup>
+              <div className="d-flex justify-content-between align-items-center">
+                <Label for="exampleEmail">Product Types</Label>
+                <Button
+                  className='mt-4'
+                  onClick={addTypeModalHandler}
+                >Add Type</Button>
+              </div>
 
-            <div className='position-relative ms-5 mb-4'>
-              <div className="row">
-                {viewProductDetail?.data?.product_image?.map((image) => (
-                  <div className="col-md-3 mt-3 position-relative">
-                    <div className="d-flex justify-content-end gap-3">
-                      <span className="cursor" style={{ fontSize: "25px" }} onClick={() => editProductImageModalHandler(image)}>✎</span>
+              {viewProductDetail?.data?.product_type?.map((data, index) => {
+                return (
+                  <>
+                    <div className="d-flex justify-content-between align-items-center">
+                      <Label className="mb-0"><b>Type {index + 1}</b></Label>
+                      <div className="d-flex align-items-center gap-3">
+                        <Button
+                          className='mt-4 mb-3 btn-danger'
+                          onClick={() => DeleteTypeModalHandler(data?.id)}
+                        >Delete Type</Button>
 
-                      <span className="cursor" style={{ fontSize: "25px" }} onClick={() => DeleteModalHandler(image?.id)}>X</span>
+                        <Button
+                          className='mt-4 mb-3'
+                          onClick={() => editTypeModalHandler(data)}
+                        >Edit Type</Button>
+
+                        <Button
+                          className='mt-4 mb-3'
+                          onClick={() => addInstallmentModalHandler(data)}
+                        >Add Plan</Button>
+                      </div>
                     </div>
 
-                    <ImageViewer
-                      src={image?.image_name}
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = '';
-                      }}
-                      width="100px"
-                      height="100px"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </FormGroup>
-          : null}
+                    <Input className="mb-3" value={`Type Name: ${data?.title}`} readOnly />
 
-        <FormGroup>
-          <div className="d-flex justify-content-between align-items-center">
-            <Label for="exampleEmail">Product Types</Label>
-            <Button
-              className='mt-4'
-              onClick={addTypeModalHandler}
-            >Add Type</Button>
-          </div>
+                    {data?.product_installment?.map((item, ind) => {
+                      return (
+                        <>
+                          <div className="d-flex justify-content-between align-items-center">
+                            <Label className="mb-0"><b>Plan {ind + 1}</b></Label>
+                            <div className="d-flex align-items-center">
+                              <Button
+                                className='mt-4 mb-3 me-3 btn-danger'
+                                onClick={() => DeletePlanModalHandler(item?.id)}
+                              >Delete Plan</Button>
 
-          {viewProductDetail?.data?.product_type?.map((data, index) => {
-            return (
-              <>
-                <div className="d-flex justify-content-between align-items-center">
-                  <Label className="mb-0"><b>Type {index + 1}</b></Label>
-                  <div className="d-flex align-items-center gap-3">
-                    <Button
-                      className='mt-4 mb-3 btn-danger'
-                      onClick={() => DeleteTypeModalHandler(data?.id)}
-                    >Delete Type</Button>
-
-                    <Button
-                      className='mt-4 mb-3'
-                      onClick={() => editTypeModalHandler(data)}
-                    >Edit Type</Button>
-
-                    <Button
-                      className='mt-4 mb-3'
-                      onClick={() => addInstallmentModalHandler(data)}
-                    >Add Plan</Button>
-                  </div>
-                </div>
-
-                <Input className="mb-3" value={`Type Name: ${data?.title}`} readOnly />
-
-                {data?.product_installment?.map((item, ind) => {
-                  return (
-                    <>
-                      <div className="d-flex justify-content-between align-items-center">
-                        <Label className="mb-0"><b>Plan {ind + 1}</b></Label>
-                        <div className="d-flex align-items-center">
-                          <Button
-                            className='mt-4 mb-3 me-3 btn-danger'
-                            onClick={() => DeletePlanModalHandler(item?.id)}
-                          >Delete Plan</Button>
-
-                          <Button
-                            className='mt-4 mb-3'
-                            onClick={() => editInstallmentModalHandler(item)}
-                          >Edit Plan</Button>
-                        </div>
-                      </div>
-                      <Input className="mb-3" value={`Title: ${item?.installment_title}`} readOnly />
-                      <Input className="mb-3" value={`Advance: ${item?.advance}`} readOnly />
-                      <Input className="mb-3" value={`Amount: ${item?.amount}`} readOnly />
-                      <Input className="mb-3" value={`Month(s): ${item?.duration}`} readOnly />
-                      <Input className="mb-3" value={`Total Amount: ${item?.total_amount}`} readOnly />
-                    </>
-                  )
-                })}
-              </>
-            )
-          })}
-        </FormGroup>
+                              <Button
+                                className='mt-4 mb-3'
+                                onClick={() => editInstallmentModalHandler(item)}
+                              >Edit Plan</Button>
+                            </div>
+                          </div>
+                          <Input className="mb-3" value={`Title: ${item?.installment_title}`} readOnly />
+                          <Input className="mb-3" value={`Advance: ${item?.advance}`} readOnly />
+                          <Input className="mb-3" value={`Amount: ${item?.amount}`} readOnly />
+                          <Input className="mb-3" value={`Month(s): ${item?.duration}`} readOnly />
+                          <Input className="mb-3" value={`Total Amount: ${item?.total_amount}`} readOnly />
+                        </>
+                      )
+                    })}
+                  </>
+                )
+              })}
+            </FormGroup>
+          </>
+        }
 
         {deleteItemModal &&
           <DeleteModal
@@ -567,6 +586,7 @@ const EditProduct = () => {
             handleCloseEditProductModal={editProductModalHandler}
             data={viewProductDetail?.data}
             action={editProductApiHandler}
+            newAction={editProductRequestApiHandler}
           />
         }
 
