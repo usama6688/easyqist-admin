@@ -13,7 +13,7 @@ const EditProductRequests = () => {
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedBrand, setSelectedBrand] = useState('');
     // const [itemId, setItemId] = useState("");
-    // const navigator = useNavigate();
+    const navigator = useNavigate();
     const auth = useSelector((data) => data?.auth);
 
     const {
@@ -164,9 +164,9 @@ const EditProductRequests = () => {
                                     {auth?.userDetail?.type == 3 ? null :
                                         <td>
                                             <div className='d-flex align-items-center'>
-                                                {/* <Button
-                                                    onClick={() => { navigator(PATHS.viewProductRequest, { state: { id: item?.edit_id } }); window.location.reload(); }}
-                                                >View</Button> */}
+                                                <Button
+                                                    onClick={() => { navigator(PATHS.viewEditRequestProduct, { state: { data: item } }); window.location.reload(); }}
+                                                >View</Button>
                                                 {/* <Button
                                                     style={{ backgroundColor: "orange", marginLeft: 10 }}
                                                     onClick={() => { navigator(PATHS.editProduct, { state: { id: item?.id } }); window.location.reload(); }}

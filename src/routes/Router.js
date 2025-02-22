@@ -53,6 +53,7 @@ const AddBlog = Loadable(lazy(() => import("../views/ui/AddBlog.jsx")));
 const EditBlog = Loadable(lazy(() => import("../views/ui/EditBlog.jsx")));
 const EditProductRequests = Loadable(lazy(() => import("../views/ui/EditProductRequests.jsx")));
 const ViewProductRequest = Loadable(lazy(() => import("../views/ui/ViewProductRequest.jsx")));
+const ViewEditRequestProduct = Loadable(lazy(() => import("../views/ui/ViewEditRequestProduct.jsx")));
 
 export default function Router() {
   const auth = useSelector((data) => data?.auth);
@@ -103,6 +104,7 @@ export default function Router() {
             { path: PATHS.editBlog, element: <EditBlog /> },
             { path: PATHS.editProductRequests, element: <EditProductRequests /> },
             { path: PATHS.viewProductRequest, element: <ViewProductRequest /> },
+            { path: PATHS.viewEditRequestProduct, element: <ViewEditRequestProduct /> },
           ],
         },
       ]

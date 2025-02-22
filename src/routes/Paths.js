@@ -41,6 +41,7 @@ const PATHS = {
     editBlog: prefix + '/edit-blog',
     editProductRequests: prefix + '/edit-product-requests',
     viewProductRequest: prefix + '/view-product-request',
+    viewEditRequestProduct: prefix + '/view-edit-request-product',
 }
 
 export default PATHS;
