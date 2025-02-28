@@ -18,6 +18,7 @@ const OrderRequests = () => {
     const [endDate, setEndDate] = useState(null);
     const [searchName, setSearchName] = useState("");
     const [searchPhone, setSearchPhone] = useState("");
+    const [area, setArea] = useState("");
     const [focusedInput, setFocusedInput] = useState(null);
     const [deleteModal, setDeleteModal] = useState(false);
     const [viewData, setViewData] = useState("");
@@ -50,6 +51,7 @@ const OrderRequests = () => {
             // status: status,
             name: searchName,
             phone: searchPhone,
+            area: area,
         }));
     };
 
@@ -146,7 +148,7 @@ const OrderRequests = () => {
         <Row>
             <Col lg="12">
                 <div className="row">
-                    <div className="col-4 pe-0">
+                    <div className="col-3 pe-0">
                         <Input
                             placeholder="Search by Name"
                             className='h-100'
@@ -155,7 +157,7 @@ const OrderRequests = () => {
                             onChange={(e) => setSearchName(e.target.value)}
                         />
                     </div>
-                    <div className="col-4 pe-0">
+                    <div className="col-3 pe-0">
                         <Input
                             placeholder="Search by Phone"
                             className='h-100'
@@ -164,7 +166,16 @@ const OrderRequests = () => {
                             onChange={(e) => setSearchPhone(e.target.value)}
                         />
                     </div>
-                    <div className="col-4 pe-0 d-flex gap-2">
+                    <div className="col-3 pe-0">
+                        <Input
+                            placeholder="Search by Area"
+                            className='h-100'
+                            type="number"
+                            value={area}
+                            onChange={(e) => setArea(e.target.value)}
+                        />
+                    </div>
+                    <div className="col-3 pe-0 d-flex gap-2">
                         <Button className="w-100 h-100 bg-danger border-0" onClick={handleReset}>Reset</Button>
                         <Button className="w-100 h-100 bg-success border-0" onClick={handleSearch}>Search</Button>
                     </div>

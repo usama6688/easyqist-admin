@@ -206,6 +206,20 @@ const ViewOrderRequests = () => {
 
                 <Col lg="4">
                     <FormGroup>
+                        <Label for="exampleEmail">Area</Label>
+                        <Input type="text" value={reqData?.address?.area} readOnly />
+                    </FormGroup>
+                </Col>
+
+                <Col lg="4">
+                    <FormGroup>
+                        <Label for="exampleEmail">UC</Label>
+                        <Input type="text" value={reqData?.address?.uc} readOnly />
+                    </FormGroup>
+                </Col>
+
+                <Col lg="4">
+                    <FormGroup>
                         <Label for="exampleEmail">CNIC</Label>
                         <Input type="text" value={reqData?.user?.cnic_number} readOnly />
                     </FormGroup>
