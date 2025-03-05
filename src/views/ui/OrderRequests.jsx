@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, Row, Table } from 'reactstrap';
+import React, { useState } from 'react';
+import { Button, Col, Input, Row, Table } from 'reactstrap';
 import delIcon from "../../assets/images/delIcon.svg";
 import { useChangeOrderStatusMutation, useDeleteOrderMutation, useViewOrderRequestQuery } from '../../services/Api';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import PATHS from '../../routes/Paths';
 import DeleteModal from "../../components/DeleteModal";
 import { useSelector } from 'react-redux';
 import moment from 'moment/moment';
 import PaginationComponent from '../../components/pagination/Pagination';
 import { DateRangePicker } from "react-dates";
+import * as XLSX from "xlsx";
 
 const OrderRequests = () => {
 
@@ -18,6 +19,7 @@ const OrderRequests = () => {
     const [endDate, setEndDate] = useState(null);
     const [searchName, setSearchName] = useState("");
     const [searchPhone, setSearchPhone] = useState("");
+    const [cnic, setCnic] = useState("");
     const [area, setArea] = useState("");
     const [focusedInput, setFocusedInput] = useState(null);
     const [deleteModal, setDeleteModal] = useState(false);
@@ -31,6 +33,7 @@ const OrderRequests = () => {
         status: prevStatus || "",
         name: "",
         phone: "",
+        cnic: "",
         startDate: "",
         endDate: "",
     });
@@ -48,7 +51,7 @@ const OrderRequests = () => {
         setQueryParams((prev) => ({
             ...prev,
             page: 1,
-            // status: status,
+            cnic: cnic,
             name: searchName,
             phone: searchPhone,
             area: area,
@@ -60,11 +63,12 @@ const OrderRequests = () => {
             ...prev,
             name: "",
             phone: "",
-            status: ""
+            status: "",
+            cnic: ""
         }));
         setSearchName("");
         setSearchPhone("");
-        // setStatus("");
+        setCnic("");
     };
 
     const handleResetDate = () => {
@@ -144,11 +148,48 @@ const OrderRequests = () => {
         }));
     };
 
+    const handleExport = () => {
+        if (!viewOrderRequest?.data?.length) {
+            alert("No data available to export.");
+            return;
+        }
+
+        const tableData = viewOrderRequest.data.map((data) => ({
+            "User Name": data?.users?.name,
+            "Phone No": data?.users?.phone_no,
+            "Order Price": data?.order_price,
+            "Order Date": data?.order_date ? new Date(data?.order_date).toLocaleDateString() : "",
+            "Product Name": data?.order_products?.[0]?.product?.name,
+            "CNIC": data?.users?.cnic_number,
+            "Session ID": data?.order_session_id,
+            "Order Status":
+                data?.order_status == 1
+                    ? "Pending"
+                    : data?.order_status == 2
+                        ? "Accepted"
+                        : data?.order_status == 3
+                            ? "Documentation"
+                            : data?.order_status == 4
+                                ? "Out for delivery"
+                                : data?.order_status == 5
+                                    ? "Delivered"
+                                    : data?.order_status == -1
+                                        ? "Rejected"
+                                        : "Unknown",
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(tableData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Orders");
+
+        XLSX.writeFile(workbook, "Order_Requests.xlsx");
+    };
+
     return (
         <Row>
             <Col lg="12">
                 <div className="row">
-                    <div className="col-3 pe-0">
+                    <div className="col-4 pe-0">
                         <Input
                             placeholder="Search by Name"
                             className='h-100'
@@ -157,7 +198,7 @@ const OrderRequests = () => {
                             onChange={(e) => setSearchName(e.target.value)}
                         />
                     </div>
-                    <div className="col-3 pe-0">
+                    <div className="col-4 pe-0">
                         <Input
                             placeholder="Search by Phone"
                             className='h-100'
@@ -166,20 +207,31 @@ const OrderRequests = () => {
                             onChange={(e) => setSearchPhone(e.target.value)}
                         />
                     </div>
-                    <div className="col-3 pe-0">
+                    <div className="col-4 pe-0">
                         <Input
                             placeholder="Search by Area"
                             className='h-100'
-                            type="number"
+                            type="text"
                             value={area}
                             onChange={(e) => setArea(e.target.value)}
                         />
                     </div>
-                    <div className="col-3 pe-0 d-flex gap-2">
+                    <div className="col-4 pe-0 mt-3">
+                        <Input
+                            placeholder="Search by CNIC"
+                            className='h-100'
+                            type="text"
+                            value={cnic}
+                            onChange={(e) => setCnic(e.target.value)}
+                        />
+                    </div>
+                    <div className="col-4 d-flex gap-2 pe-0 mt-3">
                         <Button className="w-100 h-100 bg-danger border-0" onClick={handleReset}>Reset</Button>
                         <Button className="w-100 h-100 bg-success border-0" onClick={handleSearch}>Search</Button>
                     </div>
+                </div>
 
+                <div className="row">
                     <div className="col-3 pe-0 mt-4">
                         <select class="form-select" aria-label="Default select example" onChange={(e) => selectStatusHandler(e.target.value)} value={status} style={{ height: "47px" }}>
                             <option value="">Select status</option>
@@ -208,6 +260,11 @@ const OrderRequests = () => {
                     <div className="col-4 mt-4 ps-0">
                         <Button className="w-50 h-100 bg-danger border-0" onClick={handleResetDate}>Reset Date</Button>
                     </div>
+                </div>
+
+
+                <div className='text-end mt-5'>
+                    <Button className="bg-success border-0" onClick={handleExport}>Download Excel</Button>
                 </div>
 
                 <Table className="no-wrap mt-3 align-middle" responsive borderless>

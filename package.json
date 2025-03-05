@@ -29,7 +29,8 @@
     "reactstrap": "9.1.10",
     "redux-persist": "^6.0.0",
     "sass": "1.63.2",
-    "web-vitals": "3.3.2"
+    "web-vitals": "3.3.2",
+    "xlsx": "^0.18.5"
   },
   "scripts": {
     "start": "react-scripts start",
