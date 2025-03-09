@@ -18,6 +18,7 @@ const Users = () => {
     const [endDate, setEndDate] = useState(null);
     const [searchName, setSearchName] = useState("");
     const [searchPhone, setSearchPhone] = useState("");
+    const [searchCnic, setSearchCnic] = useState("");
     const [focusedInput, setFocusedInput] = useState(null);
     const [deleteItemModal, setDeleteItemModal] = useState(false);
     const [banUserModal, setBanUserModal] = useState(false);
@@ -28,6 +29,7 @@ const Users = () => {
         limit: 50,
         name: "",
         phone: "",
+        cnic: "",
         startDate: "",
         endDate: "",
     });
@@ -46,6 +48,7 @@ const Users = () => {
             page: 1,
             name: searchName,
             phone: searchPhone,
+            cnic: searchCnic,
         }));
     };
 
@@ -54,9 +57,11 @@ const Users = () => {
             ...prev,
             name: "",
             phone: "",
+            cnic: "",
         }));
         setSearchName("");
         setSearchPhone("");
+        setSearchCnic("");
     };
 
     const handleResetDate = () => {
@@ -143,7 +148,7 @@ const Users = () => {
             <Col lg="12">
                 <div>
                     <div className="row">
-                        <div className="col-4 pe-0">
+                        <div className="col-3 pe-0">
                             <Input
                                 placeholder="Search by Name"
                                 className='h-100'
@@ -152,7 +157,7 @@ const Users = () => {
                                 onChange={(e) => setSearchName(e.target.value)}
                             />
                         </div>
-                        <div className="col-4 pe-0">
+                        <div className="col-3 pe-0">
                             <Input
                                 placeholder="Search by Phone"
                                 className='h-100'
@@ -161,7 +166,16 @@ const Users = () => {
                                 onChange={(e) => setSearchPhone(e.target.value)}
                             />
                         </div>
-                        <div className="col-4 d-flex gap-2">
+                        <div className="col-3 pe-0">
+                            <Input
+                                placeholder="Search by CNIC"
+                                className='h-100'
+                                type="number"
+                                value={searchCnic}
+                                onChange={(e) => setSearchCnic(e.target.value)}
+                            />
+                        </div>
+                        <div className="col-3 d-flex gap-2">
                             <Button className="w-100 h-100 bg-danger border-0" onClick={handleReset}>Reset</Button>
                             <Button className="w-100 h-100 bg-success border-0" onClick={handleSearch}>Search</Button>
                         </div>
