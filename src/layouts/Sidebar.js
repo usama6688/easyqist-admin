@@ -14,6 +14,10 @@ const navigation = [
     href: PATHS.users,
   },
   {
+    title: "Vendors",
+    href: PATHS.allVendors,
+  },
+  {
     title: "Products",
     href: PATHS.products,
   },

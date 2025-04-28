@@ -456,6 +456,16 @@ export const api = SplitApiSettings.injectEndpoints({
       },
     }),
 
+    addVendor: builder.mutation({
+      query: ({ data }) => {
+        return {
+          url: API_END_POINTS.addVendor,
+          method: "POST",
+          body: data,
+        }
+      },
+    }),
+
     /////////////////////////////<===QUERIES===>////////////////////////////////
 
     getBrands: builder.query({
@@ -688,6 +698,15 @@ export const api = SplitApiSettings.injectEndpoints({
       },
     }),
 
+    getAllVendors: builder.query({
+      query: () => {
+        return {
+          url: API_END_POINTS.getAllVendors,
+          method: "GET",
+        };
+      },
+    }),
+
   }),
 
   overrideExisting: true,
@@ -748,6 +767,7 @@ export const {
   useDeleteBlogMutation,
   useEditProductRequestMutation,
   useApproveProductRequestMutation,
+  useAddVendorMutation,
   /////////////////////////////<===QUERIES===>////////////////////////////////
   useGetBrandsQuery,
   useGetProductCatQuery,
@@ -773,4 +793,5 @@ export const {
   useGetAllBlogsQuery,
   useGetBlogByIdQuery,
   useGetEditProductRequestsQuery,
+  useGetAllVendorsQuery,
 } = api;

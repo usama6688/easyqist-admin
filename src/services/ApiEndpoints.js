@@ -54,6 +54,7 @@ export const API_END_POINTS = {
   editBlog: BASE_URL + "blogs",
   editProductRequest: BASE_URL + "product/edit_request",
   approveProductRequest: BASE_URL + "product/edit_request/approve",
+  addVendor: BASE_URL + "/register-vendor",
   /////////////////////////////<===QUERIES===>////////////////////////////////
   getBrands: BASE_URL + "get-brand",
   getProductCat: BASE_URL + "get-category",
@@ -79,4 +80,5 @@ export const API_END_POINTS = {
   getComments: BASE_URL + "getOrderComment",
   getAllBlogs: BASE_URL + "get-blogs",
   getEditProductRequests: BASE_URL + "edit_product_request",
+  getAllVendors: BASE_URL + "vendors",
 };

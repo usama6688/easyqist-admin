@@ -80,7 +80,7 @@ const AddAdmin = () => {
                     <Label for="exampleEmail">Password</Label>
                     <Input
                         name="password"
-                        placeholder="Name"
+                        placeholder="Password"
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
