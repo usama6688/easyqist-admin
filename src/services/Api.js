@@ -466,6 +466,16 @@ export const api = SplitApiSettings.injectEndpoints({
       },
     }),
 
+    bannerSorting: builder.mutation({
+      query: ({ data }) => {
+        return {
+          url: API_END_POINTS.bannerSorting,
+          method: "POST",
+          body: data,
+        }
+      },
+    }),
+
     /////////////////////////////<===QUERIES===>////////////////////////////////
 
     getBrands: builder.query({
@@ -768,6 +778,7 @@ export const {
   useEditProductRequestMutation,
   useApproveProductRequestMutation,
   useAddVendorMutation,
+  useBannerSortingMutation,
   /////////////////////////////<===QUERIES===>////////////////////////////////
   useGetBrandsQuery,
   useGetProductCatQuery,

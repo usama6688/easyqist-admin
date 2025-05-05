@@ -27,6 +27,7 @@ export const API_END_POINTS = {
   addPayment: BASE_URL + "add_order_payment",
   deleteBanner: BASE_URL + "banner/delete_banner",
   editBanner: BASE_URL + "banner/edit",
+  bannerSorting: BASE_URL + "banner/sort-order",
   deleteEmployee: BASE_URL + "employment/delete_employement",
   addEmployee: BASE_URL + "employment/add",
   editEmployee: BASE_URL + "employment/edit",
