@@ -56,6 +56,8 @@ const ViewProductRequest = Loadable(lazy(() => import("../views/ui/ViewProductRe
 const ViewEditRequestProduct = Loadable(lazy(() => import("../views/ui/ViewEditRequestProduct.jsx")));
 const AllVendors = Loadable(lazy(() => import("../views/ui/Vendors.jsx")));
 const AddVendor = Loadable(lazy(() => import("../views/ui/AddVendor.jsx")));
+const VendorOrderRequests = Loadable(lazy(() => import("../views/ui/VendorOrderRequests.jsx")));
+const ViewVendorOrderRequests = Loadable(lazy(() => import("../views/ui/ViewVendorOrderRequest.jsx")));
 
 export default function Router() {
   const auth = useSelector((data) => data?.auth);
@@ -109,6 +111,8 @@ export default function Router() {
             { path: PATHS.viewEditRequestProduct, element: <ViewEditRequestProduct /> },
             { path: PATHS.allVendors, element: <AllVendors /> },
             { path: PATHS.addVendors, element: <AddVendor /> },
+            { path: PATHS.vendorOrderRequests, element: <VendorOrderRequests /> },
+            { path: PATHS.viewVendorOrderRequests, element: <ViewVendorOrderRequests /> },
           ],
         },
       ]

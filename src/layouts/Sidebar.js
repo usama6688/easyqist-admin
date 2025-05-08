@@ -18,6 +18,10 @@ const navigation = [
     href: PATHS.allVendors,
   },
   {
+    title: "Vendor Order Requests",
+    href: PATHS.vendorOrderRequests,
+  },
+  {
     title: "Products",
     href: PATHS.products,
   },

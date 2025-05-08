@@ -44,6 +44,8 @@ const PATHS = {
     viewEditRequestProduct: prefix + '/view-edit-request-product',
     allVendors: prefix + '/all-vendors',
     addVendors: prefix + '/add-vendors',
+    vendorOrderRequests: prefix + '/vendor-order-requests',
+    viewVendorOrderRequests: prefix + '/view-vendor-order-requests',
 }
 
 export default PATHS;

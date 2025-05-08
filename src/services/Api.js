@@ -476,6 +476,26 @@ export const api = SplitApiSettings.injectEndpoints({
       },
     }),
 
+    vendorOrderRequestStatus: builder.mutation({
+      query: ({ data }) => {
+        return {
+          url: API_END_POINTS.vendorOrderRequestStatus,
+          method: "POST",
+          body: data,
+        }
+      },
+    }),
+
+    deleteVendorOrderRequest: builder.mutation({
+      query: ({ data }) => {
+        return {
+          url: `${API_END_POINTS.deleteVendorOrderRequest}?id=${data}`,
+          method: "DELETE",
+          body: data,
+        }
+      },
+    }),
+
     /////////////////////////////<===QUERIES===>////////////////////////////////
 
     getBrands: builder.query({
@@ -717,6 +737,25 @@ export const api = SplitApiSettings.injectEndpoints({
       },
     }),
 
+    getVendorOrderRequests: builder.query({
+      query: () => {
+        return {
+          url: API_END_POINTS.getVendorOrderRequests,
+          method: "GET",
+        };
+      },
+    }),
+
+    getVendorOrderRequestById: builder.query({
+      query: ({ params }) => {
+        return {
+          url: API_END_POINTS.getVendorOrderRequestById,
+          method: "GET",
+          params,
+        };
+      },
+    }),
+
   }),
 
   overrideExisting: true,
@@ -779,6 +818,8 @@ export const {
   useApproveProductRequestMutation,
   useAddVendorMutation,
   useBannerSortingMutation,
+  useVendorOrderRequestStatusMutation,
+  useDeleteVendorOrderRequestMutation,
   /////////////////////////////<===QUERIES===>////////////////////////////////
   useGetBrandsQuery,
   useGetProductCatQuery,
@@ -805,4 +846,6 @@ export const {
   useGetBlogByIdQuery,
   useGetEditProductRequestsQuery,
   useGetAllVendorsQuery,
+  useGetVendorOrderRequestsQuery,
+  useGetVendorOrderRequestByIdQuery,
 } = api;
