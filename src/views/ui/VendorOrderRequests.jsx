@@ -219,7 +219,7 @@ const VendorOrderRequests = () => {
                             onChange={(e) => setSearchName(e.target.value)}
                         />
                     </div>
-                    <div className="col-4 pe-0 mt-3">
+                    <div className="col-4 pe-0">
                         <Input
                             placeholder="Search by CNIC"
                             className='h-100'
@@ -228,7 +228,7 @@ const VendorOrderRequests = () => {
                             onChange={(e) => setCnic(e.target.value)}
                         />
                     </div>
-                    <div className="col-4 d-flex gap-2 pe-0 mt-3">
+                    <div className="col-4 d-flex gap-2 pe-0">
                         <Button className="w-100 h-100 bg-danger border-0" onClick={handleReset}>Reset</Button>
                         <Button className="w-100 h-100 bg-success border-0" onClick={handleSearch}>Search</Button>
                     </div>

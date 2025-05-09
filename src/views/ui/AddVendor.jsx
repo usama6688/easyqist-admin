@@ -17,6 +17,7 @@ import PhoneInput from "react-phone-input-2";
 const AddVendor = () => {
 
     const [name, setName] = useState("");
+    const [vendorName, setVendorName] = useState("");
     const [address1, setAddress1] = useState("");
     const [address2, setAddress2] = useState("");
     const [password, setPassword] = useState("");
@@ -30,6 +31,7 @@ const AddVendor = () => {
         let formData = new URLSearchParams();
 
         formData.append('name', name);
+        formData.append('vendor_person_name', vendorName);
         formData.append('phone_no', phone);
         formData.append('address', address1);
         formData.append('address2', address2);
@@ -55,7 +57,7 @@ const AddVendor = () => {
         <div>
             <Form>
                 <Row>
-                    <Col sm="6" lg="6">
+                    <Col sm="4" lg="4">
                         <FormGroup>
                             <Label for="exampleEmail">Name</Label>
                             <Input
@@ -68,7 +70,20 @@ const AddVendor = () => {
                         </FormGroup>
                     </Col>
 
-                    <Col sm="6" lg="6">
+                    <Col sm="4" lg="4">
+                        <FormGroup>
+                            <Label for="exampleEmail">Vendor Name</Label>
+                            <Input
+                                name="name"
+                                placeholder="Vendor Name"
+                                type="text"
+                                value={vendorName}
+                                onChange={(e) => setVendorName(e.target.value)}
+                            />
+                        </FormGroup>
+                    </Col>
+
+                    <Col sm="4" lg="4">
                         <FormGroup>
                             <Label for="exampleEmail">Phone</Label>
                             <PhoneInput country={'pk'} value={phone} onChange={setPhone} />
