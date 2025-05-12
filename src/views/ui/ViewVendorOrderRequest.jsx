@@ -114,6 +114,13 @@ const ViewVendorOrderRequest = () => {
 
                 <Col lg="4">
                     <FormGroup>
+                        <Label for="exampleEmail">Phone No.</Label>
+                        <Input type="text" value={orderData?.phone_number} readOnly />
+                    </FormGroup>
+                </Col>
+
+                <Col lg="4">
+                    <FormGroup>
                         <Label for="exampleEmail">Status</Label>
                         <Input type="text" className='text-capitalize' value={orderData?.status} readOnly />
                     </FormGroup>

@@ -20,6 +20,7 @@ const OrderRequests = () => {
     const [searchName, setSearchName] = useState("");
     const [searchPhone, setSearchPhone] = useState("");
     const [cnic, setCnic] = useState("");
+    const [sessionId, setSessionId] = useState("");
     const [area, setArea] = useState("");
     const [focusedInput, setFocusedInput] = useState(null);
     const [deleteModal, setDeleteModal] = useState(false);
@@ -34,6 +35,7 @@ const OrderRequests = () => {
         name: "",
         phone: "",
         cnic: "",
+        session_id: "",
         startDate: "",
         endDate: "",
     });
@@ -52,6 +54,7 @@ const OrderRequests = () => {
             ...prev,
             page: 1,
             cnic: cnic,
+            session_id: sessionId,
             name: searchName,
             phone: searchPhone,
             area: area,
@@ -69,6 +72,7 @@ const OrderRequests = () => {
         setSearchName("");
         setSearchPhone("");
         setCnic("");
+        setSessionId("");
     };
 
     const handleResetDate = () => {
@@ -223,6 +227,15 @@ const OrderRequests = () => {
                             type="text"
                             value={cnic}
                             onChange={(e) => setCnic(e.target.value)}
+                        />
+                    </div>
+                    <div className="col-4 pe-0 mt-3">
+                        <Input
+                            placeholder="Search by Session ID"
+                            className='h-100'
+                            type="text"
+                            value={sessionId}
+                            onChange={(e) => setSessionId(e.target.value)}
                         />
                     </div>
                     <div className="col-4 d-flex gap-2 pe-0 mt-3">
