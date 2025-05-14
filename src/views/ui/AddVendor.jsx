@@ -32,7 +32,7 @@ const AddVendor = () => {
 
         formData.append('name', name);
         formData.append('vendor_person_name', vendorName);
-        formData.append('phone_no', phone);
+        formData.append('phone_no', `+${phone}`);
         formData.append('address', address1);
         formData.append('address2', address2);
         formData.append('password', password);
