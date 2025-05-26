@@ -126,8 +126,8 @@ const EditProductModal = (props) => {
         formData.append('detail_description', detailDescription);
         formData.append('special', special);
         formData.append('trending', trending);
-        formData.append('category_id', Number(props?.data?.category_id || selectedCategoryId));
-        formData.append('brand_id', Number(props?.data?.brand_id || selectedBrandId));
+        formData.append('category_id', Number(selectedCategoryId || props?.data?.category_id));
+        formData.append('brand_id', Number(selectedBrandId || props?.data?.brand_id));
         formData.append('discount', Number(discount));
         formData.append('price', price);
         formData.append('advance', advance);
