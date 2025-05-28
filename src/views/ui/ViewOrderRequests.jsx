@@ -57,7 +57,7 @@ const ViewOrderRequests = () => {
 
         const data = {
             comment: comment,
-            user_id: reqDataId?.users?.id,
+            user_id: reqDataId?.users?.id || reqDataId?.user_id,
             order_id: reqDataId?.id,
         }
 
@@ -66,6 +66,7 @@ const ViewOrderRequests = () => {
             .then((payload) => {
                 if (payload.status) {
                     getCommentsRefetch();
+                    setComment("");
                     // navigate(PATHS.orderRequests);
                     // window.location.reload();
                 }

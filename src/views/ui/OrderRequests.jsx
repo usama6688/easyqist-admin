@@ -21,7 +21,7 @@ const OrderRequests = () => {
     const [searchPhone, setSearchPhone] = useState("");
     const [cnic, setCnic] = useState("");
     const [sessionId, setSessionId] = useState("");
-    const [area, setArea] = useState("");
+    const [orderId, setOrderId] = useState("");
     const [focusedInput, setFocusedInput] = useState(null);
     const [deleteModal, setDeleteModal] = useState(false);
     const [viewData, setViewData] = useState("");
@@ -57,7 +57,7 @@ const OrderRequests = () => {
             session_id: sessionId,
             name: searchName,
             phone: searchPhone,
-            area: area,
+            orderNum: orderId,
         }));
     };
 
@@ -213,11 +213,11 @@ const OrderRequests = () => {
                     </div>
                     <div className="col-4 pe-0">
                         <Input
-                            placeholder="Search by Area"
+                            placeholder="Search by Order ID"
                             className='h-100'
                             type="text"
-                            value={area}
-                            onChange={(e) => setArea(e.target.value)}
+                            value={orderId}
+                            onChange={(e) => setOrderId(e.target.value)}
                         />
                     </div>
                     <div className="col-4 pe-0 mt-3">
