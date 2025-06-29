@@ -29,15 +29,15 @@ const OrderRequests = () => {
     const auth = useSelector((data) => data?.auth);
 
     const [queryParams, setQueryParams] = useState({
-        page: 1,
-        limit: 50,
-        status: prevStatus || "",
-        name: "",
-        phone: "",
-        cnic: "",
-        session_id: "",
-        startDate: "",
-        endDate: "",
+      page: 1,
+      limit: 50,
+      status: prevStatus || "",
+      name: "",
+      phone: "",
+      cnic: "",
+      session_id: "",
+      startDate: "",
+      endDate: ""
     });
 
     const {
@@ -51,13 +51,13 @@ const OrderRequests = () => {
 
     const handleSearch = () => {
         setQueryParams((prev) => ({
-            ...prev,
-            page: 1,
-            cnic: cnic,
-            session_id: sessionId,
-            name: searchName,
-            phone: searchPhone,
-            orderNum: orderId,
+          ...prev,
+          page: 1,
+          cnic: cnic,
+          order_session_id: sessionId.trim(),
+          name: searchName,
+          phone: searchPhone,
+          orderNum: orderId
         }));
     };
 

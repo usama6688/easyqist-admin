@@ -77,9 +77,36 @@ const Sidebar = () => {
 
   const auth = useSelector((data) => data?.auth);
 
-  const filteredNavigation = auth?.userDetail?.type == 3
-    ? navigation.filter(navi => navi?.title == "Dashboard" || navi?.title == "Notifications" || navi?.title == "Users") : auth?.userDetail?.type == 4 ? navigation.filter(navi => navi?.title == "Dashboard" || navi?.title == "Order Requests" || navi?.title == "Products" || navi?.title == "Users") : auth?.userDetail?.type == 5 ? navigation.filter(navi => navi?.title == "Dashboard" || navi?.title == "Order Requests")
-      : auth?.userDetail?.type == 6 ? navigation.filter(navi => navi?.title == "Dashboard" || navi?.title == "Products" || navi?.title == "Blogs") : navigation;
+  const filteredNavigation =
+    auth?.userDetail?.type == 3
+      ? navigation.filter(
+          (navi) =>
+            navi?.title == "Dashboard" ||
+            navi?.title == "Notifications" ||
+            navi?.title == "Users"
+        )
+      : auth?.userDetail?.type == 4
+      ? navigation.filter(
+          (navi) =>
+            navi?.title == "Dashboard" ||
+            navi?.title == "Order Requests" ||
+            navi?.title == "Products" ||
+            navi?.title == "Users"
+        )
+      : auth?.userDetail?.type == 5
+      ? navigation.filter(
+          (navi) =>
+            navi?.title == "Dashboard" || navi?.title == "Order Requests"
+        )
+      : auth?.userDetail?.type == 6
+      ? navigation.filter(
+          (navi) =>
+            navi?.title == "Dashboard" ||
+            navi?.title == "Products" ||
+            navi?.title == "Blogs" ||
+            navi?.title == "Notifications"
+        )
+      : navigation;
 
   return (
     <div className="p-3">
