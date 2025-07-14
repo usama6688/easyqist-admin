@@ -10,342 +10,342 @@ export const api = SplitApiSettings.injectEndpoints({
       query: ({ data }) => ({
         url: API_END_POINTS.loginUser,
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     deleteCategory: builder.mutation({
       query: ({ data }) => ({
         url: `${API_END_POINTS.deleteCategory}?id=${data}`,
-        method: "GET",
-      }),
+        method: "GET"
+      })
     }),
 
     deleteProductImage: builder.mutation({
       query: ({ data }) => ({
         url: `${API_END_POINTS.deleteProductImage}?id=${data}`,
-        method: "GET",
-      }),
+        method: "GET"
+      })
     }),
 
     addCategory: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.addCategory,
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     addBrand: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.addBrand,
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     editBrand: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.editBrand,
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     editCategory: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.editCategory,
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     deleteProduct: builder.mutation({
       query: ({ data }) => ({
         url: `${API_END_POINTS.deleteProduct}?id=${data}`,
-        method: "GET",
-      }),
+        method: "GET"
+      })
     }),
 
     deleteBrand: builder.mutation({
       query: ({ data }) => ({
         url: `${API_END_POINTS.deleteBrand}?id=${data}`,
-        method: "GET",
-      }),
+        method: "GET"
+      })
     }),
 
     deleteUser: builder.mutation({
       query: ({ data }) => ({
         url: `${API_END_POINTS.deleteUser}?id=${data}`,
-        method: "GET",
-      }),
+        method: "GET"
+      })
     }),
 
     isRejectedOrApproved: builder.mutation({
       query: ({ data }) => ({
         url: `${API_END_POINTS.RejectedOrApproved}?id=${data}`,
-        method: "GET",
-      }),
+        method: "GET"
+      })
     }),
 
     addProduct: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.addProduct,
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          "Content-Type": "application/x-www-form-urlencoded"
         },
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     editProduct: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.editProduct,
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          "Content-Type": "application/x-www-form-urlencoded"
         },
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     editProductImages: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.editProductImages,
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          "Content-Type": "application/x-www-form-urlencoded"
         },
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     addProductImages: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.addProductImages,
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          "Content-Type": "application/x-www-form-urlencoded"
         },
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     addProductType: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.addProductType,
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          "Content-Type": "application/x-www-form-urlencoded"
         },
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     editProductType: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.editProductType,
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          "Content-Type": "application/x-www-form-urlencoded"
         },
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     addProductInstallment: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.addProductInstallment,
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          "Content-Type": "application/x-www-form-urlencoded"
         },
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     editProductInstallment: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.editProductInstallment,
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          "Content-Type": "application/x-www-form-urlencoded"
         },
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     changeOrderStatus: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.changeOrderStatus,
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     addBanner: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.addBanner,
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     addThumbnail: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.addThumbnail,
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     addProductImage: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.addProductImage,
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     addPayment: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.addPayment,
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     deleteBanner: builder.mutation({
       query: ({ data }) => ({
         url: `${API_END_POINTS.deleteBanner}?id=${data}`,
-        method: "GET",
-      }),
+        method: "GET"
+      })
     }),
 
     editBanner: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.editBanner,
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     deleteEmployee: builder.mutation({
       query: ({ data }) => ({
         url: `${API_END_POINTS.deleteEmployee}?id=${data}`,
-        method: "GET",
-      }),
+        method: "GET"
+      })
     }),
 
     deleteType: builder.mutation({
       query: ({ data }) => ({
         url: `${API_END_POINTS.deleteType}?id=${data}`,
-        method: "GET",
-      }),
+        method: "GET"
+      })
     }),
 
     deletePlan: builder.mutation({
       query: ({ data }) => ({
         url: `${API_END_POINTS.deletePlan}?id=${data}`,
-        method: "GET",
-      }),
+        method: "GET"
+      })
     }),
 
     addEmployee: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.addEmployee,
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     editEmployee: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.editEmployee,
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     employmentAssign: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.employmentAssign,
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     addCustomer: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.addCustomer,
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     deleteCustomer: builder.mutation({
       query: ({ data }) => ({
         url: `${API_END_POINTS.deleteCustomer}?id=${data}`,
-        method: "GET",
-      }),
+        method: "GET"
+      })
     }),
 
     editCustomer: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.editCustomer,
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     sendMessage: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.sendMessage,
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     addAdmin: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.addAdmin,
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     editAdmin: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.editAdmin,
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     deleteAdmin: builder.mutation({
       query: ({ data }) => ({
         url: `${API_END_POINTS.deleteAdmin}?id=${data}`,
-        method: "GET",
-      }),
+        method: "GET"
+      })
     }),
 
     deleteOrder: builder.mutation({
       query: ({ data }) => {
         return {
           url: `${API_END_POINTS.deleteOrder}?order_id=${data}`,
-          method: "GET",
-        }
-      },
+          method: "GET"
+        };
+      }
     }),
 
     deleteRequestedProduct: builder.mutation({
       query: ({ data }) => {
         return {
           url: `${API_END_POINTS.deleteRequestedProduct}?id=${data}`,
-          method: "DELETE",
-        }
-      },
+          method: "DELETE"
+        };
+      }
     }),
 
     changeProductStatus: builder.mutation({
@@ -353,9 +353,9 @@ export const api = SplitApiSettings.injectEndpoints({
         return {
           url: API_END_POINTS.changeProductStatus,
           method: "POST",
-          body: data,
-        }
-      },
+          body: data
+        };
+      }
     }),
 
     newUser: builder.mutation({
@@ -363,57 +363,57 @@ export const api = SplitApiSettings.injectEndpoints({
         return {
           url: API_END_POINTS.newUser,
           method: "POST",
-          body: data,
-        }
-      },
+          body: data
+        };
+      }
     }),
 
     addToCart: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.addToCart,
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     proceed: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.proceed,
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     changeUserStatus: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.changeUserStatus,
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     addComment: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.addComment,
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     sendNotifications: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.sendNotifications,
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     addBlog: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.addBlog,
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     editBlog: builder.mutation({
@@ -422,28 +422,28 @@ export const api = SplitApiSettings.injectEndpoints({
           url: `${API_END_POINTS.editBlog}/${data?.id}`,
           method: "PUT",
           body: data
-        }
-      },
+        };
+      }
     }),
 
     deleteBlog: builder.mutation({
       query: (id) => {
         return {
           url: `${API_END_POINTS.editBlog}/${id}`,
-          method: "DELETE",
-        }
-      },
+          method: "DELETE"
+        };
+      }
     }),
 
     editProductRequest: builder.mutation({
       query: ({ data }) => ({
         url: API_END_POINTS.editProductRequest,
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          "Content-Type": "application/x-www-form-urlencoded"
         },
         method: "POST",
-        body: data,
-      }),
+        body: data
+      })
     }),
 
     approveProductRequest: builder.mutation({
@@ -451,9 +451,9 @@ export const api = SplitApiSettings.injectEndpoints({
         return {
           url: `${API_END_POINTS.approveProductRequest}/${data?.id}`,
           method: "POST",
-          body: data,
-        }
-      },
+          body: data
+        };
+      }
     }),
 
     addVendor: builder.mutation({
@@ -461,9 +461,9 @@ export const api = SplitApiSettings.injectEndpoints({
         return {
           url: API_END_POINTS.addVendor,
           method: "POST",
-          body: data,
-        }
-      },
+          body: data
+        };
+      }
     }),
 
     bannerSorting: builder.mutation({
@@ -471,19 +471,18 @@ export const api = SplitApiSettings.injectEndpoints({
         return {
           url: API_END_POINTS.bannerSorting,
           method: "POST",
-          body: data,
-        }
-      },
+          body: data
+        };
+      }
     }),
 
+ 
     vendorOrderRequestStatus: builder.mutation({
-      query: ({ data }) => {
-        return {
-          url: API_END_POINTS.vendorOrderRequestStatus,
-          method: "POST",
-          body: data,
-        }
-      },
+      query: (body) => ({
+        url: API_END_POINTS.vendorOrderRequestStatus,
+        method: "POST",
+        body: body 
+      })
     }),
 
     deleteVendorOrderRequest: builder.mutation({
@@ -491,9 +490,9 @@ export const api = SplitApiSettings.injectEndpoints({
         return {
           url: `${API_END_POINTS.deleteVendorOrderRequest}?id=${data}`,
           method: "DELETE",
-          body: data,
-        }
-      },
+          body: data
+        };
+      }
     }),
 
     /////////////////////////////<===QUERIES===>////////////////////////////////
@@ -503,18 +502,18 @@ export const api = SplitApiSettings.injectEndpoints({
         return {
           url: API_END_POINTS.getBrands,
           method: "GET",
-          params,
+          params
         };
-      },
+      }
     }),
 
     getProductCat: builder.query({
       query: () => {
         return {
           url: API_END_POINTS.getProductCat,
-          method: "GET",
+          method: "GET"
         };
-      },
+      }
     }),
 
     getProducts: builder.query({
@@ -522,9 +521,9 @@ export const api = SplitApiSettings.injectEndpoints({
         return {
           url: API_END_POINTS.getProducts,
           method: "GET",
-          params,
+          params
         };
-      },
+      }
     }),
 
     getAllProducts: builder.query({
@@ -532,9 +531,9 @@ export const api = SplitApiSettings.injectEndpoints({
         return {
           url: API_END_POINTS.getAllProducts,
           method: "GET",
-          params,
+          params
         };
-      },
+      }
     }),
 
     getUser: builder.query({
@@ -542,9 +541,9 @@ export const api = SplitApiSettings.injectEndpoints({
         return {
           url: API_END_POINTS.getUser,
           method: "GET",
-          params,
+          params
         };
-      },
+      }
     }),
 
     viewOrderRequest: builder.query({
@@ -552,9 +551,9 @@ export const api = SplitApiSettings.injectEndpoints({
         return {
           url: API_END_POINTS.viewOrderRequest,
           method: "GET",
-          params,
+          params
         };
-      },
+      }
     }),
 
     viewPaymentHistory: builder.query({
@@ -562,18 +561,18 @@ export const api = SplitApiSettings.injectEndpoints({
         return {
           url: API_END_POINTS.viewPaymentHistory,
           method: "GET",
-          params,
+          params
         };
-      },
+      }
     }),
 
     getBanners: builder.query({
       query: () => {
         return {
           url: API_END_POINTS.getBanners,
-          method: "GET",
+          method: "GET"
         };
-      },
+      }
     }),
 
     viewOrderHistory: builder.query({
@@ -581,9 +580,9 @@ export const api = SplitApiSettings.injectEndpoints({
         return {
           url: API_END_POINTS.viewOrderHistory,
           method: "GET",
-          params,
+          params
         };
-      },
+      }
     }),
 
     viewProductDetail: builder.query({
@@ -591,18 +590,18 @@ export const api = SplitApiSettings.injectEndpoints({
         return {
           url: API_END_POINTS.viewProductDetail,
           method: "GET",
-          params,
+          params
         };
-      },
+      }
     }),
 
     getEmployees: builder.query({
       query: () => {
         return {
           url: API_END_POINTS.getEmployees,
-          method: "GET",
+          method: "GET"
         };
-      },
+      }
     }),
 
     viewOrderDetail: builder.query({
@@ -612,25 +611,25 @@ export const api = SplitApiSettings.injectEndpoints({
           method: "GET",
           params
         };
-      },
+      }
     }),
 
     viewDashboardCounts: builder.query({
       query: () => {
         return {
           url: API_END_POINTS.viewDashboardCounts,
-          method: "GET",
+          method: "GET"
         };
-      },
+      }
     }),
 
     getCustomers: builder.query({
       query: () => {
         return {
           url: API_END_POINTS.getCustomers,
-          method: "GET",
+          method: "GET"
         };
-      },
+      }
     }),
 
     getAdmins: builder.query({
@@ -638,27 +637,27 @@ export const api = SplitApiSettings.injectEndpoints({
         return {
           url: API_END_POINTS.getAdmins,
           method: "GET",
-          params,
+          params
         };
-      },
+      }
     }),
 
     chartData: builder.query({
       query: () => {
         return {
           url: API_END_POINTS.chartData,
-          method: "GET",
+          method: "GET"
         };
-      },
+      }
     }),
 
     requestedProducts: builder.query({
       query: () => {
         return {
           url: API_END_POINTS.requestedProducts,
-          method: "GET",
+          method: "GET"
         };
-      },
+      }
     }),
 
     requestedProductDetail: builder.query({
@@ -666,9 +665,9 @@ export const api = SplitApiSettings.injectEndpoints({
         return {
           url: API_END_POINTS.requestedProductDetail,
           method: "GET",
-          params,
+          params
         };
-      },
+      }
     }),
 
     getProductDetails: builder.query({
@@ -676,9 +675,9 @@ export const api = SplitApiSettings.injectEndpoints({
         return {
           url: API_END_POINTS.getProductDetails,
           method: "GET",
-          params,
+          params
         };
-      },
+      }
     }),
 
     viewCartOrders: builder.query({
@@ -686,9 +685,9 @@ export const api = SplitApiSettings.injectEndpoints({
         return {
           url: API_END_POINTS.viewCartOrders,
           method: "GET",
-          params,
+          params
         };
-      },
+      }
     }),
 
     getComments: builder.query({
@@ -698,52 +697,52 @@ export const api = SplitApiSettings.injectEndpoints({
           method: "GET",
           params
         };
-      },
+      }
     }),
 
     getAllBlogs: builder.query({
       query: () => {
         return {
           url: API_END_POINTS.getAllBlogs,
-          method: "GET",
+          method: "GET"
         };
-      },
+      }
     }),
 
     getBlogById: builder.query({
       query: ({ id }) => {
         return {
           url: `${API_END_POINTS.editBlog}/${id}`,
-          method: "GET",
+          method: "GET"
         };
-      },
+      }
     }),
 
     getEditProductRequests: builder.query({
       query: () => {
         return {
           url: API_END_POINTS.getEditProductRequests,
-          method: "GET",
+          method: "GET"
         };
-      },
+      }
     }),
 
     getAllVendors: builder.query({
       query: () => {
         return {
           url: API_END_POINTS.getAllVendors,
-          method: "GET",
+          method: "GET"
         };
-      },
+      }
     }),
 
     getVendorOrderRequests: builder.query({
       query: () => {
         return {
           url: API_END_POINTS.getVendorOrderRequests,
-          method: "GET",
+          method: "GET"
         };
-      },
+      }
     }),
 
     getVendorOrderRequestById: builder.query({
@@ -751,14 +750,13 @@ export const api = SplitApiSettings.injectEndpoints({
         return {
           url: API_END_POINTS.getVendorOrderRequestById,
           method: "GET",
-          params,
+          params
         };
-      },
-    }),
-
+      }
+    })
   }),
 
-  overrideExisting: true,
+  overrideExisting: true
 });
 
 export const {

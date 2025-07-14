@@ -1,14 +1,19 @@
-import React, { useState } from "react";
-import { Button, Form, FormGroup, Label, Input, FormText } from "reactstrap";
-import { useAddProductImageMutation, useAddProductMutation, useAddThumbnailMutation, useGetBrandsQuery, useGetProductCatQuery } from "../../services/Api";
+import React, { useState, useEffect } from "react";
+import { Button, Form, FormGroup, Label, Input } from "reactstrap";
+import {
+  useAddProductImageMutation,
+  useAddProductMutation,
+  useAddThumbnailMutation,
+  useGetBrandsQuery,
+  useGetProductCatQuery
+} from "../../services/Api";
 import ImageViewer from "../../components/ImageViewer";
 import uploadIcon from "../../assets/images/uploadImg.svg";
 import { useNavigate } from "react-router-dom";
 import PATHS from "../../routes/Paths";
 
 const AddProduct = () => {
-  const [showShopImages, setShowShopImages] = useState([]);
-  const [showThumbnail, setShowThumbnail] = useState([]);
+  // Basic product state
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [advance, setAdvance] = useState("");
@@ -19,188 +24,144 @@ const AddProduct = () => {
   const [discount, setDiscount] = useState("");
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [selectedBrandId, setSelectedBrandId] = useState(null);
-  const [inputFields, setInputFields] = useState([{ title: "" }]);
-  const [addThumbnailApi, setAddThumbnailApi] = useState("");
-  const [addProductImageApi, setAddProductImageApi] = useState([]);
-  const navigator = useNavigate();
 
-  const {
-    data: getProductCat,
-    isLoading: getProductCatLoading,
-    refetch: getProductCatRefetch,
-  } = useGetProductCatQuery();
+  // Image handling state
+  const [thumbnail, setThumbnail] = useState(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState("");
+  const [productImages, setProductImages] = useState([]);
+  const [productImagesPreviews, setProductImagesPreviews] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
 
-  const {
-    data: getBrands,
-    isLoading: getBrandLoading,
-    refetch: getBrandRefetch,
-  } = useGetBrandsQuery({ params: { category_id: "" } });
-
-  const { data: categories } = getProductCat || {};
-  const { data: brands } = getBrands || {};
-
-  const [addProduct, { isLoading }] = useAddProductMutation();
-  const [addThumbnail, { isLoading: addThumbnailLoading }] = useAddThumbnailMutation();
-  const [addProductImage, { isLoading: addProductImageLoading }] = useAddProductImageMutation();
-
-  const addThumbnailHandler = (data) => {
-
-    let formData = new FormData();
-
-    formData.append('thumbnail', data[0]);
-
-    addThumbnail({ data: formData })
-      .unwrap()
-      .then((payload) => {
-        if (payload.status) {
-          setAddThumbnailApi(payload?.data);
+  // Plans state with sub-plans
+  const [plans, setPlans] = useState([
+    {
+      title: "",
+      subPlans: [
+        {
+          down_payment_percentage: "",
+          duration: "",
+          advance: "",
+          amount: "",
+          total_amount: ""
         }
-      })
-      .catch((error) => {
-        console.log("error", error);
-      });
-  };
-
-  const updateArray = (data) => {
-    setAddProductImageApi(prevArray => [...prevArray, data]);
-  };
-
-  const addImageHandler = (data) => {
-
-    let formData = new FormData();
-
-    formData.append('product_image', data);
-
-    addProductImage({ data: formData })
-      .unwrap()
-      .then((payload) => {
-        if (payload.status) {
-          updateArray(payload?.data);
-        }
-      })
-      .catch((error) => {
-        console.log("error", error);
-      });
-  };
-
-  const handleFileChange = (e) => {
-
-    const newImages = [...showShopImages];
-
-    for (let i = 0; i < e.target.files.length; i++) {
-      newImages.push((e.target.files[i]));
+      ]
     }
+  ]);
 
-    setShowShopImages(newImages);
-    addImageHandler(e.target.files[0]);
+  // API hooks
+  const navigate = useNavigate();
+  const { data: categories } = useGetProductCatQuery();
+  const { data: brands } = useGetBrandsQuery({
+    params: { category_id: selectedCategoryId || "" }
+  });
+  const [addProduct] = useAddProductMutation();
+  const [addThumbnail] = useAddThumbnailMutation();
+  const [addProductImage] = useAddProductImageMutation();
+
+  // Image handling functions
+  const handleThumbnailChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setThumbnail(file);
+    setThumbnailPreview(URL.createObjectURL(file));
   };
 
-  const addProductHandler = () => {
+  const handleProductImagesChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+    const newPreviews = files.map((file) => URL.createObjectURL(file));
+    setProductImages((prev) => [...prev, ...files]);
+    setProductImagesPreviews((prev) => [...prev, ...newPreviews]);
+  };
 
-    const formData = new URLSearchParams();
+  const uploadThumbnail = async () => {
+    if (!thumbnail) return "";
+    const formData = new FormData();
+    formData.append("thumbnail", thumbnail);
+    try {
+      const response = await addThumbnail({ data: formData }).unwrap();
+      if (response.status) return response.data;
+    } catch (error) {
+      console.error("Thumbnail upload failed:", error);
+    }
+    return "";
+  };
 
-    formData.append('name', name);
-    formData.append('description', description);
-    formData.append('detail_description', detailDescription);
-    formData.append('special', special);
-    formData.append('trending', trending);
-    formData.append('category_id', Number(selectedCategoryId));
-    formData.append('brand_id', Number(selectedBrandId));
-    formData.append('discount', Number(discount));
-    formData.append('price', price);
-    formData.append('advance', advance);
-    formData.append('discount_type', '%');
-    formData.append('status', 1);
-    formData.append('installment', 1);
-    formData.append('thumbnailimage', addThumbnailApi);
-
-    addProductImageApi &&
-      addProductImageApi?.forEach((data, index) => {
-        formData.append(`productimage[${index}]`, data);
-      });
-
-    inputFields.forEach((data, upperIndex) => {
-      for (const property in data) {
-        if (property === 'title') {
-          if (data[property]) {
-            formData.append(`product_type[${upperIndex}][${property}]`, data[property]);
-          }
-        }
-        if (property === 'plan') {
-          data[property]?.forEach((questionData, innerIndex) => {
-            for (const property in questionData) {
-              formData.append(
-                `product_type[${upperIndex}][installment][${innerIndex}][${property}]`,
-                questionData[property]
-              );
-            }
-          });
-        }
+  const uploadProductImages = async () => {
+    if (productImages.length === 0) return [];
+    const uploadPromises = productImages.map(async (image) => {
+      const formData = new FormData();
+      formData.append("product_image", image);
+      try {
+        const response = await addProductImage({ data: formData }).unwrap();
+        return response.status ? response.data : null;
+      } catch (error) {
+        console.error("Image upload failed:", error);
+        return null;
       }
     });
-
-    addProduct({ data: formData })
-      .unwrap()
-      .then((payload) => {
-        if (payload.status) {
-          console.log("success");
-          navigator(PATHS.products);
-          window.location.reload();
-        }
-      })
-      .catch((error) => {
-        console.log("error", error);
-      });
+    const results = await Promise.all(uploadPromises);
+    return results.filter((path) => path !== null);
   };
 
-  const handleThumbnail = (e) => {
-    const maxImages = 1;
+  // Plan management functions
+  const addPlan = () => {
+    setPlans([
+      ...plans,
+      {
+        title: "",
+        subPlans: [
+          {
+            down_payment_percentage: "",
+            duration: "",
+            advance: "",
+            amount: "",
+            total_amount: ""
+          }
+        ]
+      }
+    ]);
+  };
 
-    const imagesMap = Object.entries(e.target.files).map((images) => {
-      return (images[1])
+  const removePlan = (index) => {
+    const newPlans = [...plans];
+    newPlans.splice(index, 1);
+    setPlans(newPlans);
+  };
+
+  const addSubPlan = (planIndex) => {
+    const newPlans = [...plans];
+    newPlans[planIndex].subPlans.push({
+      down_payment_percentage: "",
+      duration: "",
+      advance: "",
+      amount: "",
+      total_amount: ""
     });
-
-    const previousImages = [...showThumbnail];
-
-    const combinedImages = [...previousImages, ...imagesMap];
-
-    if (combinedImages.length > maxImages) {
-      alert("Please select up to 1 images only.");
-      return;
-    }
-
-    setShowThumbnail(combinedImages);
-
-    addThumbnailHandler(combinedImages);
+    setPlans(newPlans);
   };
 
-  const removeShopImages = (image) => {
-    let filteredData = [];
-    if (image.id) {
-      filteredData = showShopImages.filter((i) =>
-        i.hasOwnProperty("id") ? i.id !== image.id : true
-      );
-    } else {
-      filteredData = showShopImages.filter((i) => i.name !== image.name);
-    }
-    setShowShopImages([...filteredData]);
+  const removeSubPlan = (planIndex, subPlanIndex) => {
+    const newPlans = [...plans];
+    newPlans[planIndex].subPlans.splice(subPlanIndex, 1);
+    setPlans(newPlans);
   };
 
-  const removeThumbnail = (image) => {
-    let filteredData = [];
-    if (image.id) {
-      filteredData = showThumbnail.filter((i) =>
-        i.hasOwnProperty("id") ? i.id !== image.id : true
-      );
-    } else {
-      filteredData = showThumbnail.filter((i) => i.name !== image.name);
-    }
-    setShowThumbnail([...filteredData]);
+  const handlePlanChange = (planIndex, field, value) => {
+    const newPlans = [...plans];
+    newPlans[planIndex][field] = value;
+    setPlans(newPlans);
   };
 
+  const handleSubPlanChange = (planIndex, subPlanIndex, field, value) => {
+    const newPlans = [...plans];
+    newPlans[planIndex].subPlans[subPlanIndex][field] = value;
+    setPlans(newPlans);
+  };
+
+  // Special and trending handlers
   const handleSpecial = (e) => {
     const value = e.target.value;
-
     if (/^[01]?$/.test(value)) {
       setSpecial(value);
     }
@@ -208,399 +169,481 @@ const AddProduct = () => {
 
   const handleTrending = (e) => {
     const value = e.target.value;
-
     if (/^[01]?$/.test(value)) {
       setTrending(value);
     }
   };
 
-  const handleCatChange = (e) => {
-    const selectedId = e.target.value;
-    setSelectedCategoryId(selectedId);
-  };
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsUploading(true);
 
-  const handleBrandChange = (e) => {
-    const selectedId = e.target.value;
-    setSelectedBrandId(selectedId);
-  };
+    try {
+      // Validate required fields
+      if (!name || !price || !selectedCategoryId || !selectedBrandId) {
+        alert(
+          "Please fill in all required fields (Name, Price, Category, Brand)"
+        );
+        setIsUploading(false);
+        return;
+      }
 
-  const addInputField = () => {
-    setInputFields([
-      ...inputFields,
-      {
-        title: "",
-      },
-    ]);
-  };
+      // Upload images
+      const [thumbnailPath, imagePaths] = await Promise.all([
+        uploadThumbnail(),
+        uploadProductImages()
+      ]);
 
-  const addInnerInputFields = (index) => {
-    let rows = [...inputFields];
-    if (rows[index].plan?.length) {
-      rows[index].plan = [...rows[index].plan, { installment_title: "", duration: "", amount: "", advance: "", total_amount: "" }];
-    } else {
-      rows[index].plan = [{ installment_title: "", duration: "", amount: "", advance: "", total_amount: "" }];
+      // Prepare form data
+      const formData = new URLSearchParams();
+      formData.append("name", name);
+      formData.append("price", price);
+      formData.append("advance", advance || "0");
+      formData.append("description", description);
+      formData.append("detail_description", detailDescription);
+      formData.append("special", special);
+      formData.append("trending", trending);
+      formData.append("discount", discount || "0");
+      formData.append("category_id", selectedCategoryId);
+      formData.append("brand_id", selectedBrandId);
+      formData.append("thumbnailimage", thumbnailPath);
+      formData.append("discount_type", "%");
+      formData.append("status", 1);
+      formData.append(
+        "installment",
+        plans.some((plan) => plan.title && plan.subPlans.length > 0) ? 1 : 0
+      );
+
+      // Add product images
+      imagePaths.forEach((path, index) => {
+        formData.append(`productimage[${index}]`, path);
+      });
+
+      // Add plans and sub-plans
+      plans.forEach((plan, planIndex) => {
+        if (plan.title) {
+          formData.append(`product_type[${planIndex}][title]`, plan.title);
+          plan.subPlans.forEach((subPlan, subPlanIndex) => {
+            formData.append(
+              `product_type[${planIndex}][payment_options][${subPlanIndex}][down_payment_percentage]`,
+              subPlan.down_payment_percentage || ""
+            );
+            formData.append(
+              `product_type[${planIndex}][payment_options][${subPlanIndex}][duration]`,
+              subPlan.duration || ""
+            );
+            formData.append(
+              `product_type[${planIndex}][payment_options][${subPlanIndex}][advance]`,
+              subPlan.advance || "0"
+            );
+            formData.append(
+              `product_type[${planIndex}][payment_options][${subPlanIndex}][amount]`,
+              subPlan.amount || "0"
+            );
+            formData.append(
+              `product_type[${planIndex}][payment_options][${subPlanIndex}][total_amount]`,
+              subPlan.total_amount || "0"
+            );
+          });
+        }
+      });
+
+      // Submit product data
+      const response = await addProduct({ data: formData }).unwrap();
+      if (response.status) {
+        navigate(PATHS.products);
+      }
+    } catch (error) {
+      console.error("Product submission failed:", error);
+      alert("Failed to add product. Please try again.");
+    } finally {
+      setIsUploading(false);
     }
-    setInputFields([...rows]);
   };
 
-  const removeInputFieldsOnAdd = (index) => {
-    let rows = [...inputFields];
-    rows = rows.filter((data, dataIndex) => dataIndex !== index);
-    setInputFields([...rows]);
-  };
-
-  const removeInnerInputFields = (upperIndex, innerIndex) => {
-    let rows = [...inputFields];
-    let mutatingArray = rows[upperIndex].plan;
-    mutatingArray = mutatingArray.filter(
-      (data, dataIndex) => dataIndex !== innerIndex
-    );
-    rows[upperIndex].plan = mutatingArray;
-    setInputFields([...rows]);
-  };
-
-  const handleChange = (index, evnt) => {
-    const { name, value } = evnt.target;
-    const list = [...inputFields];
-    list[index][name] = value;
-    setInputFields(list);
-  };
-
-  const planNameChange = (upperIndex, innerIndex, value) => {
-    const list = [...inputFields];
-    let installment_title = list[upperIndex].plan;
-    installment_title[innerIndex].installment_title = value;
-    list[upperIndex].plan = installment_title;
-    setInputFields(list);
-  };
-
-  const monthsNameChange = (upperIndex, innerIndex, value) => {
-    const list = [...inputFields];
-    let duration = list[upperIndex].plan;
-    duration[innerIndex].duration = value;
-    list[upperIndex].plan = duration;
-    setInputFields(list);
-  };
-
-  const priceNameChange = (upperIndex, innerIndex, value) => {
-    const list = [...inputFields];
-    let amount = list[upperIndex].plan;
-    amount[innerIndex].amount = value;
-    list[upperIndex].plan = amount;
-    setInputFields(list);
-  };
-
-  const advanceNameChange = (upperIndex, innerIndex, value) => {
-    const list = [...inputFields];
-    let advance = list[upperIndex].plan;
-    advance[innerIndex].advance = value;
-    list[upperIndex].plan = advance;
-    setInputFields(list);
-  };
-
-  const amountNameChange = (upperIndex, innerIndex, value) => {
-    const list = [...inputFields];
-    let total_amount = list[upperIndex].plan;
-    total_amount[innerIndex].total_amount = value;
-    list[upperIndex].plan = total_amount;
-    setInputFields(list);
-  };
+  // Clean up object URLs
+  useEffect(() => {
+    return () => {
+      if (thumbnailPreview) URL.revokeObjectURL(thumbnailPreview);
+      productImagesPreviews.forEach((preview) => URL.revokeObjectURL(preview));
+    };
+  }, [thumbnailPreview, productImagesPreviews]);
 
   return (
-    <div>
-      <Form>
-        <FormGroup>
-          <Label for="exampleEmail">Product Name</Label>
-          <Input name="name" placeholder="Name" type="text" onChange={(e) => setName(e.target.value)} />
-        </FormGroup>
+    <div className="container py-4">
+      <h2 className="mb-4">Add New Product</h2>
 
-        <FormGroup>
-          <Label for="exampleEmail">Price</Label>
-          <Input placeholder="Price" type="number" onChange={(e) => setPrice(e.target.value)} />
-        </FormGroup>
+      <Form onSubmit={handleSubmit}>
+        {/* Basic Product Information */}
+        <div className="card mb-4">
+          <div className="card-header">Product Information</div>
+          <div className="card-body">
+            <FormGroup>
+              <Label>Product Name</Label>
+              <Input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </FormGroup>
 
-        <FormGroup>
-          <Label for="exampleEmail">Advance</Label>
-          <Input placeholder="Advance" type="number" onChange={(e) => setAdvance(e.target.value)} />
-        </FormGroup>
-
-        <FormGroup>
-          <Label for="exampleText">Description</Label>
-          <Input id="exampleText" name="description" rows="8" type="textarea" placeholder="Type..." onChange={(e) => setDescription(e.target.value)} />
-        </FormGroup>
-
-        <FormGroup>
-          <Label for="exampleText">Detail Description</Label>
-          <Input id="exampleText" type="textarea" rows="8" placeholder="Type..." onChange={(e) => setDetailDescription(e.target.value)} />
-        </FormGroup>
-
-        <FormGroup>
-          <Label for="exampleText">Special</Label>
-          <Input
-            id="exampleText"
-            name="description"
-            type="number"
-            value={special}
-            onChange={handleSpecial}
-            pattern="[01]"
-          />
-        </FormGroup>
-
-        <FormGroup>
-          <Label for="exampleText">Trending</Label>
-          <Input
-            id="exampleText"
-            name="description"
-            type="number"
-            value={trending}
-            onChange={handleTrending}
-            pattern="[01]"
-          />
-        </FormGroup>
-
-        <FormGroup>
-          <Label for="exampleSelect">Select Category</Label>
-          <Input id="exampleSelect" name="select" type="select" onChange={handleCatChange} value={selectedCategoryId}>
-            <option value="">Select category</option>
-            {categories?.map((item, index) => {
-              return <option key={index} value={item?.id}>{item?.name}</option>;
-            })}
-          </Input>
-        </FormGroup>
-
-        <FormGroup>
-          <Label for="exampleSelect">Select Brand</Label>
-          <Input id="exampleSelect" name="select" type="select" onChange={handleBrandChange} value={selectedBrandId}>
-            <option value="">Select Brand</option>
-            {brands?.map((item, index) => {
-              return <option key={index} value={item?.id}>{item?.brand_name}</option>;
-            })}
-          </Input>
-        </FormGroup>
-
-        <FormGroup>
-          <Label for="exampleEmail">Discount</Label>
-          <Input name="name" placeholder="Type.." type="number" onChange={(e) => setDiscount(e.target.value)} />
-        </FormGroup>
-
-        <FormGroup>
-          <Label for="exampleFile">Thumbnail</Label>
-
-          <div className='position-relative ms-5 mb-4'>
             <div className="row">
-
-              {showThumbnail?.length < 6 ?
-                <div className="col-md-3">
-                  <img src={uploadIcon} alt="" height={100} width={100} />
-                  <input type="file" className='hiddenInputFile' name="image"
-                    accept="image/png, image/jpg, image/jpeg" onChange={handleThumbnail} />
-                </div>
-                : ""}
-
-              {showThumbnail?.length > 0 &&
-                showThumbnail?.map((image) => (
-                  <div className="col-md-3 mt-3 position-relative">
-                    <ImageViewer
-                      src={image}
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = '';
-                      }}
-                      width="100px"
-                      height="100px"
-                    />
-
-                    <div
-                      className='removeImageIcon text-dark'
-                      onClick={() => removeThumbnail(image)}
-                    >X</div>
-                  </div>
-                ))}
-            </div>
-          </div>
-        </FormGroup>
-
-        <FormGroup>
-          <Label for="exampleFile">Image(s)</Label>
-
-          <div className='position-relative ms-5 mb-4'>
-            <div className="row">
-
-              {showShopImages?.length < 6 ?
-                <div className="col-md-3">
-                  <img src={uploadIcon} alt="" height={100} width={100} />
-                  <input type="file" className='hiddenInputFile' name="image"
-                    accept="image/png, image/jpg, image/jpeg" onChange={handleFileChange} />
-                </div>
-                : ""}
-
-              {showShopImages?.length > 0 &&
-                showShopImages?.map((image) => (
-                  <div className="col-md-3 mt-3 position-relative">
-                    <ImageViewer
-                      src={image}
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = '';
-                      }}
-                      width="100px"
-                      height="100px"
-                    />
-
-                    <div
-                      className='removeImageIcon text-dark'
-                      onClick={() => removeShopImages(image)}
-                    >X</div>
-                  </div>
-                ))}
-            </div>
-          </div>
-        </FormGroup>
-
-        <Label for="exampleText" style={{ marginBottom: 15 }}>
-          Add Types
-        </Label>
-
-        <div className="row mt-3 title-row m-0">
-          {inputFields.map((data, upperIndex) => {
-            const { name } = data;
-            return (
-              <div className="col-lg-12">
-                <div className="row">
-                  <div className="col-12 p-0 mb-4">
-                    <div>
-                      <div className="d-flex align-item-center justify-content-between">
-                        <label className="topic_label fs-12">Type {upperIndex + 1}</label>
-                        <h4 onClick={() => { removeInputFieldsOnAdd(upperIndex) }}>X</h4>
-                      </div>
-
-                      <div>
-                        <input
-                          type="text"
-                          className="form-control fontSize"
-                          placeholder="Type here..."
-                          value={name}
-                          onChange={(evnt) => handleChange(upperIndex, evnt)}
-                          name="title"
-                          maxLength="150"
-                        />
-                      </div>
-
-                      {data.plan?.length
-                        ? data.plan.map((questiondata, innerIndex) => {
-
-                          return (
-                            <>
-                              <div
-                                className="d-flex mt-2"
-                                style={{ gap: "10px" }}
-                              >
-                                <div className="w-100">
-
-                                  <div className="topic_label fs-12 mt-3">
-                                    Plan {innerIndex + 1}
-                                  </div>
-
-                                  <input
-                                    type="text"
-                                    placeholder="Plan name"
-                                    className="form-control mb-2"
-                                    value={questiondata.installment_title}
-                                    onChange={(e) =>
-                                      planNameChange(
-                                        upperIndex,
-                                        innerIndex,
-                                        e.target.value
-                                      )
-                                    }
-                                  />
-
-                                  <input
-                                    type="number"
-                                    placeholder="Months"
-                                    className="form-control mb-2"
-                                    value={questiondata.duration}
-                                    onChange={(e) =>
-                                      monthsNameChange(
-                                        upperIndex,
-                                        innerIndex,
-                                        e.target.value
-                                      )
-                                    }
-                                  />
-
-                                  <input
-                                    type="number"
-                                    placeholder="Price"
-                                    className="form-control mb-2"
-                                    value={questiondata.amount}
-                                    onChange={(e) =>
-                                      priceNameChange(
-                                        upperIndex,
-                                        innerIndex,
-                                        e.target.value
-                                      )
-                                    }
-                                  />
-
-                                  <input
-                                    type="number"
-                                    placeholder="Advance"
-                                    className="form-control mb-2"
-                                    value={questiondata.advance}
-                                    onChange={(e) =>
-                                      advanceNameChange(
-                                        upperIndex,
-                                        innerIndex,
-                                        e.target.value
-                                      )
-                                    }
-                                  />
-
-                                  <input
-                                    type="number"
-                                    placeholder="Total amount"
-                                    className="form-control mb-2"
-                                    value={questiondata.total_amount}
-                                    onChange={(e) =>
-                                      amountNameChange(
-                                        upperIndex,
-                                        innerIndex,
-                                        e.target.value
-                                      )
-                                    }
-                                  />
-
-                                  {/* <div className="text-end">
-                                    <Button className="mt-2 bg-danger" onClick={() =>
-                                      removeInnerInputFields(
-                                        upperIndex,
-                                        innerIndex
-                                      )
-                                    }>Remove</Button>
-                                  </div> */}
-                                </div>
-                              </div>
-                            </>
-                          )
-                        })
-                        : null}
-                      <div>
-                        <Button className="mt-2 w-100 bg-primary" onClick={() => addInnerInputFields(upperIndex)}>Add Plan +</Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div className="col-md-4">
+                <FormGroup>
+                  <Label>Price</Label>
+                  <Input
+                    type="number"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    required
+                  />
+                </FormGroup>
               </div>
-            );
-          })}
+              <div className="col-md-4">
+                <FormGroup>
+                  <Label>Advance Payment</Label>
+                  <Input
+                    type="number"
+                    value={advance}
+                    onChange={(e) => setAdvance(e.target.value)}
+                  />
+                </FormGroup>
+              </div>
+              <div className="col-md-4">
+                <FormGroup>
+                  <Label>Discount (%)</Label>
+                  <Input
+                    type="number"
+                    value={discount}
+                    onChange={(e) => setDiscount(e.target.value)}
+                  />
+                </FormGroup>
+              </div>
+            </div>
 
-          <div className="col-lg-12 mt-4 p-0">
-            <Button className="mt-2 w-100 bg-primary" onClick={addInputField}>Add Type +</Button>
+            <FormGroup>
+              <Label>Description</Label>
+              <Input
+                type="textarea"
+                rows="3"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </FormGroup>
+
+            <FormGroup>
+              <Label>Detailed Description</Label>
+              <Input
+                type="textarea"
+                rows="5"
+                value={detailDescription}
+                onChange={(e) => setDetailDescription(e.target.value)}
+              />
+            </FormGroup>
+
+            <div className="row">
+              <div className="col-md-6">
+                <FormGroup>
+                  <Label>Category</Label>
+                  <Input
+                    type="select"
+                    value={selectedCategoryId || ""}
+                    onChange={(e) => setSelectedCategoryId(e.target.value)}
+                    required
+                  >
+                    <option value="">Select Category</option>
+                    {categories?.data?.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </Input>
+                </FormGroup>
+              </div>
+              <div className="col-md-6">
+                <FormGroup>
+                  <Label>Brand</Label>
+                  <Input
+                    type="select"
+                    value={selectedBrandId || ""}
+                    onChange={(e) => setSelectedBrandId(e.target.value)}
+                    required
+                  >
+                    <option value="">Select Brand</option>
+                    {brands?.data?.map((brand) => (
+                      <option key={brand.id} value={brand.id}>
+                        {brand.brand_name}
+                      </option>
+                    ))}
+                  </Input>
+                </FormGroup>
+              </div>
+            </div>
+
+            <div className="row">
+              <div className="col-md-6">
+                <FormGroup>
+                  <Label>Special</Label>
+                  <Input
+                    type="number"
+                    value={special}
+                    onChange={handleSpecial}
+                    pattern="[01]"
+                  />
+                </FormGroup>
+              </div>
+              <div className="col-md-6">
+                <FormGroup>
+                  <Label>Trending</Label>
+                  <Input
+                    type="number"
+                    value={trending}
+                    onChange={handleTrending}
+                    pattern="[01]"
+                  />
+                </FormGroup>
+              </div>
+            </div>
           </div>
         </div>
 
-        <Button className="mt-5" onClick={addProductHandler}>Submit</Button>
+        {/* Product Images */}
+        <div className="card mb-4">
+          <div className="card-header">Product Images</div>
+          <div className="card-body">
+            <div className="row">
+              <div className="col-md-6">
+                <FormGroup>
+                  <Label>Thumbnail Image</Label>
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleThumbnailChange}
+                  />
+                  {thumbnailPreview && (
+                    <div className="mt-2">
+                      <ImageViewer
+                        src={thumbnailPreview}
+                        width="150"
+                        height="150"
+                      />
+                    </div>
+                  )}
+                </FormGroup>
+              </div>
+              <div className="col-md-6">
+                <FormGroup>
+                  <Label>Additional Images</Label>
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleProductImagesChange}
+                  />
+                  <div className="d-flex flex-wrap mt-2">
+                    {productImagesPreviews.map((preview, index) => (
+                      <div key={index} className="me-2 mb-2 position-relative">
+                        <ImageViewer src={preview} width="100" height="100" />
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-danger position-absolute top-0 end-0"
+                          onClick={() => {
+                            setProductImages((prev) =>
+                              prev.filter((_, i) => i !== index)
+                            );
+                            setProductImagesPreviews((prev) =>
+                              prev.filter((_, i) => i !== index)
+                            );
+                          }}
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </FormGroup>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Product Types and Installments */}
+        <div className="card mb-4">
+          <div className="card-header">Product Types and Installment Plans</div>
+          <div className="card-body">
+            {plans.map((plan, planIndex) => (
+              <div key={planIndex} className="mb-4 border p-3 rounded">
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                  <h5>Type {planIndex + 1}</h5>
+                  {plans.length > 1 && (
+                    <button
+                      type="button"
+                      className="btn btn-danger btn-sm"
+                      onClick={() => removePlan(planIndex)}
+                    >
+                      Remove Type
+                    </button>
+                  )}
+                </div>
+
+                <FormGroup>
+                  <Label>Type Name</Label>
+                  <Input
+                    type="text"
+                    value={plan.title}
+                    onChange={(e) =>
+                      handlePlanChange(planIndex, "title", e.target.value)
+                    }
+                    placeholder="e.g., Basic, Premium"
+                  />
+                </FormGroup>
+
+                <div className="mt-3">
+                  <h6>Installment Plans</h6>
+                  {plan.subPlans.map((subPlan, subPlanIndex) => (
+                    <div key={subPlanIndex} className="border p-3 mb-3 rounded">
+                      <div className="d-flex justify-content-between align-items-center mb-2">
+                        <h6 className="mb-0">Plan {subPlanIndex + 1}</h6>
+                        {plan.subPlans.length > 1 && (
+                          <button
+                            type="button"
+                            className="btn btn-danger btn-sm"
+                            onClick={() =>
+                              removeSubPlan(planIndex, subPlanIndex)
+                            }
+                          >
+                            Remove Plan
+                          </button>
+                        )}
+                      </div>
+
+                      <div className="row">
+                        <div className="col-md-6">
+                          <FormGroup>
+                            <Label>Down Payment (%)</Label>
+                            <Input
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={subPlan.down_payment_percentage}
+                              onChange={(e) =>
+                                handleSubPlanChange(
+                                  planIndex,
+                                  subPlanIndex,
+                                  "down_payment_percentage",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </FormGroup>
+                        </div>
+                        <div className="col-md-6">
+                          <FormGroup>
+                            <Label>Duration (Months)</Label>
+                            <Input
+                              type="number"
+                              min="1"
+                              value={subPlan.duration}
+                              onChange={(e) =>
+                                handleSubPlanChange(
+                                  planIndex,
+                                  subPlanIndex,
+                                  "duration",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </FormGroup>
+                        </div>
+                      </div>
+
+                      <div className="row mt-2">
+                        <div className="col-md-4">
+                          <FormGroup>
+                            <Label>Advance Amount</Label>
+                            <Input
+                              type="number"
+                              min="0"
+                              value={subPlan.advance}
+                              onChange={(e) =>
+                                handleSubPlanChange(
+                                  planIndex,
+                                  subPlanIndex,
+                                  "advance",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </FormGroup>
+                        </div>
+                        <div className="col-md-4">
+                          <FormGroup>
+                            <Label>Monthly Installment</Label>
+                            <Input
+                              type="number"
+                              min="0"
+                              value={subPlan.amount}
+                              onChange={(e) =>
+                                handleSubPlanChange(
+                                  planIndex,
+                                  subPlanIndex,
+                                  "amount",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </FormGroup>
+                        </div>
+                        <div className="col-md-4">
+                          <FormGroup>
+                            <Label>Total Amount</Label>
+                            <Input
+                              type="number"
+                              min="0"
+                              value={subPlan.total_amount}
+                              onChange={(e) =>
+                                handleSubPlanChange(
+                                  planIndex,
+                                  subPlanIndex,
+                                  "total_amount",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </FormGroup>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  <button
+                    type="button"
+                    className="btn btn-primary btn-sm mt-2"
+                    onClick={() => addSubPlan(planIndex)}
+                  >
+                    Add Installment Plan
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            <button
+              type="button"
+              className="btn btn-primary mt-3"
+              onClick={addPlan}
+            >
+              Add New Type
+            </button>
+          </div>
+        </div>
+
+        <div className="text-end">
+          <Button type="submit" color="primary" disabled={isUploading}>
+            {isUploading ? "Saving..." : "Save Product"}
+          </Button>
+        </div>
       </Form>
     </div>
   );

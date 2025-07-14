@@ -56,7 +56,7 @@ export const API_END_POINTS = {
   editProductRequest: BASE_URL + "product/edit_request",
   approveProductRequest: BASE_URL + "product/edit_request/approve",
   addVendor: BASE_URL + "/register-vendor",
-  vendorOrderRequestStatus: BASE_URL + "/vendor/product-request",
+  vendorOrderRequestStatus: BASE_URL + "/vendor/product-request/update-status",
   deleteVendorOrderRequest: BASE_URL + "/vendor/product-request",
   /////////////////////////////<===QUERIES===>////////////////////////////////
   getBrands: BASE_URL + "get-brand",
