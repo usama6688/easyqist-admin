@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Col, FormGroup, Input, Label, Row } from "reactstrap";
 import moment from "moment";
+import { toast } from "react-toastify";
 import {
   useGetVendorOrderRequestByIdQuery,
   useVendorOrderRequestStatusMutation
@@ -11,24 +12,29 @@ import { useSelector } from "react-redux";
 const ViewVendorOrderRequest = () => {
   const [isRejectionModalOpen, setIsRejectionModalOpen] = useState(false);
   const [rejectionReason, setRejectionReason] = useState("");
-  const [selectedOrderItem, setSelectedOrderItem] = useState(null);
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
   const reqDataId = location?.state?.data;
-  const auth = useSelector((data) => data?.auth);
+  const auth = useSelector((state) => state?.auth);
 
+  // API hooks
   const [vendorOrderRequestStatus] = useVendorOrderRequestStatusMutation();
-
   const {
     data: getVendorOrderRequestById,
-    refetch: getVendorOrderRequestByIdRefetch
-  } = useGetVendorOrderRequestByIdQuery({ params: { id: reqDataId?.id } });
+    refetch: getVendorOrderRequestByIdRefetch,
+    isLoading,
+    isFetching,
+    error
+  } = useGetVendorOrderRequestByIdQuery(
+    { params: { id: reqDataId?.id } },
+    { skip: !reqDataId?.id }
+  );
 
-  const orderData = getVendorOrderRequestById?.data || [];
+  const orderData = getVendorOrderRequestById?.data || {};
 
-  // Image modal handlers
+  // Handle image modal
   const handleImageClick = (imageUrl) => {
     setSelectedImage(imageUrl);
     setImageModalOpen(true);
@@ -39,140 +45,235 @@ const ViewVendorOrderRequest = () => {
     setSelectedImage("");
   };
 
-  const handleStatusChange = (status, item) => {
-    if (status == "rejected") {
-      setSelectedOrderItem(item);
+  // Handle status changes
+  const handleStatusChange = async (status) => {
+    if (status === "rejected") {
       setIsRejectionModalOpen(true);
       return;
     }
 
-    const data = {
-      id: item?.id,
-      status: status,
-      rejection_reason: ""
-    };
+    try {
+      const payload = {
+        id: parseInt(orderData?.id, 10),
+        status,
+        rejection_reason: ""
+      };
 
-    vendorOrderRequestStatus({ data })
-      .unwrap()
-      .then(() => {
-        getVendorOrderRequestByIdRefetch();
-      })
-      .catch((error) => console.log("error", error));
+      const response = await vendorOrderRequestStatus(payload).unwrap();
+
+      if (response?.status === true) {
+        toast.success(`Order ${status} successfully!`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined
+        });
+        await getVendorOrderRequestByIdRefetch();
+      } else {
+        toast.error(response?.message || "Failed to update status", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined
+        });
+      }
+    } catch (error) {
+      console.error("Status change error:", error);
+      toast.error(error?.data?.message || "Failed to update status", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined
+      });
+    }
   };
 
-  const handleConfirmRejection = () => {
-    const data = {
-      id: selectedOrderItem?.id,
-      status: "rejected",
-      rejection_reason: rejectionReason
-    };
+  // Handle order rejection
+  const handleConfirmRejection = async () => {
+    if (!rejectionReason.trim()) {
+      toast.error("Please provide a rejection reason", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined
+      });
+      return;
+    }
 
-    vendorOrderRequestStatus({ data })
-      .unwrap()
-      .then(() => {
+    try {
+      const payload = {
+        id: parseInt(orderData?.id, 10),
+        status: "rejected",
+        rejection_reason: rejectionReason.trim()
+      };
+
+      const response = await vendorOrderRequestStatus(payload).unwrap();
+
+      if (response?.status === true) {
+        toast.success("Order rejected successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined
+        });
         setIsRejectionModalOpen(false);
         setRejectionReason("");
-        getVendorOrderRequestByIdRefetch();
-      })
-      .catch((error) => console.log("error", error));
+        await getVendorOrderRequestByIdRefetch();
+      } else {
+        toast.error(response?.message || "Failed to reject order", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined
+        });
+      }
+    } catch (error) {
+      console.error("Rejection error:", error);
+      toast.error(error?.data?.message || "Failed to reject order", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined
+      });
+    }
   };
 
-  useEffect(() => {
-    getVendorOrderRequestByIdRefetch();
-  }, []);
+  if (isLoading || isFetching) {
+    return <div className="text-center py-5">Loading order details...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-5 text-danger">
+        Error loading order details. Please try again.
+      </div>
+    );
+  }
+
+  if (!orderData?.id) {
+    return (
+      <div className="text-center py-5 text-muted">
+        No order data found. Returning to previous page...
+      </div>
+    );
+  }
 
   return (
-    <div>
+    <div className="container-fluid">
+      <Row className="mb-4">
+        <Col lg="12">
+          <h4>Order Details</h4>
+          <hr />
+        </Col>
+      </Row>
+
       <Row>
-        {auth?.userDetail?.type == 3 || auth?.userDetail?.type == 5 ? null : (
-          <>
-            <Col lg="4"></Col>
-            <Col lg="4"></Col>
-            <Col lg="4" className="mb-4">
-              <div class="dropdown">
-                <button
-                  class="btn btn-secondary dropdown-togglex w-100"
-                  type="button"
-                  id="dropdownMenuButton1"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Change Status
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                  {orderData?.status == "pending" ? (
-                    <>
-                      <li>
-                        <a
-                          class="dropdown-item"
-                          onClick={() =>
-                            handleStatusChange("approved", orderData)
-                          }
-                        >
-                          Approve
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          class="dropdown-item"
-                          onClick={() =>
-                            handleStatusChange("rejected", orderData)
-                          }
-                        >
-                          Reject
-                        </a>
-                      </li>
-                    </>
-                  ) : orderData?.status == "rejected" ? (
+        {/* Status Change Dropdown */}
+        {auth?.userDetail?.type !== 3 && auth?.userDetail?.type !== 5 && (
+          <Col lg="4" className="mb-4">
+            <div className="dropdown">
+              <button
+                className="btn btn-secondary dropdown-toggle w-100"
+                type="button"
+                id="statusDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Change Status
+              </button>
+              <ul className="dropdown-menu" aria-labelledby="statusDropdown">
+                {orderData?.status === "pending" && (
+                  <>
                     <li>
-                      <a
-                        class="dropdown-item"
-                        onClick={() =>
-                          handleStatusChange("approved", orderData)
-                        }
+                      <button
+                        className="dropdown-item"
+                        onClick={() => handleStatusChange("approved")}
                       >
                         Approve
-                      </a>
+                      </button>
                     </li>
-                  ) : orderData?.status == "approved" ? (
                     <li>
-                      <a
-                        class="dropdown-item"
-                        onClick={() =>
-                          handleStatusChange("rejected", orderData)
-                        }
+                      <button
+                        className="dropdown-item"
+                        onClick={() => handleStatusChange("rejected")}
                       >
                         Reject
-                      </a>
+                      </button>
                     </li>
-                  ) : null}
-                </ul>
-              </div>
-            </Col>
-          </>
+                  </>
+                )}
+                {orderData?.status === "rejected" && (
+                  <li>
+                    <button
+                      className="dropdown-item"
+                      onClick={() => handleStatusChange("approved")}
+                    >
+                      Approve
+                    </button>
+                  </li>
+                )}
+                {orderData?.status === "approved" && (
+                  <li>
+                    <button
+                      className="dropdown-item"
+                      onClick={() => handleStatusChange("rejected")}
+                    >
+                      Reject
+                    </button>
+                  </li>
+                )}
+              </ul>
+            </div>
+          </Col>
         )}
 
+        {/* Order Information */}
         <Col lg="4">
           <FormGroup>
-            <Label for="exampleEmail">Product Name</Label>
-            <Input type="text" value={orderData?.item_name} readOnly />
+            <Label>Product Name</Label>
+            <Input type="text" value={orderData?.item_name || "N/A"} readOnly />
           </FormGroup>
         </Col>
 
         <Col lg="4">
           <FormGroup>
-            <Label for="exampleEmail">Phone No.</Label>
-            <Input type="text" value={orderData?.phone_number} readOnly />
+            <Label>Phone Number</Label>
+            <Input
+              type="text"
+              value={orderData?.phone_number || "N/A"}
+              readOnly
+            />
           </FormGroup>
         </Col>
 
         <Col lg="4">
           <FormGroup>
-            <Label for="exampleEmail">Status</Label>
+            <Label>Status</Label>
             <Input
               type="text"
               className="text-capitalize"
-              value={orderData?.status}
+              value={orderData?.status || "N/A"}
               readOnly
             />
           </FormGroup>
@@ -180,19 +281,10 @@ const ViewVendorOrderRequest = () => {
 
         <Col lg="4">
           <FormGroup>
-            <Label for="exampleEmail">Order Price</Label>
-            <Input type="text" value={orderData?.item_price} readOnly />
-          </FormGroup>
-        </Col>
-
-        <Col lg="4">
-          <FormGroup>
-            <Label for="exampleEmail">Order Date</Label>
+            <Label>Order Price</Label>
             <Input
               type="text"
-              value={moment(orderData?.order_date).format(
-                "MMMM Do YYYY, h:mm:ss a"
-              )}
+              value={orderData?.item_price || "N/A"}
               readOnly
             />
           </FormGroup>
@@ -200,26 +292,55 @@ const ViewVendorOrderRequest = () => {
 
         <Col lg="4">
           <FormGroup>
-            <Label for="exampleEmail">Address</Label>
-            <Input type="text" value={orderData?.buyer_address} readOnly />
+            <Label>Order Date</Label>
+            <Input
+              type="text"
+              value={
+                orderData?.created_at
+                  ? moment(orderData?.created_at).format(
+                      "MMMM Do YYYY, h:mm:ss a"
+                    )
+                  : "N/A"
+              }
+              readOnly
+            />
           </FormGroup>
         </Col>
 
         <Col lg="4">
           <FormGroup>
-            <Label for="exampleEmail">CNIC</Label>
-            <Input type="text" value={orderData?.buyer_cnic_number} readOnly />
+            <Label>Address</Label>
+            <Input
+              type="text"
+              value={orderData?.buyer_address || "N/A"}
+              readOnly
+            />
           </FormGroup>
         </Col>
 
         <Col lg="4">
           <FormGroup>
-            <Label for="exampleEmail">User Name</Label>
-            <Input type="text" value={orderData?.buyer_user} readOnly />
+            <Label>CNIC</Label>
+            <Input
+              type="text"
+              value={orderData?.buyer_cnic_number || "N/A"}
+              readOnly
+            />
           </FormGroup>
         </Col>
 
-        {/* Product Description Section */}
+        <Col lg="4">
+          <FormGroup>
+            <Label>User Name</Label>
+            <Input
+              type="text"
+              value={orderData?.buyer_user || "N/A"}
+              readOnly
+            />
+          </FormGroup>
+        </Col>
+
+        {/* Product Description */}
         <Col lg="12">
           <FormGroup>
             <Label>Product Description</Label>
@@ -233,7 +354,7 @@ const ViewVendorOrderRequest = () => {
           </FormGroup>
         </Col>
 
-        {/* Product Image Section */}
+        {/* Product Image */}
         <Col lg="12">
           <FormGroup>
             <Label>Product Image</Label>
@@ -243,22 +364,23 @@ const ViewVendorOrderRequest = () => {
                 maxWidth: "300px",
                 height: "200px",
                 border: "1px solid #ddd",
-                borderRadius: "5px"
+                borderRadius: "5px",
+                overflow: "hidden",
+                cursor: orderData?.item_image ? "pointer" : "default"
               }}
+              onClick={() =>
+                orderData?.item_image && handleImageClick(orderData?.item_image)
+              }
             >
-              {orderData?.item_image &&
-              !orderData?.item_image.includes("null") ? (
+              {orderData?.item_image ? (
                 <img
-                  src={orderData?.item_image}
+                  src={orderData.item_image}
                   alt="Product"
                   style={{
                     width: "100%",
                     height: "100%",
-                    objectFit: "cover",
-                    borderRadius: "5px",
-                    cursor: "pointer"
+                    objectFit: "cover"
                   }}
-                  onClick={() => handleImageClick(orderData?.item_image)}
                 />
               ) : (
                 <div
@@ -268,29 +390,45 @@ const ViewVendorOrderRequest = () => {
                     backgroundColor: "#f8f9fa",
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: "5px"
+                    justifyContent: "center"
                   }}
                 >
-                  <span style={{ fontSize: "14px", color: "#6c757d" }}>
-                    No Image Available
-                  </span>
+                  <span style={{ color: "#6c757d" }}>No Image Available</span>
                 </div>
               )}
             </div>
-            {orderData?.item_image &&
-              !orderData?.item_image.includes("null") && (
-                <small className="text-muted">
-                  Click image to view in full size
-                </small>
-              )}
+            {orderData?.item_image && (
+              <small className="text-muted">Click image to enlarge</small>
+            )}
           </FormGroup>
         </Col>
+
+        {/* Rejection Reason (if rejected) */}
+        {orderData?.status === "rejected" && orderData?.rejection_reason && (
+          <Col lg="12">
+            <FormGroup>
+              <Label>Rejection Reason</Label>
+              <textarea
+                className="form-control"
+                rows="4"
+                value={orderData.rejection_reason}
+                readOnly
+                style={{ resize: "none" }}
+              />
+            </FormGroup>
+          </Col>
+        )}
       </Row>
 
+      {/* Rejection Modal */}
       {isRejectionModalOpen && (
-        <div className="modal fade show d-block" tabIndex="-1" role="dialog">
-          <div className="modal-dialog" role="document">
+        <div
+          className="modal fade show d-block"
+          style={{ background: "rgba(0,0,0,0.5)", zIndex: 1050 }}
+          tabIndex="-1"
+          role="dialog"
+        >
+          <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">Reject Order</h5>
@@ -298,18 +436,19 @@ const ViewVendorOrderRequest = () => {
                   type="button"
                   className="btn-close"
                   onClick={() => setIsRejectionModalOpen(false)}
-                ></button>
+                />
               </div>
               <div className="modal-body">
-                <label htmlFor="rejectionReason">Reason for rejection</label>
-                <textarea
-                  className="form-control"
-                  id="rejectionReason"
-                  rows="4"
-                  value={rejectionReason}
-                  onChange={(e) => setRejectionReason(e.target.value)}
-                  placeholder="Enter reason"
-                ></textarea>
+                <FormGroup>
+                  <Label>Reason for rejection</Label>
+                  <textarea
+                    className="form-control"
+                    rows="4"
+                    value={rejectionReason}
+                    onChange={(e) => setRejectionReason(e.target.value)}
+                    placeholder="Enter reason for rejection"
+                  />
+                </FormGroup>
               </div>
               <div className="modal-footer">
                 <button
@@ -324,7 +463,7 @@ const ViewVendorOrderRequest = () => {
                   className="btn btn-danger"
                   onClick={handleConfirmRejection}
                 >
-                  Reject
+                  Confirm Rejection
                 </button>
               </div>
             </div>
@@ -332,17 +471,15 @@ const ViewVendorOrderRequest = () => {
         </div>
       )}
 
+      {/* Image Modal */}
       {imageModalOpen && (
         <div
           className="modal fade show d-block"
+          style={{ background: "rgba(0,0,0,0.8)", zIndex: 1050 }}
           tabIndex="-1"
           role="dialog"
-          style={{ backgroundColor: "rgba(0,0,0,0.8)" }}
         >
-          <div
-            className="modal-dialog modal-lg modal-dialog-centered"
-            role="document"
-          >
+          <div className="modal-dialog modal-lg modal-dialog-centered">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">Product Image</h5>
@@ -350,7 +487,7 @@ const ViewVendorOrderRequest = () => {
                   type="button"
                   className="btn-close"
                   onClick={closeImageModal}
-                ></button>
+                />
               </div>
               <div className="modal-body text-center">
                 <img
@@ -358,7 +495,7 @@ const ViewVendorOrderRequest = () => {
                   alt="Product"
                   style={{
                     maxWidth: "100%",
-                    maxHeight: "500px",
+                    maxHeight: "70vh",
                     objectFit: "contain"
                   }}
                 />
