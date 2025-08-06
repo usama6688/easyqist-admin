@@ -623,6 +623,16 @@ export const api = SplitApiSettings.injectEndpoints({
       }
     }),
 
+    getAreaWiseOrders: builder.query({
+      query: ({ params }) => {
+        return {
+          url: API_END_POINTS.getAreaWiseOrders,
+          method: "GET",
+          params
+        };
+      }
+    }),
+
     getCustomers: builder.query({
       query: () => {
         return {
@@ -832,6 +842,7 @@ export const {
   useGetEmployeesQuery,
   useViewOrderDetailQuery,
   useViewDashboardCountsQuery,
+  useGetAreaWiseOrdersQuery,
   useGetCustomersQuery,
   useGetAdminsQuery,
   useChartDataQuery,

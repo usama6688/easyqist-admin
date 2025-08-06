@@ -11,7 +11,7 @@ import {
   DropdownMenu,
   DropdownItem,
   Dropdown,
-  Button,
+  Button
 } from "reactstrap";
 import user1 from "../assets/images/users/user1.jpg";
 import PATHS from "../routes/Paths";
@@ -28,15 +28,21 @@ const Header = () => {
   const Handletoggle = () => {
     setIsOpen(!isOpen);
   };
+
+  // Updated function to work with the modern sidebar
   const showMobilemenu = () => {
-    document.getElementById("sidebarArea").classList.toggle("showSidebar");
+    const sidebarElement = document.getElementById("sidebarArea");
+
+    if (sidebarElement) {
+      sidebarElement.classList.toggle("showSidebar");
+    }
   };
 
   const logoutFunction = () => {
     dispatch(userLogout(null));
     navigate(PATHS.signin);
     // window.location.reload();
-  }
+  };
 
   return (
     <Navbar color="secondary" dark expand="md">

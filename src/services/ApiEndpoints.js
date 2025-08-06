@@ -86,4 +86,5 @@ export const API_END_POINTS = {
   getAllVendors: BASE_URL + "vendors",
   getVendorOrderRequests: BASE_URL + "vendor/product-requests",
   getVendorOrderRequestById: BASE_URL + "vendor/product-request",
+  getAreaWiseOrders: BASE_URL + "getAreaWiseOrders",
 };

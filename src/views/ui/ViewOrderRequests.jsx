@@ -143,6 +143,24 @@ const ViewOrderRequests = () => {
       });
   };
 
+  // Helper function to get installment plan details
+  const getInstallmentPlanDetails = (orderProduct) => {
+    const installment = orderProduct?.orderinstallment;
+    if (!installment) return null;
+
+    return {
+      planTitle: installment?.installment_title || "N/A",
+      downPaymentPercentage: installment?.downpayment_percentage || "N/A",
+      advanceAmount:
+        installment?.advance || orderProduct?.order_product_advance_amount || 0,
+      monthlyAmount: installment?.amount || 0,
+      duration: installment?.duration || orderProduct?.qty || 0,
+      totalAmount:
+        installment?.total_amount || orderProduct?.order_product_amount || 0,
+      installmentId: installment?.id || "N/A"
+    };
+  };
+
   useEffect(() => {
     getEmployeesRefetch();
     viewOrderDetailRefetch();
@@ -198,12 +216,6 @@ const ViewOrderRequests = () => {
                       Accepted
                     </a>
                   </li>
-                  {/* <li>
-                                <a class="dropdown-item" onClick={() => handleItemClick(3, reqData)}>Documentation</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" onClick={() => handleItemClick(4, reqData)}>Out for delivery</a>
-                            </li> */}
                   <li>
                     <a
                       class="dropdown-item"
@@ -279,12 +291,12 @@ const ViewOrderRequests = () => {
           </FormGroup>
         </Col>
 
-        <Col lg="4">
+        {/* <Col lg="4">
           <FormGroup>
             <Label for="exampleEmail">UC</Label>
             <Input type="text" value={reqData?.address?.uc} readOnly />
           </FormGroup>
-        </Col>
+        </Col> */}
 
         <Col lg="4">
           <FormGroup>
@@ -300,19 +312,19 @@ const ViewOrderRequests = () => {
           </FormGroup>
         </Col>
 
-        <Col lg="4">
+        {/* <Col lg="4">
           <FormGroup>
             <Label for="exampleEmail">Referee Code</Label>
             <Input type="text" value={reqData?.refercode} readOnly />
           </FormGroup>
-        </Col>
+        </Col> */}
 
-        <Col lg="4">
+        {/* <Col lg="4">
           <FormGroup>
             <Label for="exampleEmail">Referee Name</Label>
             <Input type="text" value={reqData?.refername} readOnly />
           </FormGroup>
-        </Col>
+        </Col> */}
 
         <Col lg="4">
           <FormGroup>
@@ -340,23 +352,93 @@ const ViewOrderRequests = () => {
         <Label for="exampleEmail" className="mt-4">
           Ordered Products
         </Label>
-        {reqData?.order_products?.map((data) => {
+        {reqData?.order_products?.map((data, index) => {
+          const planDetails = getInstallmentPlanDetails(data);
+
           return (
-            <Col lg="4">
+            <Col lg="6" key={index} className="mb-4">
               <div class="card">
-                <img src={data?.product?.thumbnail} class="card-img-top" />
+                <img
+                  src={data?.product?.thumbnail}
+                  alt="Product"
+                  style={{
+                    width: "50%", // half the width of the card
+                    height: "auto", // keep full image visible
+                    display: "block",
+                    margin: "0 auto" // center the image
+                  }}
+                />
                 <div class="card-body">
                   <h5 class="card-title">{data?.product?.name}</h5>
-                  <h6 class="card-title">
-                    Amount: {data?.order_product_amount}
-                  </h6>
-                  <h6 class="card-title">
-                    Advance: {data?.order_product_advance_amount}
-                  </h6>
-                  <h6 class="card-title">
-                    Plan: {data?.orderinstallment?.amount * data?.qty} x{" "}
-                    {data?.orderinstallment?.duration} months
-                  </h6>
+
+                  {/* Product Basic Info */}
+                  <div className="mb-3">
+                    <h6 class="text-primary mb-2">Order Details:</h6>
+                    <p class="mb-1">
+                      <strong>Quantity:</strong> {data?.qty}
+                    </p>
+                    <p class="mb-1">
+                      <strong>Order Amount:</strong> Rs{" "}
+                      {data?.order_product_amount}
+                    </p>
+                    <p class="mb-1">
+                      <strong>Order Advance:</strong> Rs{" "}
+                      {data?.order_product_advance_amount}
+                    </p>
+                  </div>
+
+                  {/* Installment Plan Details */}
+                  {planDetails && (
+                    <div
+                      className="mb-3 p-3"
+                      style={{
+                        backgroundColor: "#f8f9fa",
+                        borderRadius: "5px"
+                      }}
+                    >
+                      <h6 class="text-success mb-2">
+                        Installment Plan Details:
+                      </h6>
+                      <p class="mb-1">
+                        <strong>Plan Title:</strong> {planDetails.planTitle}
+                      </p>
+                      {planDetails.downPaymentPercentage !== "N/A" && (
+                        <p class="mb-1">
+                          <strong>Down Payment %:</strong>{" "}
+                          {planDetails.downPaymentPercentage}%
+                        </p>
+                      )}
+                      <p class="mb-1">
+                        <strong>Advance Amount:</strong> Rs{" "}
+                        {planDetails.advanceAmount}
+                      </p>
+                      <p class="mb-1">
+                        <strong>Monthly Payment:</strong> Rs{" "}
+                        {planDetails.monthlyAmount}
+                      </p>
+                      <p class="mb-1">
+                        <strong>Duration:</strong> {planDetails.duration} months
+                      </p>
+                      <p class="mb-1">
+                        <strong>Total Amount:</strong> Rs{" "}
+                        {planDetails.totalAmount}
+                      </p>
+                      {/* <p class="mb-1">
+                        <strong>Installment ID:</strong>{" "}
+                        {planDetails.installmentId}
+                      </p> */}
+                    </div>
+                  )}
+
+                  {/* Traditional Plan Display (keeping original) */}
+                  <div className="mb-3">
+                    <h6 class="text-info mb-2">Plan Summary:</h6>
+                    <p class="mb-1">
+                      <strong>Plan:</strong> Rs{" "}
+                      {data?.orderinstallment?.amount * data?.qty} x{" "}
+                      {data?.orderinstallment?.duration} months
+                    </p>
+                  </div>
 
                   {reqData?.order_status != 5 &&
                   auth?.userDetail?.type != 3 &&

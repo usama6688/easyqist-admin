@@ -13,7 +13,6 @@ import { useNavigate } from "react-router-dom";
 import PATHS from "../../routes/Paths";
 
 const AddProduct = () => {
-  // Basic product state
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [advance, setAdvance] = useState("");
@@ -22,22 +21,38 @@ const AddProduct = () => {
   const [special, setSpecial] = useState(0);
   const [trending, setTrending] = useState(0);
   const [discount, setDiscount] = useState("");
-  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
-  const [selectedBrandId, setSelectedBrandId] = useState(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState("");
+  const [selectedBrandId, setSelectedBrandId] = useState("");
 
-  // Image handling state
   const [thumbnail, setThumbnail] = useState(null);
   const [thumbnailPreview, setThumbnailPreview] = useState("");
   const [productImages, setProductImages] = useState([]);
   const [productImagesPreviews, setProductImagesPreviews] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
 
-  // Plans state with sub-plans
+  const durationOptions = [3, 6, 9, 11];
+
+  // Get duration options based on selected category
+  const getDurationOptions = () => {
+    const categoryName = getCategoryName(selectedCategoryId);
+    const categoryLower = categoryName ? categoryName.toLowerCase() : "";
+    const isBike =
+      categoryLower.includes("bike") ||
+      categoryLower.includes("motorcycle") ||
+      categoryLower.includes("motorbike");
+
+    if (isBike) {
+      return [3, 6, 9, 11, 12];
+    }
+    return [3, 6, 9, 11]; 
+  };
+
   const [plans, setPlans] = useState([
     {
       title: "",
       subPlans: [
         {
+          installment_title: "",
           down_payment_percentage: "",
           duration: "",
           advance: "",
@@ -48,7 +63,6 @@ const AddProduct = () => {
     }
   ]);
 
-  // API hooks
   const navigate = useNavigate();
   const { data: categories } = useGetProductCatQuery();
   const { data: brands } = useGetBrandsQuery({
@@ -58,7 +72,109 @@ const AddProduct = () => {
   const [addThumbnail] = useAddThumbnailMutation();
   const [addProductImage] = useAddProductImageMutation();
 
-  // Image handling functions
+  const calculateInstallmentPlan = (
+    basePrice,
+    duration,
+    downPaymentPercentage,
+    categoryName,
+    brandName
+  ) => {
+    console.log("--- CALCULATION INPUTS ---");
+    console.log("Base Price:", basePrice);
+    console.log("Duration:", duration);
+    console.log("Down Payment %:", downPaymentPercentage);
+    console.log("Category:", categoryName);
+    console.log("Brand:", brandName);
+
+    if (
+      !basePrice ||
+      !duration ||
+      downPaymentPercentage === "" ||
+      downPaymentPercentage === null
+    ) {
+      console.log("Missing required inputs for calculation");
+      return { advance: "", amount: "", total_amount: "" };
+    }
+
+    const price = parseFloat(basePrice);
+    const months = parseInt(duration);
+    const downPercent = parseFloat(downPaymentPercentage);
+
+    // Validate parsed values
+    if (isNaN(price) || isNaN(months) || isNaN(downPercent)) {
+      console.log("Invalid numeric values");
+      return { advance: "", amount: "", total_amount: "" };
+    }
+
+    let markupPercent = 0;
+    const categoryLower = categoryName ? categoryName.toLowerCase() : "";
+    const isMobile =
+      categoryLower.includes("mobile") ||
+      categoryLower.includes("phone") ||
+      categoryLower.includes("smartphone");
+    const isBike =
+      categoryLower.includes("bike") ||
+      categoryLower.includes("motorcycle") ||
+      categoryLower.includes("motorbike");
+
+    console.log("Category Detection:", { categoryLower, isMobile, isBike });
+
+    if (months === 3) {
+      markupPercent = isMobile ? 35 : 31;
+    } else if (months === 6) {
+      markupPercent = isMobile ? 40 : 36;
+    } else if (months === 9) {
+      markupPercent = isMobile ? 45 : 41;
+    } else if (months === 11) {
+      markupPercent = isMobile ? 50 : 46;
+    } else if (months === 12) {
+      markupPercent = isBike ? 60 : isMobile ? 55 : 50; 
+    }
+
+    if (isBike && (downPercent === 30 || downPercent === 50)) {
+      markupPercent = 55;
+    }
+
+    console.log("Markup Percent:", markupPercent);
+
+    const advanceAmount = price * (downPercent / 100);
+    const remainingAmount = price - advanceAmount;
+    const markupOnRemaining = remainingAmount * (markupPercent / 100);
+    const totalRemainingWithMarkup = remainingAmount + markupOnRemaining;
+    const monthlyInstallment = totalRemainingWithMarkup / months;
+    const totalAmount = advanceAmount + totalRemainingWithMarkup;
+
+    console.log("--- CALCULATION RESULTS ---");
+    console.log("Advance:", Math.round(advanceAmount).toString());
+    console.log(
+      "Monthly Installment:",
+      Math.round(monthlyInstallment).toString()
+    );
+    console.log("Total Amount:", Math.round(totalAmount).toString());
+
+    return {
+      advance: Math.round(advanceAmount).toString(),
+      amount: Math.round(monthlyInstallment).toString(),
+      total_amount: Math.round(totalAmount).toString()
+    };
+  };
+
+  const getCategoryName = (categoryId) => {
+    if (!categories?.data || !categoryId) return "";
+    const category = categories.data.find(
+      (cat) => cat.id.toString() === categoryId.toString()
+    );
+    return category ? category.name : "";
+  };
+
+  const getBrandName = (brandId) => {
+    if (!brands?.data || !brandId) return "";
+    const brand = brands.data.find(
+      (b) => b.id.toString() === brandId.toString()
+    );
+    return brand ? brand.brand_name : "";
+  };
+
   const handleThumbnailChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -104,7 +220,6 @@ const AddProduct = () => {
     return results.filter((path) => path !== null);
   };
 
-  // Plan management functions
   const addPlan = () => {
     setPlans([
       ...plans,
@@ -112,6 +227,7 @@ const AddProduct = () => {
         title: "",
         subPlans: [
           {
+            installment_title: "",
             down_payment_percentage: "",
             duration: "",
             advance: "",
@@ -132,6 +248,7 @@ const AddProduct = () => {
   const addSubPlan = (planIndex) => {
     const newPlans = [...plans];
     newPlans[planIndex].subPlans.push({
+      installment_title: "",
       down_payment_percentage: "",
       duration: "",
       advance: "",
@@ -156,10 +273,145 @@ const AddProduct = () => {
   const handleSubPlanChange = (planIndex, subPlanIndex, field, value) => {
     const newPlans = [...plans];
     newPlans[planIndex].subPlans[subPlanIndex][field] = value;
+
+    if (field === "duration" || field === "down_payment_percentage") {
+      const categoryName = getCategoryName(selectedCategoryId);
+      const brandName = getBrandName(selectedBrandId);
+
+      console.log("Recalculating for:", {
+        categoryName,
+        brandName,
+        selectedCategoryId
+      });
+
+      const calculations = calculateInstallmentPlan(
+        price,
+        newPlans[planIndex].subPlans[subPlanIndex].duration,
+        newPlans[planIndex].subPlans[subPlanIndex].down_payment_percentage,
+        categoryName,
+        brandName
+      );
+
+      newPlans[planIndex].subPlans[subPlanIndex].advance = calculations.advance;
+      newPlans[planIndex].subPlans[subPlanIndex].amount = calculations.amount;
+      newPlans[planIndex].subPlans[subPlanIndex].total_amount =
+        calculations.total_amount;
+    }
+
     setPlans(newPlans);
   };
 
-  // Special and trending handlers
+  const handleCategoryChange = (e) => {
+    const categoryId = e.target.value;
+    setSelectedCategoryId(categoryId);
+
+    setSelectedBrandId("");
+
+    if (price && categoryId) {
+      const categoryName = getCategoryName(categoryId);
+      const brandName = getBrandName(selectedBrandId);
+
+      console.log("Category changed, recalculating:", {
+        categoryName,
+        categoryId
+      });
+
+      const updatedPlans = plans.map((plan) => ({
+        ...plan,
+        subPlans: plan.subPlans.map((subPlan) => {
+          if (subPlan.duration && subPlan.down_payment_percentage !== "") {
+            const calculations = calculateInstallmentPlan(
+              price,
+              subPlan.duration,
+              subPlan.down_payment_percentage,
+              categoryName,
+              brandName
+            );
+            return {
+              ...subPlan,
+              advance: calculations.advance,
+              amount: calculations.amount,
+              total_amount: calculations.total_amount
+            };
+          }
+          return subPlan;
+        })
+      }));
+      setPlans(updatedPlans);
+    }
+  };
+
+  // Handle brand selection change
+  const handleBrandChange = (e) => {
+    const brandId = e.target.value;
+    setSelectedBrandId(brandId);
+    if (price && selectedCategoryId) {
+      const categoryName = getCategoryName(selectedCategoryId);
+      const brandName = getBrandName(brandId);
+
+      console.log("Brand changed, recalculating:", { brandName, brandId });
+
+      const updatedPlans = plans.map((plan) => ({
+        ...plan,
+        subPlans: plan.subPlans.map((subPlan) => {
+          if (subPlan.duration && subPlan.down_payment_percentage !== "") {
+            const calculations = calculateInstallmentPlan(
+              price,
+              subPlan.duration,
+              subPlan.down_payment_percentage,
+              categoryName,
+              brandName
+            );
+            return {
+              ...subPlan,
+              advance: calculations.advance,
+              amount: calculations.amount,
+              total_amount: calculations.total_amount
+            };
+          }
+          return subPlan;
+        })
+      }));
+      setPlans(updatedPlans);
+    }
+  };
+
+  useEffect(() => {
+    if (price && selectedCategoryId) {
+      const categoryName = getCategoryName(selectedCategoryId);
+      const brandName = getBrandName(selectedBrandId);
+
+      console.log("Price changed, recalculating:", {
+        categoryName,
+        brandName,
+        price
+      });
+
+      const updatedPlans = plans.map((plan) => ({
+        ...plan,
+        subPlans: plan.subPlans.map((subPlan) => {
+          if (subPlan.duration && subPlan.down_payment_percentage !== "") {
+            const calculations = calculateInstallmentPlan(
+              price,
+              subPlan.duration,
+              subPlan.down_payment_percentage,
+              categoryName,
+              brandName
+            );
+            return {
+              ...subPlan,
+              advance: calculations.advance,
+              amount: calculations.amount,
+              total_amount: calculations.total_amount
+            };
+          }
+          return subPlan;
+        })
+      }));
+      setPlans(updatedPlans);
+    }
+  }, [price]); 
+
   const handleSpecial = (e) => {
     const value = e.target.value;
     if (/^[01]?$/.test(value)) {
@@ -174,13 +426,11 @@ const AddProduct = () => {
     }
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsUploading(true);
 
     try {
-      // Validate required fields
       if (!name || !price || !selectedCategoryId || !selectedBrandId) {
         alert(
           "Please fill in all required fields (Name, Price, Category, Brand)"
@@ -195,7 +445,6 @@ const AddProduct = () => {
         uploadProductImages()
       ]);
 
-      // Prepare form data
       const formData = new URLSearchParams();
       formData.append("name", name);
       formData.append("price", price);
@@ -220,11 +469,14 @@ const AddProduct = () => {
         formData.append(`productimage[${index}]`, path);
       });
 
-      // Add plans and sub-plans
       plans.forEach((plan, planIndex) => {
         if (plan.title) {
           formData.append(`product_type[${planIndex}][title]`, plan.title);
           plan.subPlans.forEach((subPlan, subPlanIndex) => {
+            formData.append(
+              `product_type[${planIndex}][payment_options][${subPlanIndex}][installment_title]`,
+              subPlan.installment_title || ""
+            );
             formData.append(
               `product_type[${planIndex}][payment_options][${subPlanIndex}][down_payment_percentage]`,
               subPlan.down_payment_percentage || ""
@@ -249,7 +501,6 @@ const AddProduct = () => {
         }
       });
 
-      // Submit product data
       const response = await addProduct({ data: formData }).unwrap();
       if (response.status) {
         navigate(PATHS.products);
@@ -262,7 +513,6 @@ const AddProduct = () => {
     }
   };
 
-  // Clean up object URLs
   useEffect(() => {
     return () => {
       if (thumbnailPreview) URL.revokeObjectURL(thumbnailPreview);
@@ -349,8 +599,8 @@ const AddProduct = () => {
                   <Label>Category</Label>
                   <Input
                     type="select"
-                    value={selectedCategoryId || ""}
-                    onChange={(e) => setSelectedCategoryId(e.target.value)}
+                    value={selectedCategoryId}
+                    onChange={handleCategoryChange}
                     required
                   >
                     <option value="">Select Category</option>
@@ -367,8 +617,8 @@ const AddProduct = () => {
                   <Label>Brand</Label>
                   <Input
                     type="select"
-                    value={selectedBrandId || ""}
-                    onChange={(e) => setSelectedBrandId(e.target.value)}
+                    value={selectedBrandId}
+                    onChange={handleBrandChange}
                     required
                   >
                     <option value="">Select Brand</option>
@@ -471,7 +721,16 @@ const AddProduct = () => {
 
         {/* Product Types and Installments */}
         <div className="card mb-4">
-          <div className="card-header">Product Types and Installment Plans</div>
+          {/* <div className="card-header">
+            Product Types and Installment Plans
+            <small className="text-muted d-block mt-1">
+              Auto-calculation: Markup applied on remaining amount only | 3
+              months (Mobile: 35%, Others: 31%) | 6 months (Mobile: 40%, Others:
+              36%) | 9 months (Mobile: 45%, Others: 41%) | 11 months (Mobile:
+              50%, Others: 46%) | 12 months (Bikes: 60%, Mobile: 55%, Others:
+              50%) | Bikes: 55% for 30% or 50% down payment
+            </small>
+          </div> */}
           <div className="card-body">
             {plans.map((plan, planIndex) => (
               <div key={planIndex} className="mb-4 border p-3 rounded">
@@ -503,7 +762,10 @@ const AddProduct = () => {
                 <div className="mt-3">
                   <h6>Installment Plans</h6>
                   {plan.subPlans.map((subPlan, subPlanIndex) => (
-                    <div key={subPlanIndex} className="border p-3 mb-3 rounded">
+                    <div
+                      key={subPlanIndex}
+                      className="border p-3 mb-3 rounded bg-light"
+                    >
                       <div className="d-flex justify-content-between align-items-center mb-2">
                         <h6 className="mb-0">Plan {subPlanIndex + 1}</h6>
                         {plan.subPlans.length > 1 && (
@@ -518,6 +780,23 @@ const AddProduct = () => {
                           </button>
                         )}
                       </div>
+
+                      <FormGroup>
+                        <Label>Installment Plan Title</Label>
+                        <Input
+                          type="text"
+                          value={subPlan.installment_title}
+                          onChange={(e) =>
+                            handleSubPlanChange(
+                              planIndex,
+                              subPlanIndex,
+                              "installment_title",
+                              e.target.value
+                            )
+                          }
+                          placeholder="e.g., 3 Month Plan, 6 Month Plan"
+                        />
+                      </FormGroup>
 
                       <div className="row">
                         <div className="col-md-6">
@@ -543,8 +822,7 @@ const AddProduct = () => {
                           <FormGroup>
                             <Label>Duration (Months)</Label>
                             <Input
-                              type="number"
-                              min="1"
+                              type="select"
                               value={subPlan.duration}
                               onChange={(e) =>
                                 handleSubPlanChange(
@@ -554,7 +832,14 @@ const AddProduct = () => {
                                   e.target.value
                                 )
                               }
-                            />
+                            >
+                              <option value="">Select Duration</option>
+                              {getDurationOptions().map((duration) => (
+                                <option key={duration} value={duration}>
+                                  {duration} Months
+                                </option>
+                              ))}
+                            </Input>
                           </FormGroup>
                         </div>
                       </div>
@@ -562,7 +847,12 @@ const AddProduct = () => {
                       <div className="row mt-2">
                         <div className="col-md-4">
                           <FormGroup>
-                            <Label>Advance Amount</Label>
+                            <Label>
+                              Advance Amount{" "}
+                              <span className="text-success">
+                                {/* (Auto-calculated) */}
+                              </span>
+                            </Label>
                             <Input
                               type="number"
                               min="0"
@@ -575,12 +865,18 @@ const AddProduct = () => {
                                   e.target.value
                                 )
                               }
+                              className="bg-light"
                             />
                           </FormGroup>
                         </div>
                         <div className="col-md-4">
                           <FormGroup>
-                            <Label>Monthly Installment</Label>
+                            <Label>
+                              Monthly Installment{" "}
+                              <span className="text-success">
+                                {/* (Auto-calculated) */}
+                              </span>
+                            </Label>
                             <Input
                               type="number"
                               min="0"
@@ -593,12 +889,18 @@ const AddProduct = () => {
                                   e.target.value
                                 )
                               }
+                              className="bg-light"
                             />
                           </FormGroup>
                         </div>
                         <div className="col-md-4">
                           <FormGroup>
-                            <Label>Total Amount</Label>
+                            <Label>
+                              Total Amount{" "}
+                              <span className="text-success">
+                                {/* (Auto-calculated) */}
+                              </span>
+                            </Label>
                             <Input
                               type="number"
                               min="0"
@@ -611,6 +913,7 @@ const AddProduct = () => {
                                   e.target.value
                                 )
                               }
+                              className="bg-light"
                             />
                           </FormGroup>
                         </div>

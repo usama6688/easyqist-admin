@@ -1,0 +1,35 @@
+.order-requests-container {
+  padding: 20px;
+}
+
+.order-row {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.order-row:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+@media (max-width: 768px) {
+  .order-requests-container {
+    padding: 10px;
+  }
+  
+  .DateRangePicker {
+    width: 100%;
+  }
+  
+  .DateRangePickerInput {
+    width: 100%;
+  }
+}
+
+.dropdown-menu {
+  max-height: 300px;
+  overflow-y: auto;
+}
